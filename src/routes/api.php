@@ -13,9 +13,5 @@ Route::group(
             ->name('awf-generate-data.create');
         Route::get('/get-default-sequence', ['uses' => 'SequenceController@create'])
             ->name('awf-sequence.create');
-//        Route::post('/{DHIDEN}/check-barcode', ['uses' => 'BarcodeScanController@store'])
-//            ->name('liss-barcode-scan.store');
-//        Route::delete('/{DHIDEN}/delete-barcode', ['uses' => 'BarcodeScanController@destroy'])
-//            ->name('liss-barcode-scan.destroy');
     }
 );
