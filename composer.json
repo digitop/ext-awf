@@ -1,0 +1,13 @@
+{
+  "name": "awf/extension",
+  "description": "AWF custom modul to OEEM system",
+  "authors": [
+    {
+      "name": "Kassai Kristóf",
+      "email": "kassai.kristof@digitop.hu"
+    }
+  ],
+  "require": {
+
+  }
+}
