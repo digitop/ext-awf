@@ -12,15 +12,15 @@ class ServiceProvider extends IlluminateServiceProvider
     {
         include __DIR__ . '/../routes/api.php';
 
-        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations', $this->tagname);
+        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
         $this->loadViewsFrom(__DIR__ . '/../views', $this->tagname);
 
         $this->publishes(
-            [__DIR__ . '/../js' => public_path('vendor/oeem-extensions/awf/extention/js')],
+            [__DIR__ . '/../js' => public_path('vendor/oeem-extensions/awf/extension/js')],
             $this->tagname
         );
         $this->publishes(
-            [__DIR__ . '/../css' => public_path('vendor/oeem-extensions/awf/extention/css')],
+            [__DIR__ . '/../css' => public_path('vendor/oeem-extensions/awf/extension/css')],
             $this->tagname
         );
         $this->publishes(
