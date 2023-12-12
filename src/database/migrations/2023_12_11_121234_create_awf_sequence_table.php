@@ -12,6 +12,8 @@ return new class extends Migration {
      */
     public function up()
     {
+        $database = config('database.connections.mysql.database');
+
         Schema::connection('custom_mysql')->create('AWF_SEQUENCE', function (Blueprint $table) {
             $table->id('SEQUID')->comment('AWF uniquely developed module sequence identifier');
             $table->string('SEPONR', 10)->comment('Porsche Order Number');
@@ -26,15 +28,15 @@ return new class extends Migration {
             $table->string('ORCODE', 32)->comment('Order code (ORDERHEAD:ORCODE)');
         });
 
-        Schema::connection('custom_mysql')->table('AWF_SEQUENCE', function (Blueprint $table) {
+        Schema::connection('custom_mysql')->table('AWF_SEQUENCE', function (Blueprint $table) use ($database) {
             $table->foreign('PRCODE', 'FK_AWF_SEQUENCE_TO_PRODUCT_PRCODE')
                 ->references('PRCODE')
-                ->on('PRODUCT')
+                ->on($database . '.PRODUCT')
                 ->onUpdate('CASCADE');
 
             $table->foreign('ORCODE', 'FK_AWF_SEQUENCE_TO_ORDERHEAD_ORCODE')
                 ->references('ORCODE')
-                ->on('ORDERHEAD')
+                ->on($database . '.ORDERHEAD')
                 ->onUpdate('CASCADE');
         });
     }

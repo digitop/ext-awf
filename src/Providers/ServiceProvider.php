@@ -6,31 +6,35 @@ use Illuminate\Support\ServiceProvider as IlluminateServiceProvider;
 
 class ServiceProvider extends IlluminateServiceProvider
 {
-    protected $tagname = 'awf-extension';
+    protected string $tagName = 'awf-extension';
 
     public function boot()
     {
         include __DIR__ . '/../routes/api.php';
 
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
-        $this->loadViewsFrom(__DIR__ . '/../views', $this->tagname);
+        $this->loadViewsFrom(__DIR__ . '/../views', $this->tagName);
 
         $this->publishes(
+            [__DIR__ . '/../database/migrations' => database_path('migrations/extensions/' . $this->tagName)],
+            $this->tagName
+        );
+        $this->publishes(
             [__DIR__ . '/../js' => public_path('vendor/oeem-extensions/awf/extension/js')],
-            $this->tagname
+            $this->tagName
         );
         $this->publishes(
             [__DIR__ . '/../css' => public_path('vendor/oeem-extensions/awf/extension/css')],
-            $this->tagname
+            $this->tagName
         );
         $this->publishes(
             [
                 __DIR__ . '/../storage/sequence-data' =>
                     storage_path('app/public/' . config('storage.file.path.sequense-data.save'))
             ],
-            $this->tagname
+            $this->tagName
         );
-        $this->publishes([__DIR__ . '/../lang' => resource_path('lang/')], $this->tagname);
+        $this->publishes([__DIR__ . '/../lang' => resource_path('lang/')], $this->tagName);
 
         $this->app->config["filesystems.disks.awfSequenceFtp"] = [
             'driver' => 'ftp',

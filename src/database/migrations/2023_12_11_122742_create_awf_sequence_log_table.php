@@ -12,6 +12,8 @@ return new class extends Migration {
      */
     public function up()
     {
+        $database = config('database.connections.mysql.database');
+
         Schema::connection('custom_mysql')->create('AWF_SEQUENCE_LOG', function (Blueprint $table) {
             $table->id('SELOID')->comment('The unique identifier of the sequence log table of a unique development module of awf');
             $table->unsignedBigInteger('SEQUID')->comment('AWF uniquely developed module sequence identifier (AWF_SEQUENCE:SEQUID)');
@@ -21,7 +23,7 @@ return new class extends Migration {
             $table->unique(['SEQUID', 'WCSHNA'], 'SEQUID_WCSHNA_UNIQUE');
         });
 
-        Schema::connection('custom_mysql')->table('AWF_SEQUENCE_LOG', function (Blueprint $table) {
+        Schema::connection('custom_mysql')->table('AWF_SEQUENCE_LOG', function (Blueprint $table) use ($database) {
             $table->foreign('SEQUID', 'FK_AWF_SEQUENCE_LOG_TO_AWF_SEQUENCE_SEQUID')
                 ->references('SEQUID')
                 ->on('AWF_SEQUENCE')
@@ -29,7 +31,7 @@ return new class extends Migration {
 
             $table->foreign('WCSHNA', 'FK_AWF_SEQUENCE_LOG_TO_WORKCENTER_WCSHNA')
                 ->references('WCSHNA')
-                ->on('WORKCENTER')
+                ->on($database . '.WORKCENTER')
                 ->onUpdate('CASCADE');
         });
     }
