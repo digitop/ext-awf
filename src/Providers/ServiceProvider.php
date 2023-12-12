@@ -34,11 +34,11 @@ class ServiceProvider extends IlluminateServiceProvider
 
         $this->app->config["filesystems.disks.awfSequenceFtp"] = [
             'driver' => 'ftp',
-            'host' => '192.168.200.57',
+            'host' => '',
             'username' => '',
             'password' => '',
             'port' => 21,
-            'root' => '/',
+            'root' => '/as400/',
             'ssl' => false,
             'timeout' => 30
         ];

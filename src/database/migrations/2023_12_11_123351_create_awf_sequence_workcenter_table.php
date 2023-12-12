@@ -12,10 +12,10 @@ return new class extends Migration {
      */
     public function up()
     {
-        Schema::create('AWF_SEQUENCE_WORKCENTER', function (Blueprint $table){
+        Schema::connection('custom_mysql')->create('AWF_SEQUENCE_WORKCENTER', function (Blueprint $table){
             $table->id('SEWCID')->comment('The unique identifier of the table connecting workcenters and sequences of the uniquely developed module of awf');
-            $table->unsignedBigInteger('SEQUID')->nullable()->comment('AWF uniquely developed module sequence identifier (AWF_SEQUENCE:SEQUID)');
-            $table->string('WCSHNA', 8)->nullable()->comment('Workcenter short name (WORKCENTER:WCSHNA)');
+            $table->unsignedBigInteger('SEQUID')->comment('AWF uniquely developed module sequence identifier (AWF_SEQUENCE:SEQUID)');
+            $table->string('WCSHNA', 8)->comment('Workcenter short name (WORKCENTER:WCSHNA)');
         });
     }
 
@@ -26,6 +26,6 @@ return new class extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists('AWF_SEQUENCE_WORKCENTER');
+        Schema::connection('custom_mysql')->dropIfExists('AWF_SEQUENCE_WORKCENTER');
     }
 };
