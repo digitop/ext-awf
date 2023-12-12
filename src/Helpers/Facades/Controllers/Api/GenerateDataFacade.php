@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\ORDERHEAD;
 use App\Models\PRODUCT;
-use File;
+use Illuminate\Support\Facades\File;
 
 class GenerateDataFacade extends Facade
 {
