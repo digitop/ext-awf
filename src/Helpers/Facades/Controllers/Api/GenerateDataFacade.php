@@ -13,7 +13,7 @@ use App\Models\ORDERHEAD;
 use App\Models\PRODUCT;
 use File;
 
-class GenerateDataFacade
+class GenerateDataFacade extends Facade
 {
     public function create(Request|null $request = null, Model|string|null $model = null): JsonResponse|null
     {
