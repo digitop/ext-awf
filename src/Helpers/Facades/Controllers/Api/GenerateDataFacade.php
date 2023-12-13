@@ -94,7 +94,7 @@ class GenerateDataFacade extends Facade
                 'ORCODE' => $orcode,
             ]);
 
-            AWF_SEQUENCE_LOG::craete([
+            AWF_SEQUENCE_LOG::create([
                 'SEQUID' => $sequenceData->id,
                 'WCSHNA' => null,
                 'LSTIME' => $start,
