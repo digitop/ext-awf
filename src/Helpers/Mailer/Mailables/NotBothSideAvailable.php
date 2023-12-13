@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Mail\Mailables\Content;
 use  Illuminate\Support\Collection;
 
-class NotAllPillarAvailable extends Mailable
+class NotBothSideAvailable extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -28,7 +28,7 @@ class NotAllPillarAvailable extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Hiányzó oszlop adatok!',
+            subject: 'Hiányzó oldal adatok!',
         );
     }
 
@@ -40,7 +40,7 @@ class NotAllPillarAvailable extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'awf-extension::emails.checkers.not-all-pillar-available',
+            view: 'awf-extension::emails.checkers.not-both-side-available',
             with: [
                 'sequences' => $this->sequences,
             ],

@@ -23,6 +23,17 @@ class SavedData
                     ->get()
             );
         }
+
+        if (!self::isBothSideAvailable($sequences)) {
+            Mailer::sendIsBothSideAvailable(
+                DB::connection('custom_mysql')
+                    ->table('AWF_SEQUENCE')
+                    ->selectRaw('SEPONR, SEPSEQ, SEPILL')
+                    ->groupBy('SEPONR', 'SEPSEQ', 'SEPILL')
+                    ->havingRaw('count(SEQUID) <> 2')
+                    ->get()
+            );
+        }
     }
 
     protected static function isAllPillarAvailable(Collection $sequences): bool
@@ -30,10 +41,33 @@ class SavedData
         foreach ($sequences as $sequence) {
             $pillarCount =
                 DB::connection('custom_mysql')
-                    ->select('select count(SEPONR) as countedPiece from AWF_SEQUENCE where SEPONR=?', [$sequence->SEPONR]);
+                    ->select(
+                        'select count(SEPONR) as countedPiece from AWF_SEQUENCE where SEPONR=?',
+                        [$sequence->SEPONR]
+                    );
 
             if ($pillarCount[0]->countedPiece !== 6) {
                 return false;
+            }
+        }
+
+        return true;
+    }
+
+    protected static function isBothSideAvailable($sequences): bool
+    {
+        foreach ($sequences as $sequence) {
+            $pillarCounts =
+                DB::connection('custom_mysql')
+                    ->select(
+                        'select SEPONR, SEPSEQ, SEPILL, count(SEQUID) as countedPiece from AWF_SEQUENCE where SEPONR = ? group by SEPONR, SEPSEQ, SEPILL',
+                        [$sequence->SEPONR]
+                    );
+
+            foreach ($pillarCounts as $pillarCount) {
+                if ($pillarCount->countedPiece !== 2) {
+                    return false;
+                }
             }
         }
 
