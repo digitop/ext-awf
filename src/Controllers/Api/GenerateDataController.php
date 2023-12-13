@@ -4,6 +4,7 @@ namespace AWF\Extension\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use AWF\Extension\Interfaces\ApiControllerFacadeInterface;
 use AWF\Extension\Helpers\Facades\Controllers\Api\GenerateDataFacade;
 

@@ -12,10 +12,24 @@ return new class extends Migration {
      */
     public function up()
     {
-        Schema::create('AWF_SEQUENCE_WORKCENTER', function (Blueprint $table){
+        $database = config('database.connections.mysql.database');
+
+        Schema::connection('custom_mysql')->create('AWF_SEQUENCE_WORKCENTER', function (Blueprint $table){
             $table->id('SEWCID')->comment('The unique identifier of the table connecting workcenters and sequences of the uniquely developed module of awf');
-            $table->unsignedBigInteger('SEQUID')->nullable()->comment('AWF uniquely developed module sequence identifier (AWF_SEQUENCE:SEQUID)');
-            $table->string('WCSHNA', 8)->nullable()->comment('Workcenter short name (WORKCENTER:WCSHNA)');
+            $table->unsignedBigInteger('SEQUID')->comment('AWF uniquely developed module sequence identifier (AWF_SEQUENCE:SEQUID)');
+            $table->string('WCSHNA', 8)->comment('Workcenter short name (WORKCENTER:WCSHNA)');
+        });
+
+        Schema::connection('custom_mysql')->table('AWF_SEQUENCE_WORKCENTER', function (Blueprint $table) use ($database) {
+            $table->foreign('SEQUID', 'FK_AWF_SEQUENCE_WORKCENTER_TO_AWF_SEQUENCE_SEQUID')
+                ->references('SEQUID')
+                ->on('AWF_SEQUENCE')
+                ->onUpdate('CASCADE');
+
+            $table->foreign('WCSHNA', 'FK_AWF_SEQUENCE_WORKCENTER_TO_WORKCENTER_WCSHNA')
+                ->references('WCSHNA')
+                ->on($database . '.WORKCENTER')
+                ->onUpdate('CASCADE');
         });
     }
 
@@ -26,6 +40,6 @@ return new class extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists('AWF_SEQUENCE_WORKCENTER');
+        Schema::connection('custom_mysql')->dropIfExists('AWF_SEQUENCE_WORKCENTER');
     }
 };
