@@ -4,7 +4,7 @@ namespace AWF\Extension\Helpers\Mailer;
 
 use AWF\Extension\Helpers\Mailer\Mailables\NotAllPillarAvailable;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Database\Eloquent\Collection;
+use  Illuminate\Support\Collection;
 
 class Mailer
 {
