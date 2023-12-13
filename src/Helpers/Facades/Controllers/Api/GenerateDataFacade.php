@@ -91,7 +91,7 @@ class GenerateDataFacade extends Facade
                     'SEARDE' => mb_convert_encoding($data[3], 'UTF-8'),
                     'SESIDE' => $data[4],
                     'SEEXPI' => $expiration,
-                    'SEPILL' => 'A',
+                    'SEPILL' => substr($data[3], 6, 1),
                     'PRCODE' => $prcode,
                     'ORCODE' => $orcode,
                 ]);

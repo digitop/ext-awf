@@ -43,7 +43,25 @@ A minta hívások Windows rendszer alatt készültek, így curl helyett a gyári
 `Invoke-WebRequest -Method GET -H @{"Content-Type"="application/json"} -Uri http://localhost:8000/api/ext/awf-extension/generate-data`
 
 #### 200 - OK
+```
+{
+    "success":true,
+    "message":""
+}
+```
 
 #### 422 - Unprocessable Content
+```
+{
+    "success":false,
+    "message":"Hiba a feldolgozás során!"
+}
+```
 
 #### 400 - Bad Request
+```
+{
+    "success":false,
+    "message":"Hibás kérés!"
+}
+```
