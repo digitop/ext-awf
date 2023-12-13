@@ -33,8 +33,6 @@ class GenerateDataFacade extends Facade
             );
         }
 
-
-
         return new JsonResponse(
             ['success' => true, 'message' => ''],
             Response::HTTP_OK

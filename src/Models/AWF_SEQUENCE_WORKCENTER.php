@@ -32,6 +32,13 @@ class AWF_SEQUENCE_WORKCENTER extends Model
     protected $primaryKey = 'SEWCID';
 
     /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
