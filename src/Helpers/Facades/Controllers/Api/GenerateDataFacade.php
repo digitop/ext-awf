@@ -53,13 +53,13 @@ class GenerateDataFacade extends Facade
             $day = substr($data[5], 6, 2);
             $expiration = new \DateTime($year . '-' . $month . '-' . $day);
             $prcode = $data[1] . '_' . $data[2];
-            $orcode = $prcode . '_' . substr($year, -2) . '_' . $month;
 
             if (!empty(PRODUCT::where('PRCODE', 'like', $prcode . '%')->first())) {
                 $i++;
             }
 
             $prcode .=  '_' . $i;
+            $orcode = $prcode . '_' . substr($year, -2) . '_' . $month;
 
             PRODUCT::create([
                 'PRCODE' => $prcode,
