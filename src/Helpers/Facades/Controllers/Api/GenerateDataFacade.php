@@ -18,8 +18,7 @@ class GenerateDataFacade extends Facade
     public function create(Request|null $request = null, Model|string|null $model = null): JsonResponse|null
     {
         try {
-            $path = storage_path('sequence-data') . DIRECTORY_SEPARATOR . (new \DateTime())->format('Ymd');
-            File::makeDirectory($path);
+            $path = $this->generatePath();
 
             foreach (Storage::disk('awfSequenceFtp')->files() as $filePath) {
                 if (str_contains($filePath, 'P992')) {
@@ -46,7 +45,8 @@ class GenerateDataFacade extends Facade
     {
         $file = Storage::disk('awfSequenceFtp')->get($filePath);
 
-        foreach ($file as $data) {
+        foreach (explode(PHP_EOL, $file) as $row) {
+            $data = explode(';', $row);
             $i = 1;
 
             $start = new \DateTime();
@@ -80,7 +80,7 @@ class GenerateDataFacade extends Facade
                 'ORAACT' => 1,
                 'ORSCTY' => 2,
                 'ORSCVA' => 1,
-                'ORNOSC' =>100 ,
+                'ORNOSC' => 100 ,
                 'ORNOID' => 0,
             ]);
 
@@ -105,5 +105,22 @@ class GenerateDataFacade extends Facade
         }
 
         Storage::put($path . DIRECTORY_SEPARATOR . $file, $file);
+    }
+
+    protected function generatePath(): string
+    {
+        $path = storage_path('sequence-data');
+
+        if (!is_dir($path)) {
+            File::makeDirectory($path);
+        }
+
+        $path .= DIRECTORY_SEPARATOR . (new \DateTime())->format('Ymd');
+
+        if (!is_dir($path)) {
+            File::makeDirectory($path);
+        }
+
+        return $path;
     }
 }
