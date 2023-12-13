@@ -20,8 +20,7 @@ class GenerateDataFacade extends Facade
     {
         try {
             $this->generatePath();
-
-            AWF_SEQUENCE::where('SEINPR', '=', 0)->delete();
+            $this->deleteAllSequenceThatNotInProduction();
 
             foreach (Storage::disk('awfSequenceFtp')->files() as $filePath) {
                 if (str_contains($filePath, 'P992')) {
@@ -127,5 +126,16 @@ class GenerateDataFacade extends Facade
         if (!is_dir($path)) {
             File::makeDirectory($path);
         }
+    }
+
+    protected function deleteAllSequenceThatNotInProduction(): void
+    {
+        $sequences = AWF_SEQUENCE::where('SEINPR', '=', 0)->get();
+
+        foreach ($sequences as $sequence) {
+            AWF_SEQUENCE_LOG::where('SEQUID', '=', $sequence->SEQUID)->delete();
+        }
+
+        AWF_SEQUENCE::where('SEINPR', '=', 0)->delete();
     }
 }
