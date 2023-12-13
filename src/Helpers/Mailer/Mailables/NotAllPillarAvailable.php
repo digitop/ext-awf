@@ -3,6 +3,7 @@
 namespace AWF\Extension\Helpers\Mailer\Mailables;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Queue\SerializesModels;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Mail\Mailables\Content;
