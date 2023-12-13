@@ -46,7 +46,7 @@ class GenerateDataFacade extends Facade
         foreach (explode(PHP_EOL, $file) as $row) {
             $data = explode(';', $row);
 
-            if (!empty($data)) {
+            if (!empty($data) && !empty($data[0])) {
                 $i = 1;
 
                 $start = new \DateTime();
@@ -61,7 +61,7 @@ class GenerateDataFacade extends Facade
                 }
 
                 $prcode .=  '_' . $i;
-                $orcode = $prcode . '_' . substr($year, -2) . '_' . $month;
+                $orcode = $prcode . '_' . substr($year, -2) . '_' . $month . '_' . $day;
 
                 PRODUCT::create([
                     'PRCODE' => $prcode,
