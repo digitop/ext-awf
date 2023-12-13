@@ -14,7 +14,7 @@ class Mailer
         Mail::to('kassai.kristof@digitop.hu')->send(new NotAllPillarAvailable($sequences));
     }
 
-    public static function sendIsBothSideAvailable(Collection $sequences)
+    public static function sendIsBothSideAvailable(Collection $sequences): void
     {
         Mail::to('kassai.kristof@digitop.hu')->send(new NotBothSideAvailable($sequences));
     }
