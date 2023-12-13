@@ -27,8 +27,6 @@ class GenerateDataFacade extends Facade
                     $this->generateData($filePath);
                 }
             }
-
-            SavedData::check();
         }
         catch (\Exception $exception) {
             return new JsonResponse(
@@ -36,6 +34,8 @@ class GenerateDataFacade extends Facade
                 Response::HTTP_UNPROCESSABLE_ENTITY
             );
         }
+
+        SavedData::check();
 
         return new JsonResponse(
             ['success' => true, 'message' => ''],
