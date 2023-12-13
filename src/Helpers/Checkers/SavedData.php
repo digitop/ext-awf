@@ -11,10 +11,7 @@ class SavedData
 {
     public static function check(): void
     {
-        $sequences = AWF_SEQUENCE::where([
-            ['WCSHNA', '=', null],
-            ['SEINPR', '=', 0]
-        ])->get();
+        $sequences = AWF_SEQUENCE::where('SEINPR', '=', 0)->get();
 
         if (!self::isAllPillarAvailable($sequences)) {
             Mailer::sendIsAllPillarAvailable(
@@ -35,7 +32,7 @@ class SavedData
                 DB::connection('custom_mysql')
                     ->select('select count(SEPONR) as countedPiece from AWF_SEQUENCE where SEPONR=?', [$sequence->SEPONR]);
 
-            if ($pillarCount[0]['countedPiece'] !== 6) {
+            if ($pillarCount[0]->countedPiece !== 6) {
                 return false;
             }
         }
