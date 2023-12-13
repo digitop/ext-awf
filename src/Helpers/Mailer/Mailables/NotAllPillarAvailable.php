@@ -40,7 +40,7 @@ class NotAllPillarAvailable extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.checkers.not-all-pillar-available',
+            view: 'awf-extension::emails.checkers.not-all-pillar-available',
             with: [
                 'sequences' => $this->sequences,
             ],
