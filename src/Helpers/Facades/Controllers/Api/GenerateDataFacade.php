@@ -2,6 +2,7 @@
 
 namespace AWF\Extension\Helpers\Facades\Controllers\Api;
 
+use AWF\Extension\Helpers\Checkers\SavedData;
 use AWF\Extension\Models\AWF_SEQUENCE;
 use AWF\Extension\Models\AWF_SEQUENCE_LOG;
 use Illuminate\Support\Facades\Storage;
@@ -25,6 +26,8 @@ class GenerateDataFacade extends Facade
                     $this->generateData($filePath);
                 }
             }
+
+            SavedData::check();
         }
         catch (\Exception $exception) {
             return new JsonResponse(
