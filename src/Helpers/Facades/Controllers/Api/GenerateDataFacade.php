@@ -97,7 +97,7 @@ class GenerateDataFacade extends Facade
                 ]);
 
                 AWF_SEQUENCE_LOG::create([
-                    'SEQUID' => $sequenceData->id,
+                    'SEQUID' => $sequenceData->SEQUID,
                     'WCSHNA' => null,
                     'LSTIME' => $start,
                     'LETIME' => new \DateTime(),
@@ -111,7 +111,7 @@ class GenerateDataFacade extends Facade
 
     protected function generatePath(): void
     {
-        $path = storage_path('app/sequence-data');
+        $path = storage_path('app' . DIRECTORY_SEPARATOR . 'sequence-data');
 
         if (!is_dir($path)) {
             File::makeDirectory($path);
