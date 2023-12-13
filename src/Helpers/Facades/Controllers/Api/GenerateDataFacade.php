@@ -47,6 +47,8 @@ class GenerateDataFacade extends Facade
         $file = Storage::disk('awfSequenceFtp')->get($filePath);
 
         foreach ($file as $data) {
+            $i = 1;
+
             $start = new \DateTime();
             $year = substr($data[5], 0, 4);
             $month = substr($data[5], 4, 2);
@@ -55,9 +57,15 @@ class GenerateDataFacade extends Facade
             $prcode = $data[1] . '_' . $data[2];
             $orcode = $prcode . '_' . substr($year, -2) . '_' . $month;
 
+            if (!empty(PRODUCT::where('PRCODE', 'like', $prcode . '%')->first())) {
+                $i++;
+            }
+
+            $prcode .=  '_' . $i;
+
             PRODUCT::create([
                 'PRCODE' => $prcode,
-                'PRNAME' => $data[3],
+                'PRNAME' => mb_convert_encoding($data[3], 'UTF-8'),
                 'PRSHNA' => $data[1] . '_' . $data[2],
                 'PRACTV' => 1,
                 'PRSNEN' => 1,
@@ -80,7 +88,7 @@ class GenerateDataFacade extends Facade
                 'SEPONR' => $data[0],
                 'SEPSEQ' => $data[1],
                 'SEARNU' => $data[2],
-                'SEARDE' => $data[3],
+                'SEARDE' => mb_convert_encoding($data[3], 'UTF-8'),
                 'SESIDE' => $data[4],
                 'SEEXPI' => $expiration,
                 'SEPILL' => 'A',
