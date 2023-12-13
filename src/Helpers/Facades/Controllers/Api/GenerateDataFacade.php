@@ -21,6 +21,8 @@ class GenerateDataFacade extends Facade
         try {
             $this->generatePath();
 
+            AWF_SEQUENCE::where('SEINPR', '=', 0)->delete();
+
             foreach (Storage::disk('awfSequenceFtp')->files() as $filePath) {
                 if (str_contains($filePath, 'P992')) {
                     $this->generateData($filePath);
