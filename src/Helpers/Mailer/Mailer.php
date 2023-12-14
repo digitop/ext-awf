@@ -18,4 +18,9 @@ class Mailer
     {
         Mail::to('kassai.kristof@digitop.hu')->send(new NotBothSideAvailable($sequences));
     }
+
+    public static function sendSeqOccursSeveral(Collection $sequencesPillar, Collection $sequencesSide): void
+    {
+        Mail::to('kassai.kristof@digitop.hu')->send(new SeqOccursSeveral($sequencesPillar, $sequencesSide));
+    }
 }

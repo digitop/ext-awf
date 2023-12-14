@@ -34,6 +34,23 @@ class SavedData
                     ->get()
             );
         }
+
+        if (!self::isSeqOccursSeveral($sequences)) {
+            Mailer::sendSeqOccursSeveral(
+                DB::connection('custom_mysql')
+                    ->table('AWF_SEQUENCE')
+                    ->selectRaw('SEPONR, SEPSEQ, SEPILL')
+                    ->groupBy('SEPONR', 'SEPSEQ', 'SEPILL')
+                    ->havingRaw('count(SEQUID) >= 3')
+                    ->get(),
+                DB::connection('custom_mysql')
+                    ->table('AWF_SEQUENCE')
+                    ->selectRaw('SEPONR, SEPSEQ, SEPILL, SESIDE')
+                    ->groupBy('SEPONR', 'SEPSEQ', 'SEPILL', 'SESIDE')
+                    ->havingRaw('count(SEQUID) >= 2')
+                    ->get()
+            );
+        }
     }
 
     protected static function isAllPillarAvailable(Collection $sequences): bool
@@ -66,6 +83,39 @@ class SavedData
 
             foreach ($pillarCounts as $pillarCount) {
                 if ($pillarCount->countedPiece !== 2) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    protected static function isSeqOccursSeveral($sequences): bool
+    {
+        foreach ($sequences as $sequence) {
+            $pillarCounts =
+                DB::connection('custom_mysql')
+                    ->select(
+                        'select SEPONR, SEPSEQ, SEPILL, count(SEQUID) as countedPiece from AWF_SEQUENCE where SEPONR = ? group by SEPONR, SEPSEQ, SEPILL',
+                        [$sequence->SEPONR]
+                    );
+
+            foreach ($pillarCounts as $pillarCount) {
+                if ($pillarCount->countedPiece >= 3) {
+                    return false;
+                }
+            }
+
+            $pillarCounts =
+                DB::connection('custom_mysql')
+                    ->select(
+                        'select SEPONR, SEPSEQ, SEPILL, SESIDE, count(SEQUID) as countedPiece from AWF_SEQUENCE where SEPONR = ? group by SEPONR, SEPSEQ, SEPILL, SESIDE',
+                        [$sequence->SEPONR]
+                    );
+
+            foreach ($pillarCounts as $pillarCount) {
+                if ($pillarCount->countedPiece >= 2) {
                     return false;
                 }
             }
