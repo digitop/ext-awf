@@ -35,7 +35,7 @@ class SequenceFacade extends Facade
         $data = [];
 
         foreach ($sequences as $sequence) {
-            $data[$sequence->SEPILL] = [
+            $data[$sequence->SEPILL][] = [
                 'SEPONR' => $sequence->SEPONR,
                 'SEPSEQ' => $sequence->SEPSEQ,
                 'SEARNU' => $sequence->SEARNU,
