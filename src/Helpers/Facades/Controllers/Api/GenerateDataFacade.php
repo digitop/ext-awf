@@ -5,6 +5,7 @@ namespace AWF\Extension\Helpers\Facades\Controllers\Api;
 use AWF\Extension\Helpers\Checkers\SavedData;
 use AWF\Extension\Models\AWF_SEQUENCE;
 use AWF\Extension\Models\AWF_SEQUENCE_LOG;
+use AWF\Extension\Models\AWF_SEQUENCE_WORKCENTER;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -69,9 +70,14 @@ class GenerateDataFacade extends Facade
 
                 AWF_SEQUENCE_LOG::create([
                     'SEQUID' => $sequenceData->SEQUID,
-                    'WCSHNA' => null,
+                    'WCSHNA' => 'EL01',
                     'LSTIME' => $start,
                     'LETIME' => new \DateTime(),
+                ]);
+
+                AWF_SEQUENCE_WORKCENTER::create([
+                    'SEQUID' => $sequenceData->SEQUID,
+                    'WCSHNA' => 'EL01',
                 ]);
             }
         }
