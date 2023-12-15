@@ -51,42 +51,11 @@ class GenerateDataFacade extends Facade
             $data = explode(';', $row);
 
             if (!empty($data) && !empty($data[0])) {
-                $i = 1;
-
-                $start = new \DateTime();
+                 $start = new \DateTime();
                 $year = substr($data[5], 0, 4);
                 $month = substr($data[5], 4, 2);
                 $day = substr($data[5], 6, 2);
                 $expiration = new \DateTime($year . '-' . $month . '-' . $day);
-                $prcode = $data[1] . '_' . $data[2];
-
-                if (!empty(PRODUCT::where('PRCODE', 'like', $prcode . '%')->first())) {
-                    $i++;
-                }
-
-                $prcode .=  '_' . $i;
-                $orcode = $prcode . '_' . substr($year, -2) . '_' . $month . '_' . $day;
-
-                PRODUCT::create([
-                    'PRCODE' => $prcode,
-                    'PRNAME' => mb_convert_encoding($data[3], 'UTF-8'),
-                    'PRSHNA' => $data[1] . '_' . $data[2],
-                    'PRACTV' => 1,
-                    'PRSNEN' => 1,
-                ]);
-
-                ORDERHEAD::create([
-                    'ORCODE' => $orcode,
-                    'PRCODE' => $prcode,
-                    'ORQUAN' => 1,
-                    'ORSTAT' => 0,
-                    'PFIDEN' => null,
-                    'ORAACT' => 1,
-                    'ORSCTY' => 2,
-                    'ORSCVA' => 1,
-                    'ORNOSC' => 100 ,
-                    'ORNOID' => 0,
-                ]);
 
                 $sequenceData = AWF_SEQUENCE::create([
                     'SEPONR' => $data[0],
@@ -96,8 +65,6 @@ class GenerateDataFacade extends Facade
                     'SESIDE' => $data[4],
                     'SEEXPI' => $expiration,
                     'SEPILL' => $data[3][6],
-                    'PRCODE' => $prcode,
-                    'ORCODE' => $orcode,
                 ]);
 
                 AWF_SEQUENCE_LOG::create([

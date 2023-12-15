@@ -8,10 +8,11 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Foundation\Http\FormRequest;
 
 class SequenceFacade extends Facade
 {
-    public function create(Request|null $request = null, Model|string|null $model = null): JsonResponse|null
+    public function create(Request|FormRequest|null $request = null, Model|string|null $model = null): JsonResponse|null
     {
         $sequences = AWF_SEQUENCE::where('SEINPR', '=', 0)->get();
 
@@ -22,7 +23,7 @@ class SequenceFacade extends Facade
             );
         }
 
-        $data = $this->generateDataArray($sequences);
+        $data = $this->generateDataArray($sequences, $request);
 
         return new JsonResponse(
             ['success' => true, 'data' => $data, 'error' => ''],
@@ -30,17 +31,20 @@ class SequenceFacade extends Facade
         );
     }
 
-    protected function generateDataArray(Collection $sequences): array
+    protected function generateDataArray(Collection $sequences, Model $workCenter): array
     {
         $data = [];
 
         foreach ($sequences as $sequence) {
-            $data[$sequence->SEPILL][] = [
-                'SEPONR' => $sequence->SEPONR,
-                'SEPSEQ' => $sequence->SEPSEQ,
-                'SEARNU' => $sequence->SEARNU,
-                'SESIDE' => $sequence->SESIDE,
-            ];
+
+            if ($sequence->workCenter->has($workCenter->WCSHNA)) {
+                $data[$sequence->SEPILL][] = [
+                    'SEPONR' => $sequence->SEPONR,
+                    'SEPSEQ' => $sequence->SEPSEQ,
+                    'SEARNU' => $sequence->SEARNU,
+                    'SESIDE' => $sequence->SESIDE,
+                ];
+            }
         }
 
         return $data;

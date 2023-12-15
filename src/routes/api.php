@@ -11,7 +11,7 @@ Route::group(
     function () {
         Route::get('/generate-data', ['uses' => 'GenerateDataController@create'])
             ->name('awf-generate-data.create');
-        Route::get('/get-default-sequence', ['uses' => 'SequenceController@create'])
+        Route::get('/get-default-sequence/{WCSHNA}', ['uses' => 'SequenceController@create'])
             ->name('awf-sequence.create');
     }
 );

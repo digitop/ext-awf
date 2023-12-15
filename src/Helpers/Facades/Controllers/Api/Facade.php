@@ -10,7 +10,7 @@ use AWF\Extension\Interfaces\ApiControllerFacadeInterface;
 
 class Facade implements ApiControllerFacadeInterface
 {
-    public function create(Request|null $request = null, Model|string|null $model = null): JsonResponse|null
+    public function create(Request|FormRequest|null $request = null, Model|string|null $model = null): JsonResponse|null
     {
         return null;
     }

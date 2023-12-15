@@ -5,6 +5,8 @@ namespace AWF\Extension\Models;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class AWF_SEQUENCE extends Model
 {
@@ -64,6 +66,16 @@ class AWF_SEQUENCE extends Model
     protected $casts = [
         'SEINPR' => 'bool',
     ];
+
+    public function logs(): BelongsTo
+    {
+        return $this->belongsTo(AWF_SEQUENCE_LOG::class);
+    }
+
+    public function workCenters(): BelongsToMany
+    {
+        return $this->belongsToMany(AWF_SEQUENCE_WORKCENTER::class);
+    }
 
     public function getActivitylogOptions(): LogOptions
     {
