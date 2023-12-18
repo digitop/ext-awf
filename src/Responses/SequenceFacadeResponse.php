@@ -23,7 +23,7 @@ class SequenceFacadeResponse
         $data = [];
 
         if ($this->sequences instanceof Collection) {
-            foreach ($sequences as $sequence) {
+            foreach ($this->sequences as $sequence) {
                 $data[$sequence->SEPILL][] = $this->make($sequence);
             }
         }
