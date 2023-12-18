@@ -42,7 +42,7 @@ class SequenceFacade extends Facade
             ->whereNull('LETIME')
             ->get();
 
-        $sequences = collect();
+        $sequences = new Collection();
 
         foreach ($logs as $log) {
             $sequence = AWF_SEQUENCE::where('SEQUID', '=', $log->SEQUID)->first();
