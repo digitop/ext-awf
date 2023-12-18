@@ -74,7 +74,12 @@ class AWF_SEQUENCE extends Model
 
     public function workCenters(): BelongsToMany
     {
-        return $this->belongsToMany(AWF_SEQUENCE_WORKCENTER::class);
+        return $this->belongsToMany(
+            AWF_SEQUENCE_WORKCENTER::class,
+            'AWF_SEQUENCE_WORKCENTER',
+            'SEQUID',
+            'WCSHNA'
+        );
     }
 
     public function getActivitylogOptions(): LogOptions
