@@ -19,7 +19,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('SEQUID')->comment('AWF uniquely developed module sequence identifier (AWF_SEQUENCE:SEQUID)');
             $table->string('WCSHNA', 8)->nullable()->comment('Workcenter short name (WORKCENTER:WCSHNA)');
             $table->timestamp('LSTIME')->comment('Timestamp when the workcenter started the work process');
-            $table->timestamp('LETIME')->comment('Timestamp when the workcenter ended the work process');
+            $table->timestamp('LETIME')->nullable()->comment('Timestamp when the workcenter ended the work process');
             $table->unique(['SEQUID', 'WCSHNA'], 'SEQUID_WCSHNA_UNIQUE');
         });
 
