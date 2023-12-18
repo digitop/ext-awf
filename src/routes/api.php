@@ -13,5 +13,7 @@ Route::group(
             ->name('awf-generate-data.create');
         Route::get('/get-sequence/{WCSHNA}', ['uses' => 'SequenceController@create'])
             ->name('awf-sequence.create');
+        Route::post('/move-sequence/{WCSHNA}', ['uses' => 'SequenceController@store'])
+            ->name('awf-sequence.store');
     }
 );

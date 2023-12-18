@@ -3,7 +3,7 @@
 namespace AWF\Extension\Helpers\Facades\Controllers\Api;
 
 use AWF\Extension\Models\AWF_SEQUENCE;
-use AWF\Extension\Models\AWF_SEQUENCE_WORKCENTER;
+use AWF\Extension\Responses\SequenceFacadeResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Database\Eloquent\Collection;
@@ -17,6 +17,12 @@ class SequenceFacade extends Facade
     {
         $sequences = AWF_SEQUENCE::where('SEINPR', '=', 0)->get();
 
+        foreach ($sequences as $sequence) {
+            $sequence->update([
+                'SEINPR' => true,
+            ]);
+        }
+
         if ($sequences === null || !array_key_exists(0, $sequences->all()) || empty($sequences[0])) {
             return new JsonResponse(
                 ['success' => false, 'data' => [], 'error' => __('responses.no_new_data_available')],
@@ -24,7 +30,7 @@ class SequenceFacade extends Facade
             );
         }
 
-        $data = $this->generateDataArray($sequences, $model);
+        $data = SequenceFacadeResponse::generate($sequences, $model);
 
         return new JsonResponse(
             ['success' => true, 'data' => $data, 'error' => ''],
@@ -32,25 +38,12 @@ class SequenceFacade extends Facade
         );
     }
 
-    protected function generateDataArray(Collection $sequences, Model $workCenter): array
+    public function store(FormRequest|Request $request, Model|string ...$model): JsonResponse|null
     {
-        $data = [];
+        $workCenter = $model[0];
 
-        foreach ($sequences as $sequence) {
-            $sequenceWorkCenter = AWF_SEQUENCE_WORKCENTER::where('SEQUID', '=', $sequence->SEQUID)
-                ->where('WCSHNA', '=', $workCenter->WCSHNA)
-                ->first();
+        $sequences = AWF_SEQUENCE::where('SEINPR', '=', 1)->get();
 
-            if (!empty($sequenceWorkCenter)) {
-                $data[$sequence->SEPILL][] = [
-                    'SEPONR' => $sequence->SEPONR,
-                    'SEPSEQ' => $sequence->SEPSEQ,
-                    'SEARNU' => $sequence->SEARNU,
-                    'SESIDE' => $sequence->SESIDE,
-                ];
-            }
-        }
-
-        return $data;
+        return null;
     }
 }
