@@ -3,6 +3,7 @@
 namespace AWF\Extension\Helpers\Facades\Controllers\Api;
 
 use AWF\Extension\Models\AWF_SEQUENCE;
+use AWF\Extension\Models\AWF_SEQUENCE_WORKCENTER;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Database\Eloquent\Collection;
@@ -36,8 +37,11 @@ class SequenceFacade extends Facade
         $data = [];
 
         foreach ($sequences as $sequence) {
+            $sequenceWorkCenter = AWF_SEQUENCE_WORKCENTER::where('SEQUID', '=', $sequence->SEQUID)
+                ->where('WCSHNA', '=', $workCenter->WCSHNA)
+                ->first();
 
-            if ($sequence->workCenters->has($workCenter->WCSHNA)) {
+            if (!empty($sequenceWorkCenter)) {
                 $data[$sequence->SEPILL][] = [
                     'SEPONR' => $sequence->SEPONR,
                     'SEPSEQ' => $sequence->SEPSEQ,
