@@ -40,18 +40,18 @@ class SequenceFacade extends Facade
                 ->whereNull('LETIME')
                 ->get();
 
-            $model = collect();
+            $sequences = collect();
 
             foreach ($logs as $log) {
                 $sequence = AWF_SEQUENCE::where('SEQUID', '=', $log->SEQUID)->first();
 
                 if (!empty($sequence)) {
-                    $model->add($sequence);
+                    $sequences->add($sequence);
                 }
             }
         }
 
-        $data = (new SequenceFacadeResponse($sequences, $model))->generate();
+        $data = (new SequenceFacadeResponse($sequences ?? $model[0], null))->generate();
 
         return new JsonResponse(
             ['success' => true, 'data' => $data, 'error' => ''],
