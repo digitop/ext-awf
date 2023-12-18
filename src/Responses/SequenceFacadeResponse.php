@@ -10,9 +10,9 @@ use Illuminate\Database\Eloquent\Model;
 class SequenceFacadeResponse
 {
     protected Collection|Model $sequences;
-    protected Model $workCenter;
+    protected Model|null $workCenter;
 
-    public function __construct(Collection|Model $sequences, Model $workCenter)
+    public function __construct(Collection|Model $sequences, Model|null $workCenter)
     {
         $this->sequences = $sequences;
         $this->workCenter = $workCenter;
@@ -41,7 +41,7 @@ class SequenceFacadeResponse
             ->where('WCSHNA', '=', $this->workCenter->WCSHNA)
             ->first();
 
-        if (!empty($sequenceWorkCenter)) {
+        if (!empty($sequenceWorkCenter) || $this->workCenter === null) {
             return [
                 'SEPONR' => $sequence->SEPONR,
                 'SEPSEQ' => $sequence->SEPSEQ,

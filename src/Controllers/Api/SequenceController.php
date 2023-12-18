@@ -18,9 +18,9 @@ class SequenceController extends Controller
         $this->facade = new SequenceFacade();
     }
 
-    public function create(Request $request, WORKCENTER $WCSHNA): JsonResponse
+    public function create(Request $request): JsonResponse
     {
-        return $this->facade->create($request, $WCSHNA);
+        return $this->facade->create($request);
     }
 
     public function show(WORKCENTER $WCSHNA): JsonResponse
