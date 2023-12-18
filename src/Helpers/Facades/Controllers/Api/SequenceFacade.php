@@ -37,7 +37,7 @@ class SequenceFacade extends Facade
 
         foreach ($sequences as $sequence) {
 
-            if ($sequence->workCenter->has($workCenter->WCSHNA)) {
+            if ($sequence->workCenters->has($workCenter->WCSHNA)) {
                 $data[$sequence->SEPILL][] = [
                     'SEPONR' => $sequence->SEPONR,
                     'SEPSEQ' => $sequence->SEPSEQ,
