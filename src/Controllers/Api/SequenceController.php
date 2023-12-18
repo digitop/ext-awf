@@ -23,8 +23,13 @@ class SequenceController extends Controller
         return $this->facade->create($request, $WCSHNA);
     }
 
-    public function store(Request $request, WORKCENTER $WCSHNA): JsonResponse
+    public function show(WORKCENTER $WCSHNA): JsonResponse
     {
-        return $this->facade->store($request, $WCSHNA);
+        return $this->facade->show($request, $WCSHNA);
+    }
+
+    public function store(Request $request): JsonResponse
+    {
+        return $this->facade->store($request);
     }
 }
