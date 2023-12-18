@@ -23,7 +23,7 @@ class SequenceFacade extends Facade
             );
         }
 
-        $data = $this->generateDataArray($sequences, $request);
+        $data = $this->generateDataArray($sequences, $model);
 
         return new JsonResponse(
             ['success' => true, 'data' => $data, 'error' => ''],
