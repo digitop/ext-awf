@@ -30,7 +30,7 @@ class SequenceFacade extends Facade
             );
         }
 
-        $data = SequenceFacadeResponse::generate($sequences, $model);
+        $data = (new SequenceFacadeResponse($sequences, $model))->generate();
 
         return new JsonResponse(
             ['success' => true, 'data' => $data, 'error' => ''],
