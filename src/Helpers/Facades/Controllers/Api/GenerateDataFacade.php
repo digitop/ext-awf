@@ -72,7 +72,6 @@ class GenerateDataFacade extends Facade
                     'SEQUID' => $sequenceData->SEQUID,
                     'WCSHNA' => 'EL01',
                     'LSTIME' => $start,
-                    'LETIME' => new \DateTime(),
                 ]);
 
                 AWF_SEQUENCE_WORKCENTER::create([
