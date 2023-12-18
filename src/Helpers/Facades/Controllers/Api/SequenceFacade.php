@@ -55,7 +55,7 @@ class SequenceFacade extends Facade
         return new JsonResponse(
             [
                 'success' => true,
-                'data' => (new SequenceFacadeResponse($sequences, $model[0]))->generate(),
+                'data' => (new SequenceFacadeResponse($sequences->sortBy('SEQUID')->first(), $model[0]))->generate(),
                 'error' => ''
             ],
             Response::HTTP_OK
