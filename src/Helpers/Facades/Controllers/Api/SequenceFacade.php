@@ -25,36 +25,39 @@ class SequenceFacade extends Facade
             );
         }
 
-        $data = (new SequenceFacadeResponse($sequences, $model))->generate();
-
         return new JsonResponse(
-            ['success' => true, 'data' => $data, 'error' => ''],
+            [
+                'success' => true,
+                'data' => (new SequenceFacadeResponse($sequences, $model))->generate(),
+                'error' => ''
+            ],
             Response::HTTP_OK
         );
     }
+
     public function show(Model ...$model): JsonResponse|null
     {
-        if ($model instanceof WORKCENTER) {
-            $logs = AWF_SEQUENCE_LOG::where('WCSHNA', '=', $model[0]->WCSHNA)
-                ->where('LSTIME', '>=', (new \DateTime())->format('Y-m-d'))
-                ->whereNull('LETIME')
-                ->get();
+        $logs = AWF_SEQUENCE_LOG::where('WCSHNA', '=', $model[0]->WCSHNA)
+            ->where('LSTIME', '>=', (new \DateTime())->format('Y-m-d'))
+            ->whereNull('LETIME')
+            ->get();
 
-            $sequences = collect();
+        $sequences = collect();
 
-            foreach ($logs as $log) {
-                $sequence = AWF_SEQUENCE::where('SEQUID', '=', $log->SEQUID)->first();
+        foreach ($logs as $log) {
+            $sequence = AWF_SEQUENCE::where('SEQUID', '=', $log->SEQUID)->first();
 
-                if (!empty($sequence)) {
-                    $sequences->add($sequence);
-                }
+            if (!empty($sequence)) {
+                $sequences->add($sequence);
             }
         }
 
-        $data = (new SequenceFacadeResponse($sequences ?? $model[0], null))->generate();
-
         return new JsonResponse(
-            ['success' => true, 'data' => $data, 'error' => ''],
+            [
+                'success' => true,
+                'data' => (new SequenceFacadeResponse($sequences, $model[0]))->generate(),
+                'error' => ''
+            ],
             Response::HTTP_OK
         );
     }
