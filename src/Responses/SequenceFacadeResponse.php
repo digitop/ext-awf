@@ -6,6 +6,7 @@ use AWF\Extension\Models\AWF_SEQUENCE;
 use AWF\Extension\Models\AWF_SEQUENCE_WORKCENTER;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\PRODUCT;
 
 class SequenceFacadeResponse
 {
@@ -40,6 +41,7 @@ class SequenceFacadeResponse
         $sequenceWorkCenter = AWF_SEQUENCE_WORKCENTER::where('SEQUID', '=', $sequence->SEQUID)
             ->where('WCSHNA', '=', $this->workCenter->WCSHNA)
             ->first();
+        $product = PRODUCT::where('PRCODE', '=', $sequence->PRCODE)->first();
 
         if (!empty($sequenceWorkCenter) || $this->workCenter === null) {
             return [
@@ -47,6 +49,8 @@ class SequenceFacadeResponse
                 'SEPSEQ' => $sequence->SEPSEQ,
                 'SEARNU' => $sequence->SEARNU,
                 'SESIDE' => $sequence->SESIDE,
+                'TEKE' => $product?->features()->where('FESHNA', '=', 'TEKE')->first()?->FEBLOB,
+                'SZASZ' => $product?->features()->where('FESHNA', '=', 'TEKE')->first()?->FEVALU,
             ];
         }
 
