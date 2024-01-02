@@ -64,7 +64,7 @@ class SequenceFacade extends Facade
         );
     }
 
-    public function store(FormRequest|Request $request, Model|string ...$model): JsonResponse|null
+    public function store(FormRequest|Request $request, Model|string|null ...$model): JsonResponse|null
     {
         $sequence = AWF_SEQUENCE::where('SEQUID', '=', $request->SEQUID)->first();
         $product = PRODUCT::where('PRCODE', '=', $sequence->PRCODE)
