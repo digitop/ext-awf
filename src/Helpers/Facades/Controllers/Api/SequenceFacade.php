@@ -18,7 +18,10 @@ class SequenceFacade extends Facade
 {
     public function create(Request|FormRequest|null $request = null, Model|string|null $model = null): JsonResponse|null
     {
-        $sequences = AWF_SEQUENCE::where('SEINPR', '=', 0)->get();
+        $sequences = AWF_SEQUENCE::where('SEINPR', '=', 0)
+            ->orderBy('SEPILL', 'DESC')
+            ->orderBy('SEQUID', 'ASC')
+            ->get();
 
         if ($sequences === null || !array_key_exists(0, $sequences->all()) || empty($sequences[0])) {
             return new JsonResponse(
@@ -42,6 +45,8 @@ class SequenceFacade extends Facade
         $logs = AWF_SEQUENCE_LOG::where('WCSHNA', '=', $model[0]->WCSHNA)
             ->where('LSTIME', '>=', (new \DateTime())->format('Y-m-d'))
             ->whereNull('LETIME')
+            ->orderBy('SEPILL', 'DESC')
+            ->orderBy('SEQUID', 'ASC')
             ->get();
 
         $sequences = new Collection();
