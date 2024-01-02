@@ -45,8 +45,6 @@ class SequenceFacade extends Facade
         $logs = AWF_SEQUENCE_LOG::where('WCSHNA', '=', $model[0]->WCSHNA)
             ->where('LSTIME', '>=', (new \DateTime())->format('Y-m-d'))
             ->whereNull('LETIME')
-            ->orderBy('SEPILL', 'DESC')
-            ->orderBy('SEQUID', 'ASC')
             ->get();
 
         $sequences = new Collection();
