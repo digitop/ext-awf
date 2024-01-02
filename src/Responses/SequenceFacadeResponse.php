@@ -17,7 +17,7 @@ class SequenceFacadeResponse
     public function __construct(Collection|Model $sequences, Model|null $workCenter)
     {
         $this->sequences = $sequences;
-        $this->setWorkCenter($workCenter, $sequences);
+        $this->setWorkCenter($workCenter, ($sequences instanceof AWF_SEQUENCE) ? $sequences : null);
     }
 
     public function generate(): array
@@ -37,7 +37,7 @@ class SequenceFacadeResponse
         return $data;
     }
 
-    protected function setWorkCenter(Model|null $workCenter, Collection|Model|null $sequence): void
+    protected function setWorkCenter(Model|null $workCenter, Model|null $sequence): void
     {
         if ($this->sequences instanceof AWF_SEQUENCE || $sequence !== null) {
             if ($sequence === null) {
