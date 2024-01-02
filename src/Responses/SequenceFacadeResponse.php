@@ -70,12 +70,18 @@ class SequenceFacadeResponse
         $product = PRODUCT::where('PRCODE', '=', $sequence->PRCODE)->first();
 
         if (!empty($sequenceWorkCenter) || $this->workCenter === null) {
+            $image = $product?->features()->where('FESHNA', '=', 'TEKE')->first()?->FEBLOB;
+
+            if ($image !== null) {
+                $image = base64_encode($image);
+            }
+
             return [
                 'SEPONR' => $sequence->SEPONR,
                 'SEPSEQ' => $sequence->SEPSEQ,
                 'SEARNU' => $sequence->SEARNU,
                 'SESIDE' => $sequence->SESIDE,
-                'TEKE' => $product?->features()->where('FESHNA', '=', 'TEKE')->first()?->FEBLOB,
+                'TEKE' => $image,
                 'SZASZ' => $product?->features()->where('FESHNA', '=', 'TEKE')->first()?->FEVALU,
             ];
         }
