@@ -82,7 +82,7 @@ class SequenceFacadeResponse
                 'SEARNU' => $sequence->SEARNU,
                 'SESIDE' => $sequence->SESIDE,
                 'TEKE' => $image,
-                'SZASZ' => $product?->features()->where('FESHNA', '=', 'TEKE')->first()?->FEVALU,
+                'SZASZ' => $product?->features()->where('FESHNA', '=', 'SZASZ')->first()?->FEVALU,
             ];
         }
 
