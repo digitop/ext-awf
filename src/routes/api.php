@@ -15,7 +15,7 @@ Route::group(
             ->name('awf-sequence.create');
         Route::get('/get-sequence/{WCSHNA}', ['uses' => 'SequenceController@show'])
             ->name('awf-sequence.show');
-        Route::post('/move-sequence/{WCSHNA}', ['uses' => 'SequenceController@store'])
+        Route::post('/move-sequence', ['uses' => 'SequenceController@store'])
             ->name('awf-sequence.store');
     }
 );

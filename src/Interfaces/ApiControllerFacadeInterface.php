@@ -24,7 +24,7 @@ interface ApiControllerFacadeInterface
 
     public function add(Model|null $model = null, Request|null $request = null): JsonResponse|null;
 
-    public function store(Request|FormRequest $request, Model|string ...$model): JsonResponse|null;
+    public function store(Request|FormRequest $request, Model|string|null ...$model): JsonResponse|null;
 
     public function update(Request|FormRequest $request, Model|string ...$model): JsonResponse|null;
 

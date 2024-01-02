@@ -4,6 +4,7 @@ namespace AWF\Extension\Helpers\Facades\Controllers\Api;
 
 use AWF\Extension\Models\AWF_SEQUENCE;
 use AWF\Extension\Models\AWF_SEQUENCE_LOG;
+use AWF\Extension\Models\AWF_SEQUENCE_WORKCENTER;
 use AWF\Extension\Responses\SequenceFacadeResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -11,6 +12,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\PRODUCT;
 
 class SequenceFacade extends Facade
 {
@@ -64,8 +66,33 @@ class SequenceFacade extends Facade
 
     public function store(FormRequest|Request $request, Model|string ...$model): JsonResponse|null
     {
-        $sequences = AWF_SEQUENCE::where('SEINPR', '=', 1)->get();
+        $sequence = AWF_SEQUENCE::where('SEQUID', '=', $request->SEQUID)->first();
+        $product = PRODUCT::where('PRCODE', '=', $sequence->PRCODE)
+            ->where('SEEXPI', '>=', (new \DateTime())->format('Y-m-d'))
+            ->first();
 
-        return null;
+        if ($sequence->SEINPR === false) {
+            $sequence->update([
+                'SEINPR' => true,
+            ]);
+        }
+
+        AWF_SEQUENCE_LOG::where('WCSHNA', '=', $request->WCSHNA)
+            ->where('SEQUID', '=', $request->SEQUID)
+            ->first()
+            ?->update([
+                'LETIME' => (new \DateTime())
+            ]);
+
+        //todo save data to AWF_SEQUENCE_WORKCENTER table
+
+        return new JsonResponse(
+            [
+                'success' => true,
+                'data' => (new SequenceFacadeResponse($sequence, $model[0]))->generate(),
+                'error' => ''
+            ],
+            Response::HTTP_OK
+        );
     }
 }
