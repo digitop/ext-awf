@@ -17,7 +17,7 @@ class SequenceFacadeResponse
     public function __construct(Collection|Model $sequences, Model|null $workCenter)
     {
         $this->sequences = $sequences;
-        $this->setWorkCenter($workCenter);
+        $this->setWorkCenter($workCenter, $sequences);
     }
 
     public function generate(): array
