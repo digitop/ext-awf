@@ -78,6 +78,12 @@ class GenerateDataFacade extends Facade
                     'SEQUID' => $sequenceData->SEQUID,
                     'WCSHNA' => 'EL01',
                 ]);
+
+                if (!empty(PRODUCT::where('PRCODE', '=', $sequenceData->SEARNU)->first())) {
+                    $sequenceData->update([
+                        'PRCODE' => $sequenceData->SEARNU,
+                    ]);
+                }
             }
         }
 
