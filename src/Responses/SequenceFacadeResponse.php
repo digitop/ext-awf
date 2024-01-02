@@ -12,7 +12,7 @@ use App\Models\PRODUCT;
 class SequenceFacadeResponse
 {
     protected Collection|Model $sequences;
-    protected Model|null $workCenter;
+    protected Model|null $workCenter = null;
 
     public function __construct(Collection|Model $sequences, Model|null $workCenter)
     {
