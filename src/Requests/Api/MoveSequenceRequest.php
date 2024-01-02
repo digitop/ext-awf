@@ -1,6 +1,6 @@
 <?php
 
-namespace AWF\Extension\Requests;
+namespace AWF\Extension\Requests\Api;
 
 use Illuminate\Foundation\Http\FormRequest;
 

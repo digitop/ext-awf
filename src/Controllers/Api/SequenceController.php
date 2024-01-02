@@ -3,7 +3,7 @@
 namespace AWF\Extension\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use AWF\Extension\Requests\MoveSequenceRequest;
+use AWF\Extension\Requests\Api\MoveSequenceRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\WORKCENTER;
