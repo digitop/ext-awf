@@ -8,6 +8,7 @@ use AWF\Extension\Models\AWF_SEQUENCE_WORKCENTER;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\PRODUCT;
+use App\Models\WORKCENTER;
 
 class SequenceFacadeResponse
 {
