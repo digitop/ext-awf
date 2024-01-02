@@ -37,7 +37,7 @@ class SequenceFacadeResponse
         return $data;
     }
 
-    protected function setWorkCenter(Model|null $workCenter, Model|null $sequence): void
+    protected function setWorkCenter(Model|null $workCenter, Collection|Model|null $sequence): void
     {
         if ($this->sequences instanceof AWF_SEQUENCE || $sequence !== null) {
             if ($sequence === null) {
