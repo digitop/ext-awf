@@ -69,9 +69,26 @@ class SequenceFacade extends Facade
 
     public function store(FormRequest|Request $request, Model|string|null ...$model): JsonResponse|null
     {
-        $sequence = AWF_SEQUENCE::where('SEQUID', '=', $request->SEQUID)->first();
-        $product = PRODUCT::where('PRCODE', '=', $sequence->PRCODE)
+        $sequence = AWF_SEQUENCE::where('SEQUID', '=', $request->SEQUID)
             ->where('SEEXPI', '>=', (new \DateTime())->format('Y-m-d'))
+            ->first();
+
+        $product = PRODUCT::where('PRCODE', '=', $sequence->PRCODE)->first();
+        $productWorkCenterData = $product->workflows[0]->operationWorkcenters()
+            ->where('WCSHNA', '=', $request->WCSHNA)
+            ->first();
+        $productOperation = $product->workflows[0]->operations()
+            ->where('PFIDEN', '=', $productWorkCenterData->PFIDEN)
+            ->where('OPSHNA', '=', $productWorkCenterData->OPSHNA)
+            ->first();
+
+        $nextProductOperation = $product->workflows[0]->operations()
+            ->where('PFIDEN', '=', $productWorkCenterData->PFIDEN)
+            ->where('PORANK', '=', (int)$productOperation->PORANK + 1)
+            ->first();
+        $nextProductWorkCenterData = $product->workflows[0]->operationWorkcenters()
+            ->where('PFIDEN', '=', $nextProductOperation->PFIDEN)
+            ->where('OPSHNA', '=', $nextProductOperation->OPSHNA)
             ->first();
 
         if ($sequence->SEINPR === false) {
@@ -87,7 +104,11 @@ class SequenceFacade extends Facade
                 'LETIME' => (new \DateTime())
             ]);
 
-        //todo save data to AWF_SEQUENCE_WORKCENTER table
+
+        AWF_SEQUENCE_WORKCENTER::create([
+            'SEQUID' => $request->SEQUID,
+            'WCSHNA' => $nextProductWorkCenterData->WCSHNA,
+        ]);
 
         return new JsonResponse(
             [
