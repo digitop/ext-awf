@@ -2,6 +2,7 @@
 
 namespace AWF\Extension\Helpers\Facades\Controllers\Api;
 
+use App\Models\WORKCENTER;
 use AWF\Extension\Models\AWF_SEQUENCE;
 use AWF\Extension\Models\AWF_SEQUENCE_LOG;
 use AWF\Extension\Models\AWF_SEQUENCE_WORKCENTER;
@@ -113,7 +114,10 @@ class SequenceFacade extends Facade
         return new JsonResponse(
             [
                 'success' => true,
-                'data' => (new SequenceFacadeResponse($sequence, $model[0]))->generate(),
+                'data' => (new SequenceFacadeResponse(
+                    $sequence,
+                    WORKCENTER::where('WCSHNA', '=', $nextProductWorkCenterData->WCSHNA)->first()
+                ))->generate(),
                 'error' => ''
             ],
             Response::HTTP_OK
