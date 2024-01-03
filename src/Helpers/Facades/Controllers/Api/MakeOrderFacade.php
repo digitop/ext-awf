@@ -35,7 +35,7 @@ class MakeOrderFacade extends Facade
             [
                 'success' => true,
                 'data' => (new SequenceFacadeResponse($sequences, $model))->generate(),
-                'error' => ''
+                'message' => ''
             ],
             Response::HTTP_OK
         );

@@ -26,7 +26,7 @@ class SequenceFacade extends Facade
 
         if ($sequences === null || !array_key_exists(0, $sequences->all()) || empty($sequences[0])) {
             return new JsonResponse(
-                ['success' => false, 'data' => [], 'error' => __('responses.no_new_data_available')],
+                ['success' => false, 'data' => [], 'message' => __('responses.no_new_data_available')],
                 Response::HTTP_UNPROCESSABLE_ENTITY
             );
         }
@@ -35,7 +35,7 @@ class SequenceFacade extends Facade
             [
                 'success' => true,
                 'data' => (new SequenceFacadeResponse($sequences, $model))->generate(),
-                'error' => ''
+                'message' => ''
             ],
             Response::HTTP_OK
         );
@@ -62,7 +62,7 @@ class SequenceFacade extends Facade
             [
                 'success' => true,
                 'data' => (new SequenceFacadeResponse($sequences->sortBy('SEQUID')->take(2), $model[0]))->generate(),
-                'error' => ''
+                'message' => ''
             ],
             Response::HTTP_OK
         );
@@ -123,7 +123,7 @@ class SequenceFacade extends Facade
                     $sequence,
                     WORKCENTER::where('WCSHNA', '=', $nextProductWorkCenterData->WCSHNA)->first()
                 ))->generate(),
-                'error' => ''
+                'message' => ''
             ],
             Response::HTTP_OK
         );
