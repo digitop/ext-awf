@@ -71,7 +71,6 @@ class GenerateDataFacade extends Facade
                 AWF_SEQUENCE_LOG::create([
                     'SEQUID' => $sequenceData->SEQUID,
                     'WCSHNA' => 'EL01',
-                    'LSTIME' => $start,
                 ]);
 
                 AWF_SEQUENCE_WORKCENTER::create([
