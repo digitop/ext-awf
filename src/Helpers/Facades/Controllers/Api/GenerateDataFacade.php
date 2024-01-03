@@ -89,10 +89,8 @@ class GenerateDataFacade extends Facade
                     ]);
                 }
 
-                $orderHead = $this->makeOrder($sequenceData);
-
                 $sequenceData->update([
-                    'ORCODE' => $orderHead->ORCODE,
+                    'ORCODE' => $this->makeOrder($sequenceData),
                 ]);
             }
         }
@@ -128,7 +126,7 @@ class GenerateDataFacade extends Facade
         AWF_SEQUENCE::where('SEINPR', '=', 0)->delete();
     }
 
-    protected function makeOrder(Model $sequenceData): ORDERHEAD
+    protected function makeOrder(Model $sequenceData): string
     {
         $workflow = PRWFDATA::where('PRCODE', $sequenceData->PRCODE)->first();
 
@@ -138,27 +136,27 @@ class GenerateDataFacade extends Facade
 
         $orcode = $sequenceData->SEPONR . '_' . $sequenceData->SEPSEQ . '_' . $sequenceData->SEARNU;
 
-        $orderRequest = new InsertRequest([
-            "PRCODE" => $sequenceData->PRCODE, //TERMÉK KÓD
-            "PRORCO" => null, //null mindig
-            "ORCODE" => $orcode, //Megrendelés kód
-            "PFIDEN" => $workflow->PFIDEN, //Termék alapértelmezett gyártási folyamata
-            "ORSTAT" => 1, // MINDIG 1
-            "ORQUAN" => 1, // MINDIG 1
-            "ORQYEN" => 1,
-            "ORRQEN" => 1,
-            "ORNOID" => $orderDefaultNotification->PAVALU ?? null, //PARAMTER tábla ORDER_DEFAULT_NOTIFICATION
-            "ORNOTC" => $orderNotificationEnabled->PAVALU ?? 0, //PARAMTER tábla ORDER_NOTIFICATION_ENABLED
-            "ORNOSC" => 60, // DEFAULT 60
-            "ORSCTY" => 2, // MINDIG 2, Gyártási terv típus 2 = kézi
-            "ORSCVA" => 1, // MINDIG 1, gyártási terv kezdő érték
-            "ORSCW1" => 5, // mindig 5, gyártási terv 1. figyelmeztetés
-            "ORSCW2" => 10, // mindig 10, gyártási terv 2. figyelmeztetés
-            "ORSCSW" => null, // null mindig, gyártási terv dátum alapú váltása
-        ]);
+        $orderController->store(
+            new InsertRequest([
+                "PRCODE" => $sequenceData->PRCODE, //TERMÉK KÓD
+                "PRORCO" => null, //null mindig
+                "ORCODE" => $orcode, //Megrendelés kód
+                "PFIDEN" => $workflow->PFIDEN, //Termék alapértelmezett gyártási folyamata
+                "ORSTAT" => 1, // MINDIG 1
+                "ORQUAN" => 1, // MINDIG 1
+                "ORQYEN" => 1,
+                "ORRQEN" => 1,
+                "ORNOID" => $orderDefaultNotification->PAVALU ?? null, //PARAMTER tábla ORDER_DEFAULT_NOTIFICATION
+                "ORNOTC" => $orderNotificationEnabled->PAVALU ?? 0, //PARAMTER tábla ORDER_NOTIFICATION_ENABLED
+                "ORNOSC" => 60, // DEFAULT 60
+                "ORSCTY" => 2, // MINDIG 2, Gyártási terv típus 2 = kézi
+                "ORSCVA" => 1, // MINDIG 1, gyártási terv kezdő érték
+                "ORSCW1" => 5, // mindig 5, gyártási terv 1. figyelmeztetés
+                "ORSCW2" => 10, // mindig 10, gyártási terv 2. figyelmeztetés
+                "ORSCSW" => null, // null mindig, gyártási terv dátum alapú váltása
+            ])
+        );
 
-        $orderController->store($orderRequest);
-
-        return ORDERHEAD::where('ORCODE', '=', $orcode)->first();
+        return $orcode;
     }
 }
