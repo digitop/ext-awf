@@ -51,10 +51,6 @@ class SequenceFacade extends Facade
         $sequences = new Collection();
 
         foreach ($logs as $log) {
-            $log->update([
-                'LSTIME' => (new \DateTime()),
-            ]);
-
             $sequence = AWF_SEQUENCE::where('SEQUID', '=', $log->SEQUID)->first();
 
             if (!empty($sequence)) {
@@ -62,10 +58,22 @@ class SequenceFacade extends Facade
             }
         }
 
+        $sequence = $sequences->sortBy('SEQUID')->take(2);
+
+        foreach ($sequence as $item) {
+            AWF_SEQUENCE_LOG::where('WCSHNA', '=', $model[0]->WCSHNA)
+                ->where('SEQUID', '=', $item->SEQUID)
+                ->whereNull('LSTIME')
+                ->whereNull('LETIME')
+                ->update([
+                    'LSTIME' => (new \DateTime()),
+                ]);
+        }
+
         return new JsonResponse(
             [
                 'success' => true,
-                'data' => (new SequenceFacadeResponse($sequences->sortBy('SEQUID')->take(2), $model[0]))->generate(),
+                'data' => (new SequenceFacadeResponse($sequence, $model[0]))->generate(),
                 'message' => ''
             ],
             Response::HTTP_OK
