@@ -2,22 +2,19 @@
 
 namespace AWF\Extension\Helpers\Facades\Controllers\Api;
 
-use App\Http\Controllers\production\order\OrderController;
-use App\Http\Requests\production\order\InsertRequest;
-use App\Models\PARAMETERS;
-use App\Models\PRWFDATA;
 use AWF\Extension\Helpers\Checkers\SavedData;
+use AWF\Extension\Helpers\MakeOrder;
 use AWF\Extension\Models\AWF_SEQUENCE;
 use AWF\Extension\Models\AWF_SEQUENCE_LOG;
 use AWF\Extension\Models\AWF_SEQUENCE_WORKCENTER;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Database\Eloquent\Collection;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\ORDERHEAD;
 use App\Models\PRODUCT;
 use Illuminate\Support\Facades\File;
 
@@ -54,6 +51,8 @@ class GenerateDataFacade extends Facade
     {
         $file = Storage::disk('awfSequenceFtp')->get($filePath);
 
+        $sequences = new Collection();
+
         foreach (explode(PHP_EOL, $file) as $row) {
             $data = explode(';', $row);
 
@@ -89,11 +88,11 @@ class GenerateDataFacade extends Facade
                     ]);
                 }
 
-                $sequenceData->update([
-                    'ORCODE' => $this->makeOrder($sequenceData),
-                ]);
+                $sequences->add($sequenceData);
             }
         }
+
+        MakeOrder::makeOrder($sequences);
 
         $savePath = 'sequence-data' . DIRECTORY_SEPARATOR . (new \DateTime())->format('Ymd');
         Storage::put($savePath . DIRECTORY_SEPARATOR . $filePath, $file);
@@ -124,39 +123,5 @@ class GenerateDataFacade extends Facade
         }
 
         AWF_SEQUENCE::where('SEINPR', '=', 0)->delete();
-    }
-
-    protected function makeOrder(Model $sequenceData): string
-    {
-        $workflow = PRWFDATA::where('PRCODE', $sequenceData->PRCODE)->first();
-
-        $orderController = new OrderController;
-        $orderDefaultNotification = PARAMETERS::find('ORDER_DEFAULT_NOTIFICATION');
-        $orderNotificationEnabled = PARAMETERS::find('ORDER_NOTIFICATION_ENABLED');
-
-        $orcode = $sequenceData->SEPONR . '_' . $sequenceData->SEPSEQ . '_' . $sequenceData->SEARNU;
-
-        $orderController->store(
-            new InsertRequest([
-                "PRCODE" => $sequenceData->PRCODE, //TERMÉK KÓD
-                "PRORCO" => null, //null mindig
-                "ORCODE" => $orcode, //Megrendelés kód
-                "PFIDEN" => $workflow->PFIDEN, //Termék alapértelmezett gyártási folyamata
-                "ORSTAT" => 1, // MINDIG 1
-                "ORQUAN" => 1, // MINDIG 1
-                "ORQYEN" => 1,
-                "ORRQEN" => 1,
-                "ORNOID" => $orderDefaultNotification->PAVALU ?? null, //PARAMTER tábla ORDER_DEFAULT_NOTIFICATION
-                "ORNOTC" => $orderNotificationEnabled->PAVALU ?? 0, //PARAMTER tábla ORDER_NOTIFICATION_ENABLED
-                "ORNOSC" => 60, // DEFAULT 60
-                "ORSCTY" => 2, // MINDIG 2, Gyártási terv típus 2 = kézi
-                "ORSCVA" => 1, // MINDIG 1, gyártási terv kezdő érték
-                "ORSCW1" => 5, // mindig 5, gyártási terv 1. figyelmeztetés
-                "ORSCW2" => 10, // mindig 10, gyártási terv 2. figyelmeztetés
-                "ORSCSW" => null, // null mindig, gyártási terv dátum alapú váltása
-            ])
-        );
-
-        return $orcode;
     }
 }
