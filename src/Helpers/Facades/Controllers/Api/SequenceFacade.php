@@ -44,7 +44,7 @@ class SequenceFacade extends Facade
     public function show(Model ...$model): JsonResponse|null
     {
         $logs = AWF_SEQUENCE_LOG::where('WCSHNA', '=', $model[0]->WCSHNA)
-            ->where('LSTIME', '>=', (new \DateTime())->format('Y-m-d'))
+            ->whereNull('LSTIME')
             ->whereNull('LETIME')
             ->get();
 
@@ -102,13 +102,18 @@ class SequenceFacade extends Facade
             ->where('SEQUID', '=', $request->SEQUID)
             ->first()
             ?->update([
-                'LETIME' => (new \DateTime())
+                'LETIME' => (new \DateTime()),
             ]);
-
 
         AWF_SEQUENCE_WORKCENTER::create([
             'SEQUID' => $request->SEQUID,
             'WCSHNA' => $nextProductWorkCenterData->WCSHNA,
+        ]);
+
+        AWF_SEQUENCE_LOG::create([
+            'SEQUID' => $request->SEQUID,
+            'WCSHNA' => $nextProductWorkCenterData->WCSHNA,
+            'LSTIME' => (new \DateTime()),
         ]);
 
         return new JsonResponse(
