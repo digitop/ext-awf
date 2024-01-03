@@ -32,10 +32,6 @@ class SequenceFacade extends Facade
             );
         }
 
-        foreach ($sequences as $sequence) {
-            MakeOrder::makeOrder($sequence);
-        }
-
         return new JsonResponse(
             [
                 'success' => true,
