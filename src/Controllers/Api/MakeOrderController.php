@@ -3,6 +3,7 @@
 namespace AWF\Extension\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use AWF\Extension\Helpers\Facades\Controllers\Api\MakeOrderFacade;
 use AWF\Extension\Interfaces\ApiControllerFacadeInterface;
 
 class MakeOrderController extends Controller
@@ -11,7 +12,7 @@ class MakeOrderController extends Controller
 
     public function __construct()
     {
-        $this->facade = new SequenceFacade();
+        $this->facade = new MakeOrderFacade();
     }
 
     public function create(Request $request): JsonResponse
