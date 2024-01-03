@@ -3,6 +3,7 @@
 namespace AWF\Extension\Helpers\Facades\Controllers\Api;
 
 use App\Models\WORKCENTER;
+use AWF\Extension\Helpers\MakeOrder;
 use AWF\Extension\Models\AWF_SEQUENCE;
 use AWF\Extension\Models\AWF_SEQUENCE_LOG;
 use AWF\Extension\Models\AWF_SEQUENCE_WORKCENTER;
@@ -29,6 +30,10 @@ class SequenceFacade extends Facade
                 ['success' => false, 'data' => [], 'error' => __('responses.no_new_data_available')],
                 Response::HTTP_UNPROCESSABLE_ENTITY
             );
+        }
+
+        foreach ($sequences as $sequence) {
+            MakeOrder::makeOrder($sequence);
         }
 
         return new JsonResponse(

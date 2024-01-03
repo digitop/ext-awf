@@ -92,8 +92,6 @@ class GenerateDataFacade extends Facade
             }
         }
 
-        MakeOrder::makeOrder($sequences);
-
         $savePath = 'sequence-data' . DIRECTORY_SEPARATOR . (new \DateTime())->format('Ymd');
         Storage::put($savePath . DIRECTORY_SEPARATOR . $filePath, $file);
     }
