@@ -51,6 +51,10 @@ class SequenceFacade extends Facade
         $sequences = new Collection();
 
         foreach ($logs as $log) {
+            $log->update([
+                'LSTIME' => (new \DateTime()),
+            ]);
+
             $sequence = AWF_SEQUENCE::where('SEQUID', '=', $log->SEQUID)->first();
 
             if (!empty($sequence)) {
