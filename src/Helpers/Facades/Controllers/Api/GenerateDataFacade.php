@@ -89,7 +89,11 @@ class GenerateDataFacade extends Facade
                     ]);
                 }
 
-                $this->makeOrder($sequenceData);
+                $orderHead = $this->makeOrder($sequenceData);
+
+                $sequenceData->update([
+                    'ORCODE' => $orderHead->ORCODE,
+                ]);
             }
         }
 
@@ -124,7 +128,7 @@ class GenerateDataFacade extends Facade
         AWF_SEQUENCE::where('SEINPR', '=', 0)->delete();
     }
 
-    protected function makeOrder(Model $sequenceData): void
+    protected function makeOrder(Model $sequenceData): ORDERHEAD
     {
         $workflow = PRWFDATA::where('PRCODE', $sequenceData->PRCODE)->first();
 
@@ -132,10 +136,12 @@ class GenerateDataFacade extends Facade
         $orderDefaultNotification = PARAMETERS::find('ORDER_DEFAULT_NOTIFICATION');
         $orderNotificationEnabled = PARAMETERS::find('ORDER_NOTIFICATION_ENABLED');
 
+        $orcode = $sequenceData->SEPONR . '_' . $sequenceData->SEPSEQ . '_' . $sequenceData->SEARNU;
+
         $orderRequest = new InsertRequest([
             "PRCODE" => $sequenceData->PRCODE, //TERMÉK KÓD
             "PRORCO" => null, //null mindig
-            "ORCODE" => $sequenceData->SEPONR . '_' . $sequenceData->SEPSEQ . '_' . $sequenceData->SEARNU, //Megrendelés kód
+            "ORCODE" => $orcode, //Megrendelés kód
             "PFIDEN" => $workflow->PFIDEN, //Termék alapértelmezett gyártási folyamata
             "ORSTAT" => 1, // MINDIG 1
             "ORQUAN" => 1, // MINDIG 1
@@ -152,5 +158,7 @@ class GenerateDataFacade extends Facade
         ]);
 
         $orderController->store($orderRequest);
+
+        return ORDERHEAD::where('ORCODE', '=', $orcode)->first();
     }
 }
