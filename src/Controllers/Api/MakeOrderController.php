@@ -5,6 +5,8 @@ namespace AWF\Extension\Controllers\Api;
 use App\Http\Controllers\Controller;
 use AWF\Extension\Helpers\Facades\Controllers\Api\MakeOrderFacade;
 use AWF\Extension\Interfaces\ApiControllerFacadeInterface;
+use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 
 class MakeOrderController extends Controller
 {
