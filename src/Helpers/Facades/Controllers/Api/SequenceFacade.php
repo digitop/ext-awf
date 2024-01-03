@@ -125,7 +125,6 @@ class SequenceFacade extends Facade
         AWF_SEQUENCE_LOG::create([
             'SEQUID' => $request->SEQUID,
             'WCSHNA' => $nextProductWorkCenterData->WCSHNA,
-            'LSTIME' => (new \DateTime()),
         ]);
 
         return new JsonResponse(
