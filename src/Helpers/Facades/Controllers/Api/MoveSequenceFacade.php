@@ -7,6 +7,7 @@ use AWF\Extension\Models\AWF_SEQUENCE_LOG;
 use AWF\Extension\Models\AWF_SEQUENCE_WORKCENTER;
 use App\Models\PRODUCT;
 use App\Models\WORKCENTER;
+use App\Models\PRWCDATA;
 use AWF\Extension\Responses\SequenceFacadeResponse;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Http\FormRequest;
@@ -38,7 +39,7 @@ class MoveSequenceFacade extends Facade
         );
     }
 
-    protected function getNextWorkCenterData(FormRequest|Request $request, Model $sequence): WORKCENTER
+    protected function getNextWorkCenterData(FormRequest|Request $request, Model $sequence): PRWCDATA
     {
         $product = PRODUCT::where('PRCODE', '=', $sequence->PRCODE)->first();
         $productWorkCenterData = $product->workflows[0]->operationWorkcenters()
