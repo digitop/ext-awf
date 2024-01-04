@@ -32,7 +32,7 @@ class MoveSequenceFacade extends Facade
                 'success' => true,
                 'data' => (new SequenceFacadeResponse(
                     $sequence,
-                    WORKCENTER::where('WCSHNA', '=', $nextProductWorkCenterData->WCSHNA)->first()
+                    WORKCENTER::where('WCSHNA', '=', $nextProductWorkCenterData?->WCSHNA ?? $request->WCSHNA)->first()
                 ))->generate(),
                 'message' => ''
             ],
@@ -40,7 +40,7 @@ class MoveSequenceFacade extends Facade
         );
     }
 
-    protected function getNextWorkCenterData(FormRequest|Request $request, Model $sequence): PRWCDATA
+    protected function getNextWorkCenterData(FormRequest|Request $request, Model $sequence): PRWCDATA|null
     {
         $product = PRODUCT::where('PRCODE', '=', $sequence->PRCODE)->first();
         $productWorkCenterData = $product->workflows[0]->operationWorkcenters()
@@ -55,15 +55,18 @@ class MoveSequenceFacade extends Facade
             ->where('PFIDEN', '=', $productWorkCenterData->PFIDEN)
             ->where('PORANK', '=', (int)$productOperation->PORANK + 1)
             ->first();
-        $nextProductWorkCenterData = $product->workflows[0]->operationWorkcenters()
-            ->where('PFIDEN', '=', $nextProductOperation->PFIDEN)
-            ->where('OPSHNA', '=', $nextProductOperation->OPSHNA)
-            ->first();
 
-        return $nextProductWorkCenterData;
+        if (!empty($nextProductOperation)) {
+            $nextProductWorkCenterData = $product->workflows[0]->operationWorkcenters()
+                ->where('PFIDEN', '=', $nextProductOperation->PFIDEN)
+                ->where('OPSHNA', '=', $nextProductOperation->OPSHNA)
+                ->first();
+        }
+
+        return $nextProductWorkCenterData ?? null;
     }
 
-    protected function move(FormRequest|Request $request, Model $sequence, Model $nextProductWorkCenterData): void
+    protected function move(FormRequest|Request $request, Model $sequence, Model|null $nextProductWorkCenterData): void
     {
         if ($sequence->SEINPR === false) {
             $sequence->update([
@@ -78,14 +81,16 @@ class MoveSequenceFacade extends Facade
                 'LETIME' => (new \DateTime()),
             ]);
 
-        AWF_SEQUENCE_WORKCENTER::create([
-            'SEQUID' => $request->SEQUID,
-            'WCSHNA' => $nextProductWorkCenterData->WCSHNA,
-        ]);
+        if ($nextProductWorkCenterData !== null) {
+            AWF_SEQUENCE_WORKCENTER::create([
+                'SEQUID' => $request->SEQUID,
+                'WCSHNA' => $nextProductWorkCenterData->WCSHNA,
+            ]);
 
-        AWF_SEQUENCE_LOG::create([
-            'SEQUID' => $request->SEQUID,
-            'WCSHNA' => $nextProductWorkCenterData->WCSHNA,
-        ]);
+            AWF_SEQUENCE_LOG::create([
+                'SEQUID' => $request->SEQUID,
+                'WCSHNA' => $nextProductWorkCenterData->WCSHNA,
+            ]);
+        }
     }
 }
