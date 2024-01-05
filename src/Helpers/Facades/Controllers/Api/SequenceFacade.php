@@ -55,7 +55,28 @@ class SequenceFacade extends Facade
             }
         }
 
-        $sequence = $sequences->sortBy('SEQUID')->take(2);
+        $sequence = $sequences->sort(function ($a, $b) {
+            foreach ([['column' => 'SEPILL', 'order' => 'desc'], ['column' => 'SEQUID']] as $sortingInstruction) {
+
+                $a[$sortingInstruction['column']] = $a[$sortingInstruction['column']] ?? '';
+                $b[$sortingInstruction['column']] = $b[$sortingInstruction['column']] ?? '';
+
+                if (empty($sortingInstruction['order']) || strtolower($sortingInstruction['order']) === 'asc') {
+                    $x = ($a[$sortingInstruction['column']] <=> $b[$sortingInstruction['column']]);
+                }
+                else {
+                    $x = ($b[$sortingInstruction['column']] <=> $a[$sortingInstruction['column']]);
+                }
+
+                if ((int)$x !== 0) {
+                    return $x;
+                }
+
+            }
+
+            return 0;
+        })
+            ->take(2);
 
         foreach ($sequence as $item) {
             AWF_SEQUENCE_LOG::where('WCSHNA', '=', $model[0]->WCSHNA)
