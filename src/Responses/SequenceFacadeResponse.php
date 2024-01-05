@@ -70,10 +70,15 @@ class SequenceFacadeResponse
         $product = PRODUCT::where('PRCODE', '=', $sequence->PRCODE)->first();
 
         if (!empty($sequenceWorkCenter) || $this->workCenter === null) {
-            $image = $product?->features()->where('FESHNA', '=', 'TEKE')->first()?->FEBLOB;
+            $EL_image = $product?->features()->where('FESHNA', '=', 'TEKEEL')->first()?->FEVALU;
+            $HE_image = $product?->features()->where('FESHNA', '=', 'TEKEHE')->first()?->FEVALU;
 
-            if ($image !== null) {
-                $image = base64_encode($image);
+            if ($EL_image !== null) {
+                $EL_image = base64_encode(\Illuminate\Support\Facades\Storage::disk('products')->get($EL_image));
+            }
+
+            if ($HE_image !== null) {
+                $HE_image = base64_encode(\Illuminate\Support\Facades\Storage::disk('products')->get($HE_image));
             }
 
             return [
@@ -81,7 +86,8 @@ class SequenceFacadeResponse
                 'SEPSEQ' => $sequence->SEPSEQ,
                 'SEARNU' => $sequence->SEARNU,
                 'SESIDE' => $sequence->SESIDE,
-                'TEKE' => $image,
+                'EL_image' => $EL_image,
+                'HE_image' => $HE_image,
                 'SZASZ' => $product?->features()->where('FESHNA', '=', 'SZASZ')->first()?->FEVALU,
                 'SZAA' => $product?->features()->where('FESHNA', '=', 'SZAA')->first()?->FEVALU,
             ];
