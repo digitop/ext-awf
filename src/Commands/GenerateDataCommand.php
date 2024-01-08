@@ -14,14 +14,14 @@ class GenerateDataCommand extends Command
      *
      * @var string
      */
-    protected string $signature = 'awf:generate-data';
+    protected $signature = 'awf:generate-data';
 
     /**
      * The console command description.
      *
      * @var string|null
      */
-    protected string|null $description = 'Generate default orders data';
+    protected $description = 'Generate default orders data';
 
     /**
      * Create a new command instance.
