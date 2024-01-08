@@ -39,7 +39,15 @@ class GenerateDataFacade extends Facade
             );
         }
 
-        SavedData::check();
+        try {
+            SavedData::check();
+        }
+        catch (\Exception $exception) {
+            return new JsonResponse(
+                ['success' => false, 'message' => __('response.email_error')],
+                Response::HTTP_UNPROCESSABLE_ENTITY
+            );
+        }
 
         return new JsonResponse(
             ['success' => true, 'message' => ''],
