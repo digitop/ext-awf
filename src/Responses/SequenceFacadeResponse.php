@@ -73,14 +73,14 @@ class SequenceFacadeResponse
             $EL_image = $product?->features()->where('FESHNA', '=', 'TEKEEL')->first()?->FEVALU;
             $HE_image = $product?->features()->where('FESHNA', '=', 'TEKEHE')->first()?->FEVALU;
 
-            $rootPath = config('filesystems.disks.products.root') . '/' . $sequence->PRCODE . '/features/images/';
+            $rootPath = $_SERVER['HTTP_HOST'] .'/storage/product/';
 
             if ($EL_image !== null) {
-                $EL_image = $_SERVER['HTTP_HOST'] . $rootPath . $EL_image;
+                $EL_image =  $rootPath . $EL_image;
             }
 
             if ($HE_image !== null) {
-                $HE_image = $_SERVER['HTTP_HOST'] . $rootPath . $HE_image;
+                $HE_image = $rootPath . $HE_image;
             }
 
             return [

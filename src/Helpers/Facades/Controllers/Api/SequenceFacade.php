@@ -93,7 +93,7 @@ class SequenceFacade extends Facade
         return new CustomJsonResponse(new JsonResponseModel(
             new ResponseData(
                 true,
-                (new SequenceFacadeResponse($sequences, $model[0]))->generate()
+                (new SequenceFacadeResponse($sequence, $model[0]))->generate()
             ),
             Response::HTTP_OK
         ));
