@@ -2,6 +2,7 @@
 
 namespace AWF\Extension\Providers;
 
+use AWF\Extension\Commands\GenerateDataCommand;
 use Illuminate\Support\ServiceProvider as IlluminateServiceProvider;
 
 class ServiceProvider extends IlluminateServiceProvider
@@ -46,5 +47,15 @@ class ServiceProvider extends IlluminateServiceProvider
             'ssl' => false,
             'timeout' => 30
         ];
+    }
+
+    /**
+     * Register any application services.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        $this->commands([GenerateDataCommand::class]);
     }
 }
