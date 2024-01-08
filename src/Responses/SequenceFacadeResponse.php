@@ -73,12 +73,14 @@ class SequenceFacadeResponse
             $EL_image = $product?->features()->where('FESHNA', '=', 'TEKEEL')->first()?->FEVALU;
             $HE_image = $product?->features()->where('FESHNA', '=', 'TEKEHE')->first()?->FEVALU;
 
+            $rootPath = config('filesystems.disks.products.root') . '/' . $sequence->PRCODE . '/features/images/';
+
             if ($EL_image !== null) {
-                $EL_image = base64_encode(\Illuminate\Support\Facades\Storage::disk('products')->get($EL_image));
+                $EL_image = $_SERVER['HTTP_HOST'] . $rootPath . $EL_image;
             }
 
             if ($HE_image !== null) {
-                $HE_image = base64_encode(\Illuminate\Support\Facades\Storage::disk('products')->get($HE_image));
+                $HE_image = $_SERVER['HTTP_HOST'] . $rootPath . $HE_image;
             }
 
             return [

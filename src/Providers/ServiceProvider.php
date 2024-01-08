@@ -47,6 +47,14 @@ class ServiceProvider extends IlluminateServiceProvider
             'ssl' => false,
             'timeout' => 30
         ];
+
+        $this->app->config["filesystems.disks.products"] = [
+            'driver' => 'local',
+            'root' => storage_path('app/public/product'),
+            'url' => env('APP_URL') . '/storage/product',
+            'visibility' => 'public',
+            'throw' => true,
+        ];
     }
 
     /**

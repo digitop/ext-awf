@@ -1,3 +1,9 @@
+### get all data
+GET http://localhost:8000/api/ext/awf-extension/get-default-sequence
+Accept: application/json
+Content-Type: application/json
+
+### get data by WC
 GET localhost:8000/api/ext/awf-extension/get-sequence/EL01
 Accept: application/json
 Content-Type: application/json
