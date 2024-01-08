@@ -43,8 +43,6 @@ class GenerateDataCommand extends Command
     {
         try {
             (new GenerateDataFacade())->create();
-
-            return true;
         }
         catch (\Exception $exception) {
             $endTime = microtime(true);
@@ -57,12 +55,12 @@ class GenerateDataCommand extends Command
                 'logs/awf_data_generation_' . Carbon::now()->format('Ymd') . '.log',
                 $dataToLog . "\n" . str_repeat("=", 20) . "\n\n"
             );
+
+            return false;
         }
 
         try {
             (new MakeOrderFacade())->create();
-
-            return true;
         }
         catch (\Exception $exception) {
             $endTime = microtime(true);
@@ -75,8 +73,10 @@ class GenerateDataCommand extends Command
                 'logs/awf_order_generation_' . Carbon::now()->format('Ymd') . '.log',
                 $dataToLog . "\n" . str_repeat("=", 20) . "\n\n"
             );
+
+            return false;
         }
 
-        return false;
+        return true;
     }
 }
