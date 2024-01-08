@@ -125,9 +125,11 @@ class GenerateDataFacade extends Facade
         foreach ($sequences as $sequence) {
             AWF_SEQUENCE_LOG::where('SEQUID', '=', $sequence->SEQUID)?->delete();
             AWF_SEQUENCE_WORKCENTER::where('SEQUID', '=', $sequence->SEQUID)->delete();
-            ORDERHEAD::where('ORCODE', '=', $sequence->ORCODE)->delete();
-        }
 
-        AWF_SEQUENCE::where('SEINPR', '=', 0)->delete();
+            $orderCode = $sequence->ORCODE;
+            $sequence->delete();
+
+            ORDERHEAD::where('ORCODE', '=', $orderCode)->delete();
+        }
     }
 }

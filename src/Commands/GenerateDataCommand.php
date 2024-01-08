@@ -52,7 +52,7 @@ class GenerateDataCommand extends Command
             $dataToLog .= 'Duration: ' . number_format($endTime - LARAVEL_START, 3) . "\n";
             $dataToLog .= 'Output: ' . $exception->getMessage() . "\n";
 
-            Storage::disk('local')->append('logs/redis_' . Carbon::now()->format('Ymd') . '.log', $dataToLog . "\n" . str_repeat("=", 20) . "\n\n");
+            Storage::disk('local')->append('logs/awf_data_generation_' . Carbon::now()->format('Ymd') . '.log', $dataToLog . "\n" . str_repeat("=", 20) . "\n\n");
         }
 
         return false;
