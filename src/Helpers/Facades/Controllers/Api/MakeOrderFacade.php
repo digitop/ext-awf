@@ -3,7 +3,10 @@
 namespace AWF\Extension\Helpers\Facades\Controllers\Api;
 
 use AWF\Extension\Helpers\MakeOrder;
+use AWF\Extension\Helpers\Responses\JsonResponseModel;
+use AWF\Extension\Helpers\Responses\ResponseData;
 use AWF\Extension\Models\AWF_SEQUENCE;
+use AWF\Extension\Responses\CustomJsonResponse;
 use AWF\Extension\Responses\SequenceFacadeResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -25,20 +28,23 @@ class MakeOrderFacade extends Facade
             }
         }
         catch (\Exception $exception) {
-            return new JsonResponse(
-                ['success' => false, 'message' => __('response.unprocessable_entity')],
+            return new CustomJsonResponse(new JsonResponseModel(
+                new ResponseData(
+                    true,
+                    [],
+                    __('response.unprocessable_entity')
+                ),
                 Response::HTTP_UNPROCESSABLE_ENTITY
-            );
+            ));
         }
 
-        return new JsonResponse(
-            [
-                'success' => true,
-                'data' => (new SequenceFacadeResponse($sequences, $model))->generate(),
-                'message' => ''
-            ],
+        return new CustomJsonResponse(new JsonResponseModel(
+            new ResponseData(
+                true,
+                (new SequenceFacadeResponse($sequences, $model))->generate()
+            ),
             Response::HTTP_OK
-        );
+        ));
     }
 
 }

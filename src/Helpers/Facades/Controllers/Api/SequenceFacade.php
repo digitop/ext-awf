@@ -2,8 +2,11 @@
 
 namespace AWF\Extension\Helpers\Facades\Controllers\Api;
 
+use AWF\Extension\Helpers\Responses\JsonResponseModel;
+use AWF\Extension\Helpers\Responses\ResponseData;
 use AWF\Extension\Models\AWF_SEQUENCE;
 use AWF\Extension\Models\AWF_SEQUENCE_LOG;
+use AWF\Extension\Responses\CustomJsonResponse;
 use AWF\Extension\Responses\SequenceFacadeResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -28,14 +31,13 @@ class SequenceFacade extends Facade
             );
         }
 
-        return new JsonResponse(
-            [
-                'success' => true,
-                'data' => (new SequenceFacadeResponse($sequences, $model))->generate(),
-                'message' => ''
-            ],
+        return new CustomJsonResponse(new JsonResponseModel(
+            new ResponseData(
+                true,
+                (new SequenceFacadeResponse($sequences, $model))->generate()
+            ),
             Response::HTTP_OK
-        );
+        ));
     }
 
     public function show(Model ...$model): JsonResponse|null
@@ -88,13 +90,12 @@ class SequenceFacade extends Facade
                 ]);
         }
 
-        return new JsonResponse(
-            [
-                'success' => true,
-                'data' => (new SequenceFacadeResponse($sequence, $model[0]))->generate(),
-                'message' => ''
-            ],
+        return new CustomJsonResponse(new JsonResponseModel(
+            new ResponseData(
+                true,
+                (new SequenceFacadeResponse($sequences, $model[0]))->generate()
+            ),
             Response::HTTP_OK
-        );
+        ));
     }
 }

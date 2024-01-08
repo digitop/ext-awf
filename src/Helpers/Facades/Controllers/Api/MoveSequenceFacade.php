@@ -2,12 +2,15 @@
 
 namespace AWF\Extension\Helpers\Facades\Controllers\Api;
 
+use AWF\Extension\Helpers\Responses\JsonResponseModel;
+use AWF\Extension\Helpers\Responses\ResponseData;
 use AWF\Extension\Models\AWF_SEQUENCE;
 use AWF\Extension\Models\AWF_SEQUENCE_LOG;
 use AWF\Extension\Models\AWF_SEQUENCE_WORKCENTER;
 use App\Models\PRODUCT;
 use App\Models\WORKCENTER;
 use App\Models\PRWCDATA;
+use AWF\Extension\Responses\CustomJsonResponse;
 use AWF\Extension\Responses\SequenceFacadeResponse;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Http\FormRequest;
@@ -27,17 +30,16 @@ class MoveSequenceFacade extends Facade
 
         $this->move($request, $sequence, $nextProductWorkCenterData);
 
-        return new JsonResponse(
-            [
-                'success' => true,
-                'data' => (new SequenceFacadeResponse(
+        return new CustomJsonResponse(new JsonResponseModel(
+            new ResponseData(
+                true,
+                (new SequenceFacadeResponse(
                     $sequence,
                     WORKCENTER::where('WCSHNA', '=', $nextProductWorkCenterData?->WCSHNA ?? $request->WCSHNA)->first()
-                ))->generate(),
-                'message' => ''
-            ],
+                ))->generate()
+            ),
             Response::HTTP_OK
-        );
+        ));
     }
 
     protected function getNextWorkCenterData(FormRequest|Request $request, Model $sequence): PRWCDATA|null

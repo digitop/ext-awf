@@ -3,10 +3,14 @@
 namespace AWF\Extension\Helpers\Facades\Controllers\Api;
 
 use AWF\Extension\Helpers\Checkers\SavedData;
+use AWF\Extension\Helpers\Responses\JsonResponseModel;
+use AWF\Extension\Helpers\Responses\ResponseData;
 use AWF\Extension\Models\AWF_SEQUENCE;
 use AWF\Extension\Models\AWF_SEQUENCE_LOG;
 use AWF\Extension\Models\AWF_SEQUENCE_WORKCENTER;
 use App\Models\ORDERHEAD;
+use AWF\Extension\Responses\CustomJsonResponse;
+use AWF\Extension\Responses\SequenceFacadeResponse;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Storage;
@@ -32,26 +36,36 @@ class GenerateDataFacade extends Facade
             }
         }
         catch (\Exception $exception) {
-            return new JsonResponse(
-                ['success' => false, 'message' => __('response.unprocessable_entity')],
-                Response::HTTP_UNPROCESSABLE_ENTITY
-            );
+            return new CustomJsonResponse(new JsonResponseModel(
+                new ResponseData(
+                    true,
+                    [],
+                    __('response.unprocessable_entity')
+                ),
+                Response::HTTP_OK
+            ));
         }
 
         try {
             SavedData::check();
         }
         catch (\Exception $exception) {
-            return new JsonResponse(
-                ['success' => false, 'message' => __('response.email_error')],
-                Response::HTTP_UNPROCESSABLE_ENTITY
-            );
+            return new CustomJsonResponse(new JsonResponseModel(
+                new ResponseData(
+                    true,
+                    [],
+                    __('response.email_error')
+                ),
+                Response::HTTP_OK
+            ));
         }
 
-        return new JsonResponse(
-            ['success' => true, 'message' => ''],
+        return new CustomJsonResponse(new JsonResponseModel(
+            new ResponseData(
+                true
+            ),
             Response::HTTP_OK
-        );
+        ));
     }
 
     protected function generateData(string $filePath): void
@@ -99,7 +113,7 @@ class GenerateDataFacade extends Facade
             }
         }
 
-        $savePath = 'sequence-data' . DIRECTORY_SEPARATOR . (new \DateTime())->format('Ymd');
+        $savePath = 'sequence-data' . DIRECTORY_SEPARATOR . (new \DateTime())->format('Ymd_His');
         Storage::put($savePath . DIRECTORY_SEPARATOR . $filePath, $file);
     }
 
