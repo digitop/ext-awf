@@ -3,6 +3,7 @@
 namespace AWF\Extension\Commands;
 
 use AWF\Extension\Helpers\Facades\Controllers\Api\GenerateDataFacade;
+use AWF\Extension\Helpers\Facades\Controllers\Api\MakeOrderFacade;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Console\Command;
 use Carbon\Carbon;
@@ -52,7 +53,28 @@ class GenerateDataCommand extends Command
             $dataToLog .= 'Duration: ' . number_format($endTime - LARAVEL_START, 3) . "\n";
             $dataToLog .= 'Output: ' . $exception->getMessage() . "\n";
 
-            Storage::disk('local')->append('logs/awf_data_generation_' . Carbon::now()->format('Ymd') . '.log', $dataToLog . "\n" . str_repeat("=", 20) . "\n\n");
+            Storage::disk('local')->append(
+                'logs/awf_data_generation_' . Carbon::now()->format('Ymd') . '.log',
+                $dataToLog . "\n" . str_repeat("=", 20) . "\n\n"
+            );
+        }
+
+        try {
+            (new MakeOrderFacade())->create();
+
+            return true;
+        }
+        catch (\Exception $exception) {
+            $endTime = microtime(true);
+            $dataToLog = 'Type: ' . $this->description . "\n";
+            $dataToLog .= 'Time: ' . date("Y m d H:i:s") . "\n";
+            $dataToLog .= 'Duration: ' . number_format($endTime - LARAVEL_START, 3) . "\n";
+            $dataToLog .= 'Output: ' . $exception->getMessage() . "\n";
+
+            Storage::disk('local')->append(
+                'logs/awf_order_generation_' . Carbon::now()->format('Ymd') . '.log',
+                $dataToLog . "\n" . str_repeat("=", 20) . "\n\n"
+            );
         }
 
         return false;
