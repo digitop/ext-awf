@@ -40,6 +40,18 @@ Amennyiben még nincs ilyen létrehozva, úgy egyszerűen a `php artisan storage
 }
 ```
 
+### Command hozzáadása az automatikus futtatáshoz
+Mivel minden éjfélkor automatikusan le kell töltenünk a file-okat egy adott szerverről, így létre lett hozva egy 
+GenerateDataCommand osztály, ami pontosan ezt csinálja meg. Ahhoz, hogy automatikusan le is fusson, azonban bele kell 
+tenni a `\app\Console\Kernel.php` osztály `schedule` function-jébe:
+```
+$schedule->command(GenerateDataCommand::class)->dailyAt('00:00');
+```
+
+Ez a command minden nap 0 óra 0 perckor futtatja le a GenerateDataCommand osztályban meghatározottakat
+
+(Ne felejtsük el use-olni se az osztályt: `use AWF\Extension\Commands\GenerateDataCommand;`)
+
 ### Autoload fájl újragenerálása
 
 ```composer dump-autoload```
