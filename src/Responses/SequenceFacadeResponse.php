@@ -84,6 +84,7 @@ class SequenceFacadeResponse
             }
 
             return [
+                'SEQUID' => $sequence->SEQUID,
                 'SEPONR' => $sequence->SEPONR,
                 'SEPSEQ' => $sequence->SEPSEQ,
                 'SEARNU' => $sequence->SEARNU,

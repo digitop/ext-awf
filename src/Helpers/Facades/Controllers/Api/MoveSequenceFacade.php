@@ -27,10 +27,14 @@ class MoveSequenceFacade extends Facade
             ->first();
 
         if (empty($sequence)) {
-            return new JsonResponse(
-                ['success' => false, 'data' => [], 'message' => __('responses.no_new_data_available')],
+            return new CustomJsonResponse(new JsonResponseModel(
+                new ResponseData(
+                    true,
+                    [],
+                    __('response.no_new_data_available')
+                ),
                 Response::HTTP_UNPROCESSABLE_ENTITY
-            );
+            ));
         }
 
         $nextProductWorkCenterData = $this->getNextWorkCenterData($request, $sequence);
