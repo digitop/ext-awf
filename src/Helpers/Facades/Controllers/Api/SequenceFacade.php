@@ -47,6 +47,13 @@ class SequenceFacade extends Facade
             ->whereNull('LETIME')
             ->get();
 
+        if ($logs === null || !array_key_exists(0, $logs->all()) || empty($logs[0])) {
+            return new JsonResponse(
+                ['success' => false, 'data' => [], 'message' => __('responses.no_new_data_available')],
+                Response::HTTP_UNPROCESSABLE_ENTITY
+            );
+        }
+
         $sequences = new Collection();
 
         foreach ($logs as $log) {
