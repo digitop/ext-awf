@@ -26,6 +26,13 @@ class MoveSequenceFacade extends Facade
             ->where('SEEXPI', '>=', (new \DateTime())->format('Y-m-d'))
             ->first();
 
+        if (empty($sequence)) {
+            return new JsonResponse(
+                ['success' => false, 'data' => [], 'message' => __('responses.no_new_data_available')],
+                Response::HTTP_UNPROCESSABLE_ENTITY
+            );
+        }
+
         $nextProductWorkCenterData = $this->getNextWorkCenterData($request, $sequence);
 
         $this->move($request, $sequence, $nextProductWorkCenterData);
