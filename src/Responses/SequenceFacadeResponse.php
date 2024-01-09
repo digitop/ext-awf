@@ -96,6 +96,11 @@ class SequenceFacadeResponse
                 ->setMaterial($product?->features()->where('FESHNA', '=', 'SZAA')->first()?->FEVALU);
         }
 
-        return [];
+        return (new SequenceResponseModel())
+            ->setSEQUID($sequence->SEQUID)
+            ->setSEPONR($sequence->SEPONR)
+            ->setSEPSEQ($sequence->SEPSEQ)
+            ->setSEARNU($sequence->SEARNU)
+            ->setSESIDE($sequence->SESIDE);
     }
 }
