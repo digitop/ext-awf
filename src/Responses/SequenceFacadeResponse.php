@@ -28,12 +28,12 @@ class SequenceFacadeResponse
 
         if ($this->sequences instanceof Collection) {
             foreach ($this->sequences as $sequence) {
-                $data[$sequence->SEPILL][] = $this->make($sequence);
+                $data[$sequence->SEPILL][] = $this->make($sequence)->get();
             }
         }
 
         if ($this->sequences instanceof AWF_SEQUENCE) {
-            $data[$this->sequences->SEPILL][] = $this->make($this->sequences);
+            $data[$this->sequences->SEPILL][] = $this->make($this->sequences)->get();
         }
 
         return $data;
@@ -60,7 +60,7 @@ class SequenceFacadeResponse
         }
     }
 
-    protected function make(Model $sequence): array
+    protected function make(Model $sequence): SequenceResponseModel
     {
         $this->setWorkCenter($this->workCenter, $sequence);
 
