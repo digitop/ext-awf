@@ -31,7 +31,6 @@ eljuttatása történik egy előre definiált JSON objektumban.
 ## URL
 Itt kerülnek felsorolásra az API hívásához szükséges url-ek.
 
-
 | Megnevezés                              | Metódus | URL                                             |
 |-----------------------------------------|---------|-------------------------------------------------|
 | Összes adat lekérése                    | GET     | `/api/ext/awf-extension/get-default-sequence`   |
