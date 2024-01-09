@@ -83,8 +83,8 @@ A minta hívások Windows rendszer alatt készültek, így curl helyett a gyári
         "SESIDE": "L",
         "EL_image": null,
         "HE_image": "localhost:8000\/storage\/product\/F46B02103\/features\/images\/TEKEHE_9b0b27e9-ac09-4f57-9e0a-fc63fb7c2a23.jpg",
-        "SZASZ": "000000",
-        "SZAA": "stoff"
+        "color": "000000",
+        "material": "stoff"
       }
     ]
   },

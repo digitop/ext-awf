@@ -2,6 +2,7 @@
 
 namespace AWF\Extension\Responses;
 
+use AWF\Extension\Helpers\Models\SequenceResponseModel;
 use AWF\Extension\Models\AWF_SEQUENCE;
 use AWF\Extension\Models\AWF_SEQUENCE_LOG;
 use AWF\Extension\Models\AWF_SEQUENCE_WORKCENTER;
@@ -70,30 +71,29 @@ class SequenceFacadeResponse
         $product = PRODUCT::where('PRCODE', '=', $sequence->PRCODE)->first();
 
         if (!empty($sequenceWorkCenter) || $this->workCenter === null) {
-            $EL_image = $product?->features()->where('FESHNA', '=', 'TEKEEL')->first()?->FEVALU;
-            $HE_image = $product?->features()->where('FESHNA', '=', 'TEKEHE')->first()?->FEVALU;
+            $preparatory = $product?->features()->where('FESHNA', '=', 'TEKEEL')->first()?->FEVALU;
+            $welder = $product?->features()->where('FESHNA', '=', 'TEKEHE')->first()?->FEVALU;
 
             $rootPath = $_SERVER['HTTP_HOST'] .'/storage/product/';
 
-            if ($EL_image !== null) {
-                $EL_image =  $rootPath . $EL_image;
+            if ($preparatory !== null) {
+                $preparatory =  $rootPath . $preparatory;
             }
 
-            if ($HE_image !== null) {
-                $HE_image = $rootPath . $HE_image;
+            if ($welder !== null) {
+                $welder = $rootPath . $welder;
             }
 
-            return [
-                'SEQUID' => $sequence->SEQUID,
-                'SEPONR' => $sequence->SEPONR,
-                'SEPSEQ' => $sequence->SEPSEQ,
-                'SEARNU' => $sequence->SEARNU,
-                'SESIDE' => $sequence->SESIDE,
-                'EL_image' => $EL_image,
-                'HE_image' => $HE_image,
-                'SZASZ' => $product?->features()->where('FESHNA', '=', 'SZASZ')->first()?->FEVALU,
-                'SZAA' => $product?->features()->where('FESHNA', '=', 'SZAA')->first()?->FEVALU,
-            ];
+            return (new SequenceResponseModel())
+                ->setSEQUID($sequence->SEQUID)
+                ->setSEPONR($sequence->SEPONR)
+                ->setSEPSEQ($sequence->SEPSEQ)
+                ->setSEARNU($sequence->SEARNU)
+                ->setSESIDE($sequence->SESIDE)
+                ->setPreparatory($preparatory)
+                ->setWelder($welder)
+                ->setColor($product?->features()->where('FESHNA', '=', 'SZASZ')->first()?->FEVALU)
+                ->setMaterial($product?->features()->where('FESHNA', '=', 'SZAA')->first()?->FEVALU);
         }
 
         return [];

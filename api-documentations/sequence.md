@@ -83,8 +83,8 @@ A minta hívások Windows rendszer alatt készültek, így curl helyett a gyári
         "SESIDE": "L",
         "EL_image": null,
         "HE_image": "localhost:8000\/storage\/product\/F46B28101\/features\/images\/TEKEHE_9b0b27e9-ac09-4f57-9e0a-fc63fb7c2a23.jpg",
-        "SZASZ": "000000",
-        "SZAA": "dinamica"
+        "color": "000000",
+        "material": "dinamica"
       },
       {
         "SEPONR": "2042428",
@@ -93,8 +93,8 @@ A minta hívások Windows rendszer alatt készültek, így curl helyett a gyári
         "SESIDE": "R",
         "EL_image": null,
         "HE_image": "localhost:8000\/storage\/product\/F46B29101\/features\/images\/TEKEHE_9b0b27e9-ac09-4f57-9e0a-fc63fb7c2a23.jpg",
-        "SZASZ": "000000",
-        "SZAA": "dinamica"
+        "color": "000000",
+        "material": "dinamica"
       },
       {
       .
@@ -136,8 +136,8 @@ A minta hívások Windows rendszer alatt készültek, így curl helyett a gyári
         "SESIDE": "L",
         "EL_image": null,
         "HE_image": "localhost:8000\/storage\/product\/F46B04304\/features\/images\/TEKEHE_9b0b27e9-ac09-4f57-9e0a-fc63fb7c2a23.jpg",
-        "SZASZ": "323137",
-        "SZAA": "stoff"
+        "color": "323137",
+        "material": "stoff"
       },
       {
         "SEPONR": "2742658",
@@ -146,8 +146,8 @@ A minta hívások Windows rendszer alatt készültek, így curl helyett a gyári
         "SESIDE": "R",
         "EL_image": null,
         "HE_image": "localhost:8000\/storage\/product\/F46B05304\/features\/images\/TEKEHE_9b0b27e9-ac09-4f57-9e0a-fc63fb7c2a23.jpg",
-        "SZASZ": "323137",
-        "SZAA": "stoff"
+        "color": "323137",
+        "material": "stoff"
       }
     ]
   },
