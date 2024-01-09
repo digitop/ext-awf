@@ -41,20 +41,6 @@ class SequenceFacadeResponse
 
     protected function setWorkCenter(Model|null $workCenter, Model|null $sequence): void
     {
-        if ($this->sequences instanceof AWF_SEQUENCE || $sequence !== null) {
-            if ($sequence === null) {
-                $sequence = $this->sequences;
-            }
-
-            $workCenterId = AWF_SEQUENCE_LOG::where('SEQUID', '=', $sequence->SEQUID)
-                ->whereNull('LETIME')
-                ->first()?->WCSHNA;
-
-            if (!empty($workCenterId)) {
-                $this->workCenter = WORKCENTER::where('WCSHNA', '=', $workCenterId)->first();
-            }
-        }
-
         if ($workCenter !== null) {
             $this->workCenter = $workCenter;
         }
@@ -65,7 +51,7 @@ class SequenceFacadeResponse
         $this->setWorkCenter($this->workCenter, $sequence);
 
         $sequenceWorkCenter = AWF_SEQUENCE_WORKCENTER::where('SEQUID', '=', $sequence->SEQUID)
-            ->where('WCSHNA', '=', $this->workCenter->WCSHNA)
+            ->where('WCSHNA', '=', $this->workCenter?->WCSHNA)
             ->first();
 
         $product = PRODUCT::where('PRCODE', '=', $sequence->PRCODE)->first();
