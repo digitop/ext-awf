@@ -46,7 +46,9 @@ class MoveSequenceFacade extends Facade
                 true,
                 (new SequenceFacadeResponse(
                     $sequence,
-                    WORKCENTER::where('WCSHNA', '=', $nextProductWorkCenterData?->WCSHNA ?? $request->WCSHNA)->first()
+                    $nextProductWorkCenterData !== null ?
+                        WORKCENTER::where('WCSHNA', '=', $nextProductWorkCenterData->WCSHNA)->first() :
+                        null
                 ))->generate()
             ),
             Response::HTTP_OK
