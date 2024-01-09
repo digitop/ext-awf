@@ -9,8 +9,8 @@ class SequenceResponseModel extends ObjectToArray
     protected string $SEPSEQ;
     protected string $SEARNU;
     protected string $SESIDE;
-    protected string $preparatory;
-    protected string $welder;
+    protected string|null $preparatory = null;
+    protected string|null $welder = null;
     protected string $color;
     protected string $material;
 
@@ -69,23 +69,23 @@ class SequenceResponseModel extends ObjectToArray
         return $this;
     }
 
-    public function getPreparatory(): string
+    public function getPreparatory(): string|null
     {
         return $this->preparatory;
     }
 
-    public function setPreparatory(string $preparatory): SequenceResponseModel
+    public function setPreparatory(string|null $preparatory): SequenceResponseModel
     {
         $this->preparatory = $preparatory;
         return $this;
     }
 
-    public function getWelder(): string
+    public function getWelder(): string|null
     {
         return $this->welder;
     }
 
-    public function setWelder(string $welder): SequenceResponseModel
+    public function setWelder(string|null $welder): SequenceResponseModel
     {
         $this->welder = $welder;
         return $this;
