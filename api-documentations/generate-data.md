@@ -1,4 +1,4 @@
-# GenerateDataController API
+# GenerateDataController API / GenerateDataCommand
 <hr>
 
 ## Tartalomjegyzék

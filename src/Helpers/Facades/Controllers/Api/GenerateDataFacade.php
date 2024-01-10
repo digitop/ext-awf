@@ -23,6 +23,8 @@ use Illuminate\Support\Facades\File;
 
 class GenerateDataFacade extends Facade
 {
+    protected const DATEFORMAT = 'Ymd_His';
+
     public function create(Request|FormRequest|null $request = null, Model|string|null $model = null): JsonResponse|null
     {
         try {
@@ -113,7 +115,7 @@ class GenerateDataFacade extends Facade
             }
         }
 
-        $savePath = 'sequence-data' . DIRECTORY_SEPARATOR . (new \DateTime())->format('Ymd_His');
+        $savePath = 'sequence-data' . DIRECTORY_SEPARATOR . (new \DateTime())->format(static::DATEFORMAT);
         Storage::put($savePath . DIRECTORY_SEPARATOR . $filePath, $file);
     }
 
@@ -125,7 +127,7 @@ class GenerateDataFacade extends Facade
             File::makeDirectory($path);
         }
 
-        $path .= DIRECTORY_SEPARATOR . (new \DateTime())->format('Ymd');
+        $path .= DIRECTORY_SEPARATOR . (new \DateTime())->format(static::DATEFORMAT);
 
         if (!is_dir($path)) {
             File::makeDirectory($path);
