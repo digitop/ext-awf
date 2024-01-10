@@ -10,7 +10,7 @@ use AWF\Extension\Models\AWF_SEQUENCE_LOG;
 use AWF\Extension\Models\AWF_SEQUENCE_WORKCENTER;
 use App\Models\ORDERHEAD;
 use AWF\Extension\Responses\CustomJsonResponse;
-use AWF\Extension\Responses\SequenceFacadeResponse;
+use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Storage;
@@ -38,6 +38,18 @@ class GenerateDataFacade extends Facade
             }
         }
         catch (\Exception $exception) {
+            $endTime = microtime(true);
+            $dataToLog = 'Type: ' . __CLASS__ . "\n";
+            $dataToLog .= 'Method: GenerateAwfPorscheData' . "\n";
+            $dataToLog .= 'Time: ' . date("Y m d H:i:s") . "\n";
+            $dataToLog .= 'Duration: ' . number_format($endTime - LARAVEL_START, 3) . "\n";
+            $dataToLog .= 'Output: ' . $exception->getMessage() . "\n";
+
+            Storage::disk('local')->append(
+                'logs/awf_generate_porsche_data_' . Carbon::now()->format('Ymd') . '.log',
+                $dataToLog . "\n" . str_repeat("=", 20) . "\n\n"
+            );
+
             return new CustomJsonResponse(new JsonResponseModel(
                 new ResponseData(
                     true,
@@ -52,6 +64,18 @@ class GenerateDataFacade extends Facade
             SavedData::check();
         }
         catch (\Exception $exception) {
+            $endTime = microtime(true);
+            $dataToLog = 'Type: ' . __CLASS__ . "\n";
+            $dataToLog .= 'Method: SendAwfMail' . "\n";
+            $dataToLog .= 'Time: ' . date("Y m d H:i:s") . "\n";
+            $dataToLog .= 'Duration: ' . number_format($endTime - LARAVEL_START, 3) . "\n";
+            $dataToLog .= 'Output: ' . $exception->getMessage() . "\n";
+
+            Storage::disk('local')->append(
+                'logs/awf_send_porsche_mail_' . Carbon::now()->format('Ymd') . '.log',
+                $dataToLog . "\n" . str_repeat("=", 20) . "\n\n"
+            );
+
             return new CustomJsonResponse(new JsonResponseModel(
                 new ResponseData(
                     true,
