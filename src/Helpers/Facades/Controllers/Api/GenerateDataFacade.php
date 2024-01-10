@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\File;
 
 class GenerateDataFacade extends Facade
 {
-    protected const DATEFORMAT = 'Ymd_His';
+    protected const DATEFORMAT = 'Ymd_H';
 
     public function create(Request|FormRequest|null $request = null, Model|string|null $model = null): JsonResponse|null
     {
