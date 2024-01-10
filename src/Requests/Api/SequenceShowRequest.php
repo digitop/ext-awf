@@ -4,14 +4,14 @@ namespace AWF\Extension\Requests\Api;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SequenceCreateRequest extends FormRequest
+class SequenceShowRequest extends FormRequest
 {
     /**
      * The key to be used for the view error bag.
      *
      * @var string
      */
-    protected $errorBag = 'sequenceCreateRequest';
+    protected $errorBag = 'sequenceShowRequest';
 
     /**
      * Get the validation rules that apply to the request.
@@ -21,7 +21,7 @@ class SequenceCreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'WCSHNA' => ['required', 'string', 'max:32', 'min:1'],
+            'pillar' => ['nullable', 'string', 'max:1', 'min:1', 'in:R,L'],
         ];
     }
 
@@ -33,10 +33,11 @@ class SequenceCreateRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'WCSHNA.required' => __('validation.required', ['attribute' =>'WCSHNA']),
-            'WCSHNA.string' => __('validation.string', ['attribute' =>'WCSHNA']),
-            'WCSHNA.max' => __('validation.max.string', ['attribute' =>'WCSHNA']),
-            'WCSHNA.min' => __('validation.min.string', ['attribute' =>'WCSHNA']),
+            'pillar.required' => __('validation.required', ['attribute' =>'pillar']),
+            'pillar.in' => __('validation.required', ['attribute' =>'pillar']),
+            'pillar.string' => __('validation.string', ['attribute' =>'pillar']),
+            'pillar.max' => __('validation.max.string', ['attribute' =>'pillar']),
+            'pillar.min' => __('validation.min.string', ['attribute' =>'pillar']),
         ];
     }
 }

@@ -44,7 +44,7 @@ class SequenceFacade extends Facade
         ));
     }
 
-    public function show(Model ...$model): JsonResponse|null
+    public function show(Request|FormRequest|null $request = null, Model ...$model): JsonResponse|null
     {
         $logs = AWF_SEQUENCE_LOG::where('WCSHNA', '=', $model[0]->WCSHNA)
             ->whereNull('LSTIME')
@@ -65,7 +65,13 @@ class SequenceFacade extends Facade
         $sequences = new Collection();
 
         foreach ($logs as $log) {
-            $sequence = AWF_SEQUENCE::where('SEQUID', '=', $log->SEQUID)->first();
+            $sequence = AWF_SEQUENCE::where('SEQUID', '=', $log->SEQUID);
+
+            if (array_key_exists('pillar', $request->all())) {
+                $sequence->where('SEPILL', '=', $request->pillar);
+            }
+
+            $sequence->first();
 
             if (!empty($sequence)) {
                 $sequences->add($sequence);
@@ -111,6 +117,7 @@ class SequenceFacade extends Facade
                 (new SequenceFacadeResponse($sequence, $model[0]))->generate()
             ),
             Response::HTTP_OK
-        ));
+        )
+        );
     }
 }

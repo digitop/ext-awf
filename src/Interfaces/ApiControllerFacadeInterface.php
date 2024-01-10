@@ -20,7 +20,7 @@ interface ApiControllerFacadeInterface
         Model|string|null $model = null
     ): JsonResponse|null;
 
-    public function show(Model ...$model): JsonResponse|null;
+    public function show(Request|FormRequest|null $request = null, Model ...$model): JsonResponse|null;
 
     public function add(Model|null $model = null, Request|null $request = null): JsonResponse|null;
 

@@ -3,6 +3,7 @@
 namespace AWF\Extension\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use AWF\Extension\Requests\Api\SequenceShowRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\WORKCENTER;
@@ -23,7 +24,7 @@ class SequenceController extends Controller
         return $this->facade->create($request);
     }
 
-    public function show(WORKCENTER $WCSHNA): JsonResponse
+    public function show(SequenceShowRequest $request, WORKCENTER $WCSHNA): JsonResponse
     {
         return $this->facade->show($WCSHNA);
     }
