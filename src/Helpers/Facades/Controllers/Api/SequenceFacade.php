@@ -117,7 +117,6 @@ class SequenceFacade extends Facade
                 (new SequenceFacadeResponse($sequence, $model[0]))->generate()
             ),
             Response::HTTP_OK
-        )
-        );
+        ));
     }
 }
