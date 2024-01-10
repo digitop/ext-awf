@@ -99,7 +99,7 @@ class SequenceFacade extends Facade
 
             return 0;
         })
-            ->take(2);
+            ->take($request->limit ?? 2);
 
         foreach ($sequence as $item) {
             AWF_SEQUENCE_LOG::where('WCSHNA', '=', $model[0]->WCSHNA)
