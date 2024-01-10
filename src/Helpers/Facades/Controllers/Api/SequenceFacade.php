@@ -65,13 +65,13 @@ class SequenceFacade extends Facade
         $sequences = new Collection();
 
         foreach ($logs as $log) {
-            $sequence = AWF_SEQUENCE::where('SEQUID', '=', $log->SEQUID);
+            $sequence = AWF_SEQUENCE::where('SEQUID', '=', $log->SEQUID)->first();
 
             if (array_key_exists('pillar', $request->all())) {
-                $sequence->where('SEPILL', '=', $request->pillar);
+                $sequence = AWF_SEQUENCE::where('SEQUID', '=', $log->SEQUID)
+                    ->where('SESIDE', '=', $request->pillar)
+                    ->first();
             }
-
-            $sequence->first();
 
             if (!empty($sequence)) {
                 $sequences->add($sequence);
