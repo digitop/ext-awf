@@ -91,7 +91,7 @@ class SequenceFacade extends Facade
                     $x = ($b[$sortingInstruction['column']] <=> $a[$sortingInstruction['column']]);
                 }
 
-                if ((int)$x !== 0) {
+                if ($x !== 0) {
                     return $x;
                 }
 

@@ -60,7 +60,7 @@ class SequenceFacadeResponse
             $preparatory = $product?->features()->where('FESHNA', '=', 'TEKEEL')->first()?->FEVALU;
             $welder = $product?->features()->where('FESHNA', '=', 'TEKEHE')->first()?->FEVALU;
 
-            $rootPath = $_SERVER['HTTP_HOST'] .'/storage/product/';
+            $rootPath = ($_SERVER['HTTP_HOST'] ?? 'http://localhost') .'/storage/product/';
 
             if ($preparatory !== null) {
                 $preparatory =  $rootPath . $preparatory;
