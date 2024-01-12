@@ -14,7 +14,7 @@ return new class extends Migration {
     {
         $database = config('database.connections.mysql.database');
 
-        Schema::connection('custom_mysql')::table('AWF_SEQUENCE_WORKCENTER', function (Blueprint $table) {
+        Schema::connection('custom_mysql')->table('AWF_SEQUENCE_WORKCENTER', function (Blueprint $table) {
             $table->string('RNREPN', 64)->nullable();
         });
 
@@ -35,11 +35,11 @@ return new class extends Migration {
     {
         Schema::connection('custom_mysql')->dropIfExists('AWF_SEQUENCE_WORKCENTER');
 
-        if (Schema::connection('custom_mysql')::hasColumn('AWF_SEQUENCE_WORKCENTER', 'RNREPN')) {
-            Schema::connection('custom_mysql')::table('AWF_SEQUENCE_WORKCENTER', function (Blueprint $table) {
+        if (Schema::connection('custom_mysql')->hasColumn('AWF_SEQUENCE_WORKCENTER', 'RNREPN')) {
+            Schema::connection('custom_mysql')->table('AWF_SEQUENCE_WORKCENTER', function (Blueprint $table) {
                 $table->dropForeign('FK_AWF_SEQUENCE_WORKCENTER_TO_REPNO_RNREPN');
             });
-            Schema::connection('custom_mysql')::table('AWF_SEQUENCE_WORKCENTER', function (Blueprint $table) {
+            Schema::connection('custom_mysql')->table('AWF_SEQUENCE_WORKCENTER', function (Blueprint $table) {
                 $table->dropColumn('RNREPN');
             });
         }
