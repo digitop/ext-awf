@@ -76,6 +76,7 @@ class SequenceFacadeResponse
                 ->setSEPSEQ($sequence->SEPSEQ)
                 ->setSEARNU($sequence->SEARNU)
                 ->setSESIDE($sequence->SESIDE)
+                ->setORCODE($sequence->ORCODE)
                 ->setPreparatory($preparatory)
                 ->setWelder($welder)
                 ->setColor($product?->features()->where('FESHNA', '=', 'SZASZ')->first()?->FEVALU)
@@ -87,6 +88,7 @@ class SequenceFacadeResponse
             ->setSEPONR($sequence->SEPONR)
             ->setSEPSEQ($sequence->SEPSEQ)
             ->setSEARNU($sequence->SEARNU)
-            ->setSESIDE($sequence->SESIDE);
+            ->setSESIDE($sequence->SESIDE)
+            ->setORCODE($sequence->ORCODE);
     }
 }

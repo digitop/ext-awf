@@ -9,6 +9,7 @@ class SequenceResponseModel extends ObjectToArray
     protected string $SEPSEQ;
     protected string $SEARNU;
     protected string $SESIDE;
+    protected string $ORCODE;
     protected string|null $preparatory = null;
     protected string|null $welder = null;
     protected string $color;
@@ -66,6 +67,17 @@ class SequenceResponseModel extends ObjectToArray
     public function setSESIDE(string $SESIDE): SequenceResponseModel
     {
         $this->SESIDE = $SESIDE;
+        return $this;
+    }
+
+    public function getORCODE(): string
+    {
+        return $this->ORCODE;
+    }
+
+    public function setORCODE(string $ORCODE): SequenceResponseModel
+    {
+        $this->ORCODE = $ORCODE;
         return $this;
     }
 
