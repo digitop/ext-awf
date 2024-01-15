@@ -79,7 +79,7 @@ class SequenceFacadeResponse
             ->setOPNAME(
                 isset($this->workCenter?->operatorPanels) &&
                 !empty($this->workCenter?->operatorPanels[0]) ?
-                    $this->workCenter?->operatorPanels :
+                    $this->workCenter?->operatorPanels[0] :
                     null
             )
             ->setRNREPN($sequenceWorkCenter?->RNREPN)
