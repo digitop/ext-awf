@@ -46,6 +46,7 @@ class AWF_SEQUENCE_WORKCENTER extends Model
     protected $fillable = [
         'SEQUID',
         'WCSHNA',
+        'RNREPN',
     ];
 
     public function getActivitylogOptions(): LogOptions
