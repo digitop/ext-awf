@@ -61,7 +61,6 @@ class MakeOrder
 
         $repno->update([
             'RNACTV' => 1,
-            'RNTOID' => $value[6] ?? null
         ]);
 
         $sequenceWorkCenter->update([
