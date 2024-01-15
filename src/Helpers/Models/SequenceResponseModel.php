@@ -2,6 +2,8 @@
 
 namespace AWF\Extension\Helpers\Models;
 
+use App\Models\OPERATOR_PANEL;
+
 class SequenceResponseModel extends ObjectToArray
 {
     protected int $SEQUID;
@@ -10,6 +12,7 @@ class SequenceResponseModel extends ObjectToArray
     protected string $SEARNU;
     protected string $SESIDE;
     protected string $ORCODE;
+    protected string|null $OPNAME;
     protected string|null $preparatory = null;
     protected string|null $welder = null;
     protected string $color;
@@ -78,6 +81,20 @@ class SequenceResponseModel extends ObjectToArray
     public function setORCODE(string $ORCODE): SequenceResponseModel
     {
         $this->ORCODE = $ORCODE;
+        return $this;
+    }
+
+    public function getOPNAME(): null|string
+    {
+        return $this->OPNAME;
+    }
+
+    public function setOPNAME(OPERATOR_PANEL|null $operatorPanel): SequenceResponseModel
+    {
+        if ($operatorPanel !== null) {
+            $this->OPNAME = $operatorPanel->OPNAME;
+        }
+
         return $this;
     }
 

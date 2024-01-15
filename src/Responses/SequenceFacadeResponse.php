@@ -77,6 +77,12 @@ class SequenceFacadeResponse
                 ->setSEARNU($sequence->SEARNU)
                 ->setSESIDE($sequence->SESIDE)
                 ->setORCODE($sequence->ORCODE)
+                ->setOPNAME(
+                    isset($this->workCenter?->operatorPanels) &&
+                    !empty($this->workCenter?->operatorPanels[0]) ?
+                        $this->workCenter?->operatorPanels :
+                        null
+                )
                 ->setPreparatory($preparatory)
                 ->setWelder($welder)
                 ->setColor($product?->features()->where('FESHNA', '=', 'SZASZ')->first()?->FEVALU)
@@ -89,6 +95,12 @@ class SequenceFacadeResponse
             ->setSEPSEQ($sequence->SEPSEQ)
             ->setSEARNU($sequence->SEARNU)
             ->setSESIDE($sequence->SESIDE)
-            ->setORCODE($sequence->ORCODE);
+            ->setORCODE($sequence->ORCODE)
+            ->setOPNAME(
+                isset($this->workCenter?->operatorPanels) &&
+                !empty($this->workCenter?->operatorPanels[0]) ?
+                    $this->workCenter?->operatorPanels :
+                    null
+            );
     }
 }
