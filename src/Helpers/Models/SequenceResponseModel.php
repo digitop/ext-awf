@@ -13,6 +13,7 @@ class SequenceResponseModel extends ObjectToArray
     protected string $SESIDE;
     protected string $ORCODE;
     protected string|null $OPNAME;
+    protected string|null $RNREPN;
     protected string|null $preparatory = null;
     protected string|null $welder = null;
     protected string $color;
@@ -95,6 +96,17 @@ class SequenceResponseModel extends ObjectToArray
             $this->OPNAME = $operatorPanel->OPNAME;
         }
 
+        return $this;
+    }
+
+    public function getRNREPN(): string|null
+    {
+        return $this->RNREPN;
+    }
+
+    public function setRNREPN(string|null $RNREPN): SequenceResponseModel
+    {
+        $this->RNREPN = $RNREPN;
         return $this;
     }
 

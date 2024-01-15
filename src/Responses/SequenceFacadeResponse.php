@@ -56,37 +56,17 @@ class SequenceFacadeResponse
 
         $product = PRODUCT::where('PRCODE', '=', $sequence->PRCODE)->first();
 
-        if (!empty($sequenceWorkCenter) || $this->workCenter === null) {
-            $preparatory = $product?->features()->where('FESHNA', '=', 'TEKEEL')->first()?->FEVALU;
-            $welder = $product?->features()->where('FESHNA', '=', 'TEKEHE')->first()?->FEVALU;
+        $preparatory = $product?->features()->where('FESHNA', '=', 'TEKEEL')->first()?->FEVALU;
+        $welder = $product?->features()->where('FESHNA', '=', 'TEKEHE')->first()?->FEVALU;
 
-            $rootPath = ($_SERVER['HTTP_HOST'] ?? 'http://localhost') .'/storage/product/';
+        $rootPath = ($_SERVER['HTTP_HOST'] ?? 'http://localhost') .'/storage/product/';
 
-            if ($preparatory !== null) {
-                $preparatory =  $rootPath . $preparatory;
-            }
+        if ($preparatory !== null) {
+            $preparatory =  $rootPath . $preparatory;
+        }
 
-            if ($welder !== null) {
-                $welder = $rootPath . $welder;
-            }
-
-            return (new SequenceResponseModel())
-                ->setSEQUID($sequence->SEQUID)
-                ->setSEPONR($sequence->SEPONR)
-                ->setSEPSEQ($sequence->SEPSEQ)
-                ->setSEARNU($sequence->SEARNU)
-                ->setSESIDE($sequence->SESIDE)
-                ->setORCODE($sequence->ORCODE)
-                ->setOPNAME(
-                    isset($this->workCenter?->operatorPanels) &&
-                    !empty($this->workCenter?->operatorPanels[0]) ?
-                        $this->workCenter?->operatorPanels :
-                        null
-                )
-                ->setPreparatory($preparatory)
-                ->setWelder($welder)
-                ->setColor($product?->features()->where('FESHNA', '=', 'SZASZ')->first()?->FEVALU)
-                ->setMaterial($product?->features()->where('FESHNA', '=', 'SZAA')->first()?->FEVALU);
+        if ($welder !== null) {
+            $welder = $rootPath . $welder;
         }
 
         return (new SequenceResponseModel())
@@ -101,6 +81,11 @@ class SequenceFacadeResponse
                 !empty($this->workCenter?->operatorPanels[0]) ?
                     $this->workCenter?->operatorPanels :
                     null
-            );
+            )
+            ->setRNREPN($sequenceWorkCenter?->RNREPN)
+            ->setPreparatory($preparatory)
+            ->setWelder($welder)
+            ->setColor($product?->features()->where('FESHNA', '=', 'SZASZ')->first()?->FEVALU)
+            ->setMaterial($product?->features()->where('FESHNA', '=', 'SZAA')->first()?->FEVALU);
     }
 }
