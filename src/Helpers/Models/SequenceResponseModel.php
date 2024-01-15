@@ -14,6 +14,7 @@ class SequenceResponseModel extends ObjectToArray
     protected string $ORCODE;
     protected string|null $OPNAME;
     protected string|null $RNREPN;
+    protected string|null $DHIDEN;
     protected string|null $preparatory = null;
     protected string|null $welder = null;
     protected string $color;
@@ -94,6 +95,8 @@ class SequenceResponseModel extends ObjectToArray
     {
         if ($operatorPanel !== null) {
             $this->OPNAME = $operatorPanel->OPNAME;
+
+            $this->setDHIDEN($operatorPanel->dashboard->DHIDEN);
         }
 
         return $this;
@@ -107,6 +110,17 @@ class SequenceResponseModel extends ObjectToArray
     public function setRNREPN(string|null $RNREPN): SequenceResponseModel
     {
         $this->RNREPN = $RNREPN;
+        return $this;
+    }
+
+    public function getDHIDEN(): string|null
+    {
+        return $this->DHIDEN;
+    }
+
+    public function setDHIDEN(string|null $DHIDEN): SequenceResponseModel
+    {
+        $this->DHIDEN = $DHIDEN;
         return $this;
     }
 

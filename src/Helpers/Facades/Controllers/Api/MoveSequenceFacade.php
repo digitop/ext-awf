@@ -2,6 +2,7 @@
 
 namespace AWF\Extension\Helpers\Facades\Controllers\Api;
 
+use App\Models\REPNO;
 use AWF\Extension\Helpers\Responses\JsonResponseModel;
 use AWF\Extension\Helpers\Responses\ResponseData;
 use AWF\Extension\Models\AWF_SEQUENCE;
@@ -97,9 +98,16 @@ class MoveSequenceFacade extends Facade
             ]);
 
         if ($nextProductWorkCenterData !== null) {
+            $repno = REPNO::where([
+                ['WCSHNA', $nextProductWorkCenterData->WCSHNA],
+                ['ORCODE', $sequence->ORCODE],
+                ['RNOLAC', 0]
+            ])->first();
+
             AWF_SEQUENCE_WORKCENTER::create([
                 'SEQUID' => $request->SEQUID,
                 'WCSHNA' => $nextProductWorkCenterData->WCSHNA,
+                'RNREPN' => $repno->RNREPN,
             ]);
 
             AWF_SEQUENCE_LOG::create([
