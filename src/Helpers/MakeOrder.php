@@ -57,11 +57,17 @@ class MakeOrder
 
         $sequenceWorkCenter = AWF_SEQUENCE_WORKCENTER::where('SEQUID', '=', $sequenceData->SEQUID)->first();
 
-        $repno = REPNO::where([['WCSHNA', $sequenceWorkCenter->WCSHNA], ['ORCODE', $orcode]])->first();
+        REPNO::where('RNACTV', '=', 0)
+            ->update([
+                'RNACTV' => 1,
+            ]);
 
-        $repno->update([
-            'RNACTV' => 1,
-        ]);
+        $repno = REPNO::where([
+            ['WCSHNA', $sequenceWorkCenter->WCSHNA],
+            ['ORCODE', $orcode],
+            ['RNACTV', 1],
+            ['RNOLAC', 0],
+        ])->first();
 
         $sequenceWorkCenter->update([
             'RNREPN' => $repno->RNREPN,
