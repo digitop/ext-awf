@@ -4,6 +4,8 @@ namespace AWF\Extension\Helpers;
 
 use App\Http\Controllers\production\order\OrderController;
 use App\Http\Requests\production\order\InsertRequest;
+use App\Models\REPNO;
+use AWF\Extension\Models\AWF_SEQUENCE_WORKCENTER;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\PARAMETERS;
 use App\Models\ORDERHEAD;
@@ -51,6 +53,19 @@ class MakeOrder
 
         $sequenceData->update([
             'ORCODE' => $orcode,
+        ]);
+
+        $sequenceWorkCenter = AWF_SEQUENCE_WORKCENTER::where('SEQUID', '=', $sequenceData->SEQUID)->first();
+
+        $repno = REPNO::where([['WCSHNA', $sequenceWorkCenter->WCSHNA], ['ORCODE', $orcode]])->first();
+
+        $repno->update([
+            'RNACTV' => 1,
+            'RNTOID' => $value[6] ?? null
+        ]);
+
+        $sequenceWorkCenter->update([
+            'RNREPN' => $repno->RNREPN,
         ]);
     }
 }
