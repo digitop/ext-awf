@@ -32,7 +32,18 @@ class ProductFeaturesFacade extends Facade
 
     public function show(Request|FormRequest|null $request = null, Model ...$model): JsonResponse|null
     {
-        return null;
+        return new CustomJsonResponse(new JsonResponseModel(
+            new ResponseData(
+                true,
+                (new ProductFeaturesResponse(
+                    PRODUCT::whereNull('DELDAT')
+                        ->where('PRACTV', '=', 1)
+                        ->where('PRCODE', '=', $request->productCode)
+                        ->get()
+                ))->generate()
+            ),
+            Response::HTTP_OK
+        ));
     }
 
     public function colors(): JsonResponse|null
