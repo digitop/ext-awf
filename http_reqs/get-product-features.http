@@ -1,3 +1,4 @@
+### get features of all product
 GET localhost:8000/api/ext/awf-extension/get-product-feature
 Accept: application/json
 Content-Type: application/json

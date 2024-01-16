@@ -24,7 +24,7 @@ Route::group(
         Route::get('/get-product-feature', ['uses' => 'ProductFeaturesController@create'])
             ->name('get-product-feature.create');
 
-        Route::get('/get-product-feature/{WCSHNA}', ['uses' => 'ProductFeaturesController@show'])
+        Route::post('/get-product-feature', ['uses' => 'ProductFeaturesController@show'])
             ->name('get-product-feature.show');
     }
 );

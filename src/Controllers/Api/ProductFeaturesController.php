@@ -23,8 +23,8 @@ class ProductFeaturesController extends Controller
     }
 
 
-    public function show(ProductFeaturesShowRequest $request, WORKCENTER $WCSHNA): JsonResponse
+    public function show(ProductFeaturesShowRequest $request): JsonResponse
     {
-        return $this->facade->show($request, $WCSHNA);
+        return $this->facade->show($request);
     }
 }
