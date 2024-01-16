@@ -81,7 +81,7 @@ class ProductFeaturesFacade extends Facade
         if ($product->features()->where('FESHNA', '=', 'SZASZ')->first() === null) {
             return new CustomJsonResponse(
                 new JsonResponseModel(
-                    new ResponseData(true, [], __('response.no_new_data_available')),
+                    new ResponseData(true, [], __('response.check.empty_color')),
                     Response::HTTP_BAD_REQUEST
                 )
             );
@@ -92,7 +92,7 @@ class ProductFeaturesFacade extends Facade
         if ($color->FEVALU !== $request->color) {
             return new CustomJsonResponse(
                 new JsonResponseModel(
-                    new ResponseData(true, [], __('response.unprocessable_entity')),
+                    new ResponseData(true, [], __('response.check.wrong_color')),
                     Response::HTTP_UNPROCESSABLE_ENTITY
                 )
             );

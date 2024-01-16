@@ -5,4 +5,8 @@ return [
     'bad_request' => 'Ungültige Anforderung!',
     'no_new_data_available' => 'Keine Daten verfügbar!',
     'email_error' => 'Fehler beim Versuch, eine E-Mail zu senden!',
+    'check' => [
+        'wrong_color' => 'Sie haben die Produktfarbe falsch eingegeben!',
+        'empty_color' => 'Es gibt keine Farbe für das Produkt!',
+    ],
 ];
