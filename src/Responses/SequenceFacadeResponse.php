@@ -5,7 +5,6 @@ namespace AWF\Extension\Responses;
 use AWF\Extension\Helpers\Models\SequenceResponseModel;
 use AWF\Extension\Helpers\ProductFeaturesImagesUrl;
 use AWF\Extension\Models\AWF_SEQUENCE;
-use AWF\Extension\Models\AWF_SEQUENCE_LOG;
 use AWF\Extension\Models\AWF_SEQUENCE_WORKCENTER;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;

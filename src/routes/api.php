@@ -25,6 +25,8 @@ Route::group(
             ->name('get-product-feature.create');
         Route::get('/get-product-feature/colors', ['uses' => 'ProductFeaturesController@colors'])
             ->name('get-product-feature.colors');
+        Route::get('/get-product-feature/materials', ['uses' => 'ProductFeaturesController@materials'])
+            ->name('get-product-feature.materials');
         Route::post('/get-product-feature', ['uses' => 'ProductFeaturesController@show'])
             ->name('get-product-feature.show');
     }

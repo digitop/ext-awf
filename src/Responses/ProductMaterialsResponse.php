@@ -5,7 +5,7 @@ namespace AWF\Extension\Responses;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
-class ProductColorsResponse
+class ProductMaterialsResponse
 {
     protected Collection $products;
     protected Model|null $workCenter = null;
@@ -22,9 +22,13 @@ class ProductColorsResponse
 
         foreach ($this->products as $product) {
             if (
-                !in_array($color = $product?->features()->where('FESHNA', '=', 'SZASZ')->first()?->FEVALU, $data, true)
+                !in_array(
+                    $material = $product?->features()->where('FESHNA', '=', 'SZAA')->first()?->FEVALU,
+                    $data,
+                    true
+                )
             ) {
-                $data[] = $color;
+                $data[] = $material;
             }
         }
 
@@ -36,18 +40,18 @@ class ProductColorsResponse
         return $this->products;
     }
 
-    public function setProducts(Collection $products): ProductColorsResponse
+    public function setProducts(Collection $products): ProductMaterialsResponse
     {
         $this->products = $products;
         return $this;
     }
 
-    public function getWorkCenter(): Model|null
+    public function getWorkCenter(): ?Model
     {
         return $this->workCenter;
     }
 
-    public function setWorkCenter(Model|null $workCenter): ProductColorsResponse
+    public function setWorkCenter(?Model $workCenter): ProductMaterialsResponse
     {
         $this->workCenter = $workCenter;
         return $this;

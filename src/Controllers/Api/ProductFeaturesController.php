@@ -32,4 +32,9 @@ class ProductFeaturesController extends Controller
     {
         return $this->facade->colors($request);
     }
+
+    public function materials(Request $request): JsonResponse
+    {
+        return $this->facade->materials($request);
+    }
 }

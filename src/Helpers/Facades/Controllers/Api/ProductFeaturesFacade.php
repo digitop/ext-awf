@@ -45,4 +45,17 @@ class ProductFeaturesFacade extends Facade
             Response::HTTP_OK
         ));
     }
+
+    public function materials(): JsonResponse|null
+    {
+        return new CustomJsonResponse(new JsonResponseModel(
+            new ResponseData(
+                true,
+                (new ProductMaterialsResponse(
+                    PRODUCT::whereNull('DELDAT')->where('PRACTV', '=', 1)->get()
+                ))->generate()
+            ),
+            Response::HTTP_OK
+        ));
+    }
 }
