@@ -1,5 +1,5 @@
 ### get features of a given product by machine
-POST localhost:8000/api/ext/awf-extension/get-product-feature
+POST localhost:8000/api/ext/awf-extension/product-feature/show
 Accept: application/json
 Content-Type: application/json
 
