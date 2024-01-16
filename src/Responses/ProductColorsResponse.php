@@ -32,7 +32,7 @@ class ProductColorsResponse
                 $data,
                 true
             )) {
-                $data['designation'][] = $color;
+                $data['designation'][] = $designation;
             }
         }
 
