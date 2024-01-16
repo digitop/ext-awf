@@ -23,9 +23,13 @@ class ProductFeaturesController extends Controller
         return $this->facade->create($request);
     }
 
-
     public function show(ProductFeaturesShowRequest $request): JsonResponse
     {
         return $this->facade->show($request);
+    }
+
+    public function colors(Request $request): JsonResponse
+    {
+        return $this->facade->colors($request);
     }
 }

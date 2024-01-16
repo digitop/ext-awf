@@ -23,7 +23,8 @@ Route::group(
 
         Route::get('/get-product-feature', ['uses' => 'ProductFeaturesController@create'])
             ->name('get-product-feature.create');
-
+        Route::get('/get-product-feature/colors', ['uses' => 'ProductFeaturesController@colors'])
+            ->name('get-product-feature.colors');
         Route::post('/get-product-feature', ['uses' => 'ProductFeaturesController@show'])
             ->name('get-product-feature.show');
     }

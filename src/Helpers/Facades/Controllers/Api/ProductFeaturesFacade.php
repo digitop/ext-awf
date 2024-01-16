@@ -5,6 +5,7 @@ namespace AWF\Extension\Helpers\Facades\Controllers\Api;
 use AWF\Extension\Helpers\Responses\JsonResponseModel;
 use AWF\Extension\Helpers\Responses\ResponseData;
 use AWF\Extension\Responses\CustomJsonResponse;
+use AWF\Extension\Responses\ProductColorsResponse;
 use AWF\Extension\Responses\ProductFeaturesResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Database\Eloquent\Model;
@@ -30,5 +31,18 @@ class ProductFeaturesFacade extends Facade
     public function show(Request|FormRequest|null $request = null, Model ...$model): JsonResponse|null
     {
         return null;
+    }
+
+    public function colors(): JsonResponse|null
+    {
+        return new CustomJsonResponse(new JsonResponseModel(
+            new ResponseData(
+                true,
+                (new ProductColorsResponse(
+                    PRODUCT::whereNull('DELDAT')->where('PRACTV', '=', 1)->get()
+                ))->generate()
+            ),
+            Response::HTTP_OK
+        ));
     }
 }
