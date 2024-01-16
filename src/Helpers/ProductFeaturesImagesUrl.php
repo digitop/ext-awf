@@ -4,9 +4,9 @@ namespace AWF\Extension\Helpers;
 
 class ProductFeaturesImagesUrl
 {
-    public static function getUrl(string $path): string
+    public static function getUrl(string|null $path): string|null
     {
-        $url = '';
+        $url = null;
         $rootPath = ($_SERVER['HTTP_HOST'] ?? 'http://localhost') .'/storage/product/';
 
         if ($path !== null) {
