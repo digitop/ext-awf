@@ -7,6 +7,7 @@ use AWF\Extension\Helpers\Responses\ResponseData;
 use AWF\Extension\Responses\CustomJsonResponse;
 use AWF\Extension\Responses\ProductColorsResponse;
 use AWF\Extension\Responses\ProductFeaturesResponse;
+use AWF\Extension\Responses\ProductMaterialsResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Database\Eloquent\Model;
