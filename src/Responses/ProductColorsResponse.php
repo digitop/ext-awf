@@ -21,15 +21,17 @@ class ProductColorsResponse
         $data = [];
 
         foreach ($this->products as $product) {
-            if (
-                !in_array($color = $product?->features()->where('FESHNA', '=', 'SZASZ')->first()?->FEVALU, $data, true)
-            ) {
+            if (!in_array(
+                $color = $product?->features()->where('FESHNA', '=', 'SZASZ')->first()?->FEVALU,
+                $data['color'],
+                true
+            )) {
                 $data['color'][] = $color;
             }
 
             if (!in_array(
                 $designation = $product?->features()->where('FESHNA', '=', 'TESZNE')->first()?->FEVALU,
-                $data,
+                $data['designation'],
                 true
             )) {
                 $data['designation'][] = $designation;

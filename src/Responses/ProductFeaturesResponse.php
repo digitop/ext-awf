@@ -29,6 +29,7 @@ class ProductFeaturesResponse
                 $product?->features()->where('FESHNA', '=', 'SZASZ')->first()?->FEVALU,
                 $product?->features()->where('FESHNA', '=', 'SZAA')->first()?->FEVALU
             ))
+                ->setColorDesignation($product?->features()->where('FESHNA', '=', 'TESZNE')->first()?->FEVALU)
                 ->setPreparatoryImageUrl(ProductFeaturesImagesUrl::getUrl(
                     $product?->features()->where('FESHNA', '=', 'TEKEEL')->first()?->FEVALU
                 ))
