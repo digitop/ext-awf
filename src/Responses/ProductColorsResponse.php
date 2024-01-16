@@ -19,24 +19,20 @@ class ProductColorsResponse
     public function generate(): array
     {
         $data = [];
-        $data['color'] = [];
-        $data['designation'] = [];
+        $availableColors = [];
 
         foreach ($this->products as $product) {
             if (!in_array(
-                $color = $product?->features()->where('FESHNA', '=', 'SZASZ')->first()?->FEVALU,
-                $data['color'],
-                true
-            )) {
-                $data['color'][] = $color;
-            }
-
-            if (!in_array(
                 $designation = $product?->features()->where('FESHNA', '=', 'TESZNE')->first()?->FEVALU,
-                $data['designation'],
+                $availableColors,
                 true
             )) {
-                $data['designation'][] = $designation;
+                $data[] = [
+                    'designation' => $designation,
+                    'color' => $product?->features()->where('FESHNA', '=', 'SZASZ')->first()?->FEVALU,
+                ];
+
+                $availableColors[] = $designation;
             }
         }
 
