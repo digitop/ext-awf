@@ -19,6 +19,8 @@ class ProductColorsResponse
     public function generate(): array
     {
         $data = [];
+        $data['color'] = [];
+        $data['designation'] = [];
 
         foreach ($this->products as $product) {
             if (!in_array(
