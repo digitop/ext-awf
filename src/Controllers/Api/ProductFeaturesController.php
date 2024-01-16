@@ -3,6 +3,7 @@
 namespace AWF\Extension\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use AWF\Extension\Helpers\Facades\Controllers\Api\ProductFeaturesFacade;
 use AWF\Extension\Interfaces\ApiControllerFacadeInterface;
 use AWF\Extension\Requests\Api\ProductFeaturesShowRequest;
 use Illuminate\Http\Request;
@@ -14,7 +15,7 @@ class ProductFeaturesController extends Controller
 
     public function __construct()
     {
-        $this->facade = new MakeOrderFacade();
+        $this->facade = new ProductFeaturesFacade();
     }
 
     public function create(Request $request): JsonResponse
