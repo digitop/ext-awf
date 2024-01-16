@@ -2,3 +2,8 @@
 GET localhost:8000/api/ext/awf-extension/get-product-feature
 Accept: application/json
 Content-Type: application/json
+
+### get features of all product - colors
+GET localhost:8000/api/ext/awf-extension/get-product-feature/colors
+Accept: application/json
+Content-Type: application/json
