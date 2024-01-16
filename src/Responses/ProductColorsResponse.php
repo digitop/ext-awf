@@ -24,7 +24,15 @@ class ProductColorsResponse
             if (
                 !in_array($color = $product?->features()->where('FESHNA', '=', 'SZASZ')->first()?->FEVALU, $data, true)
             ) {
-                $data[] = $color;
+                $data['color'][] = $color;
+            }
+
+            if (!in_array(
+                $designation = $product?->features()->where('FESHNA', '=', 'TESZNE')->first()?->FEVALU,
+                $data,
+                true
+            )) {
+                $data['designation'][] = $color;
             }
         }
 

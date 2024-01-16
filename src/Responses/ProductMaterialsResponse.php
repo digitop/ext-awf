@@ -21,13 +21,11 @@ class ProductMaterialsResponse
         $data = [];
 
         foreach ($this->products as $product) {
-            if (
-                !in_array(
-                    $material = $product?->features()->where('FESHNA', '=', 'SZAA')->first()?->FEVALU,
-                    $data,
-                    true
-                )
-            ) {
+            if (!in_array(
+                $material = $product?->features()->where('FESHNA', '=', 'SZAA')->first()?->FEVALU,
+                $data,
+                true
+            )) {
                 $data[] = $material;
             }
         }
