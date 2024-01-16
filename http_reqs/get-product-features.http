@@ -1,14 +1,14 @@
 ### get features of all product
-GET localhost:8000/api/ext/awf-extension/get-product-feature
+GET localhost:8000/api/ext/awf-extension/product-feature/get
 Accept: application/json
 Content-Type: application/json
 
 ### get features of all product - colors
-GET localhost:8000/api/ext/awf-extension/get-product-feature/colors
+GET localhost:8000/api/ext/awf-extension/product-feature/get/colors
 Accept: application/json
 Content-Type: application/json
 
 ### get features of all product - materials
-GET localhost:8000/api/ext/awf-extension/get-product-feature/materials
+GET localhost:8000/api/ext/awf-extension/product-feature/get/materials
 Accept: application/json
 Content-Type: application/json

@@ -21,13 +21,15 @@ Route::group(
         Route::post('/move-sequence', ['uses' => 'MoveSequenceController@store'])
             ->name('awf-sequence.store');
 
-        Route::get('/get-product-feature', ['uses' => 'ProductFeaturesController@create'])
-            ->name('get-product-feature.create');
-        Route::get('/get-product-feature/colors', ['uses' => 'ProductFeaturesController@colors'])
-            ->name('get-product-feature.colors');
-        Route::get('/get-product-feature/materials', ['uses' => 'ProductFeaturesController@materials'])
-            ->name('get-product-feature.materials');
-        Route::post('/get-product-feature', ['uses' => 'ProductFeaturesController@show'])
-            ->name('get-product-feature.show');
+        Route::get('/product-feature/get', ['uses' => 'ProductFeaturesController@create'])
+            ->name('product-feature.create');
+        Route::get('/product-feature/get/colors', ['uses' => 'ProductFeaturesController@colors'])
+            ->name('product-feature.colors');
+        Route::get('/product-feature/get/materials', ['uses' => 'ProductFeaturesController@materials'])
+            ->name('product-feature.materials');
+        Route::post('/product-feature/post', ['uses' => 'ProductFeaturesController@show'])
+            ->name('product-feature.show');
+        Route::post('/product-feature/check', ['uses' => 'ProductFeaturesController@check'])
+            ->name('product-feature.check');
     }
 );
