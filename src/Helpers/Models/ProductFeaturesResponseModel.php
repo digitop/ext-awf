@@ -27,12 +27,12 @@ class ProductFeaturesResponseModel extends ObjectToArray
         return $this;
     }
 
-    public function getColorDesignation(): ?string
+    public function getColorDesignation(): string|null
     {
         return $this->colorDesignation;
     }
 
-    public function setColorDesignation(?string $colorDesignation): ProductFeaturesResponseModel
+    public function setColorDesignation(string|null $colorDesignation): ProductFeaturesResponseModel
     {
         $this->colorDesignation = $colorDesignation;
         return $this;

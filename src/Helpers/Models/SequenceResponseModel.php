@@ -18,6 +18,7 @@ class SequenceResponseModel extends ObjectToArray
     protected string|null $preparatory = null;
     protected string|null $welder = null;
     protected string $color;
+    protected string|null $colorDesignation = null;
     protected string $material;
 
     public function getSEQUID(): int
@@ -154,6 +155,17 @@ class SequenceResponseModel extends ObjectToArray
     public function setColor(string $color): SequenceResponseModel
     {
         $this->color = $color;
+        return $this;
+    }
+
+    public function getColorDesignation(): ?string
+    {
+        return $this->colorDesignation;
+    }
+
+    public function setColorDesignation(?string $colorDesignation): SequenceResponseModel
+    {
+        $this->colorDesignation = $colorDesignation;
         return $this;
     }
 

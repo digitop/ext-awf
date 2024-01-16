@@ -77,6 +77,7 @@ class SequenceFacadeResponse
                 $product?->features()->where('FESHNA', '=', 'TEKEHE')->first()?->FEVALU
             ))
             ->setColor($product?->features()->where('FESHNA', '=', 'SZASZ')->first()?->FEVALU)
+            ->setColorDesignation($product?->features()->where('FESHNA', '=', 'TESZNE')->first()?->FEVALU)
             ->setMaterial($product?->features()->where('FESHNA', '=', 'SZAA')->first()?->FEVALU);
     }
 }
