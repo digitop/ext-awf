@@ -26,7 +26,7 @@ class ProductMaterialsResponse
                 $data,
                 true
             )) {
-                $data[] = $material;
+                $data[] = ucfirst($material);
             }
         }
 
