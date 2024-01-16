@@ -5,6 +5,7 @@ namespace AWF\Extension\Controllers\Api;
 use App\Http\Controllers\Controller;
 use AWF\Extension\Helpers\Facades\Controllers\Api\ProductFeaturesFacade;
 use AWF\Extension\Interfaces\ApiControllerFacadeInterface;
+use AWF\Extension\Requests\Api\ProductFeaturesCheckRequest;
 use AWF\Extension\Requests\Api\ProductFeaturesShowRequest;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -36,5 +37,10 @@ class ProductFeaturesController extends Controller
     public function materials(Request $request): JsonResponse
     {
         return $this->facade->materials($request);
+    }
+
+    public function check(ProductFeaturesCheckRequest $request): JsonResponse
+    {
+        return $this->facade->check($request);
     }
 }

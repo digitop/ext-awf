@@ -71,4 +71,33 @@ class ProductFeaturesFacade extends Facade
             Response::HTTP_OK
         ));
     }
+
+    public function check(Request|FormRequest|null $request = null): JsonResponse|null
+    {
+        $product = PRODUCT::where('PRCODE', '=', $request->productCode)
+            ->where('PRACTV', '=', 1)
+            ->first();
+
+        if ($product->features()->where('FESHNA', '=', 'SZASZ')->first() === null) {
+            return new CustomJsonResponse(
+                new JsonResponseModel(
+                    new ResponseData(true, [], __('response.no_new_data_available')),
+                    Response::HTTP_BAD_REQUEST
+                )
+            );
+        }
+
+        $color = $product->features()->where('FESHNA', '=', 'SZASZ')->first();
+
+        if ($color->FEVALU !== $request->color) {
+            return new CustomJsonResponse(
+                new JsonResponseModel(
+                    new ResponseData(true, [], __('response.unprocessable_entity')),
+                    Response::HTTP_UNPROCESSABLE_ENTITY
+                )
+            );
+        }
+
+        return new CustomJsonResponse(new JsonResponseModel(new ResponseData(true), Response::HTTP_OK));
+    }
 }

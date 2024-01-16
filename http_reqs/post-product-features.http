@@ -6,3 +6,13 @@ Content-Type: application/json
 {
   "productCode": ""
 }
+
+### check if selected color is right
+POST localhost:8000/api/ext/awf-extension/product-feature/check
+Accept: application/json
+Content-Type: application/json
+
+{
+  "productCode": "",
+  "color": ""
+}
