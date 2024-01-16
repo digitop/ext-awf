@@ -13,11 +13,18 @@ Route::group(
             ->name('awf-generate-data.create');
         Route::get('/generate-orders', ['uses' => 'MakeOrderController@create'])
             ->name('awf-generate-orders.create');
+
         Route::get('/get-default-sequence', ['uses' => 'SequenceController@create'])
             ->name('awf-sequence.create');
         Route::get('/get-sequence/{WCSHNA}', ['uses' => 'SequenceController@show'])
             ->name('awf-sequence.show');
         Route::post('/move-sequence', ['uses' => 'MoveSequenceController@store'])
             ->name('awf-sequence.store');
+
+        Route::get('/get-product-feature', ['uses' => 'ProductFeaturesController@create'])
+            ->name('get-product-feature.create');
+
+        Route::get('/get-product-feature/{WCSHNA}', ['uses' => 'ProductFeaturesController@show'])
+            ->name('get-product-feature.show');
     }
 );

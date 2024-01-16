@@ -3,6 +3,7 @@
 namespace AWF\Extension\Responses;
 
 use AWF\Extension\Helpers\Models\SequenceResponseModel;
+use AWF\Extension\Helpers\ProductFeaturesImagesUrl;
 use AWF\Extension\Models\AWF_SEQUENCE;
 use AWF\Extension\Models\AWF_SEQUENCE_LOG;
 use AWF\Extension\Models\AWF_SEQUENCE_WORKCENTER;
@@ -56,19 +57,6 @@ class SequenceFacadeResponse
 
         $product = PRODUCT::where('PRCODE', '=', $sequence->PRCODE)->first();
 
-        $preparatory = $product?->features()->where('FESHNA', '=', 'TEKEEL')->first()?->FEVALU;
-        $welder = $product?->features()->where('FESHNA', '=', 'TEKEHE')->first()?->FEVALU;
-
-        $rootPath = ($_SERVER['HTTP_HOST'] ?? 'http://localhost') .'/storage/product/';
-
-        if ($preparatory !== null) {
-            $preparatory =  $rootPath . $preparatory;
-        }
-
-        if ($welder !== null) {
-            $welder = $rootPath . $welder;
-        }
-
         return (new SequenceResponseModel())
             ->setSEQUID($sequence->SEQUID)
             ->setSEPONR($sequence->SEPONR)
@@ -83,8 +71,12 @@ class SequenceFacadeResponse
                     null
             )
             ->setRNREPN($sequenceWorkCenter?->RNREPN)
-            ->setPreparatory($preparatory)
-            ->setWelder($welder)
+            ->setPreparatory(ProductFeaturesImagesUrl::getUrl(
+                $product?->features()->where('FESHNA', '=', 'TEKEEL')->first()?->FEVALU
+            ))
+            ->setWelder(ProductFeaturesImagesUrl::getUrl(
+                $product?->features()->where('FESHNA', '=', 'TEKEHE')->first()?->FEVALU
+            ))
             ->setColor($product?->features()->where('FESHNA', '=', 'SZASZ')->first()?->FEVALU)
             ->setMaterial($product?->features()->where('FESHNA', '=', 'SZAA')->first()?->FEVALU);
     }
