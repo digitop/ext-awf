@@ -41,6 +41,9 @@ class GenerateDataCommand extends Command
      */
     public function handle(): mixed
     {
+        $this->info('Start of downloading and processing data from a server');
+        $this->info(str_repeat("=", 10));
+
         try {
             (new GenerateDataFacade())->create();
         }
@@ -59,6 +62,11 @@ class GenerateDataCommand extends Command
             return false;
         }
 
+        $this->info('End of downloading and processing data from a server');
+        $this->info(str_repeat("=", 20));
+        $this->info('Start creating your orders');
+        $this->info(str_repeat("=", 10));
+
         try {
             (new MakeOrderFacade())->create();
         }
@@ -76,6 +84,8 @@ class GenerateDataCommand extends Command
 
             return false;
         }
+
+        $this->info('End creating your orders');
 
         return true;
     }
