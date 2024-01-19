@@ -42,6 +42,21 @@ class MoveSequenceFacade extends Facade
 
         $this->move($request, $sequence, $nextProductWorkCenterData);
 
+        $workCenter = WORKCENTER::where('WCSHNA', '=', $nextProductWorkCenterData?->WCSHNA)->first();
+
+        if (empty($workCenter)) {
+            $workCenter = WORKCENTER::where('WCSHNA', '=', $request->WCSHNA)->first();
+        }
+
+        publishMqtt(env('DEPLOYMENT_SUBDOMAIN') . '/api/SEQUENCE_CHANGE/', [
+            [
+                "to" => 'dh:' . $workCenter?->operatorPanels[0]->dashboard->DHIDEN,
+                "payload" => [
+                    "title" => "alert.2",
+                ],
+            ]
+        ]);
+
         return new CustomJsonResponse(new JsonResponseModel(
             new ResponseData(
                 true,
