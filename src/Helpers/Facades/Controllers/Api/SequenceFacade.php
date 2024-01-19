@@ -48,6 +48,10 @@ class SequenceFacade extends Facade
     {
         list($workCenter, $pillar) = $model;
 
+        if (is_string($pillar) && $pillar === 'null') {
+            $pillar = null;
+        }
+
         $logs = AWF_SEQUENCE_LOG::where('WCSHNA', '=', $workCenter->WCSHNA)
             ->whereNull('LSTIME')
             ->whereNull('LETIME')
