@@ -44,8 +44,12 @@ class GenerateDataCommand extends Command
         $this->info('Start of downloading and processing data from a server');
         $this->info(str_repeat("=", 10));
 
+        $success = false;
+
         try {
             (new GenerateDataFacade())->create();
+
+            $success = true;
         }
         catch (\Exception $exception) {
             $endTime = microtime(true);
@@ -59,7 +63,7 @@ class GenerateDataCommand extends Command
                 $dataToLog . "\n" . str_repeat("=", 20) . "\n\n"
             );
 
-            return false;
+            $success = false;
         }
 
         $this->info('End of downloading and processing data from a server');
@@ -69,6 +73,8 @@ class GenerateDataCommand extends Command
 
         try {
             (new MakeOrderFacade())->create();
+
+            $success = true;
         }
         catch (\Exception $exception) {
             $endTime = microtime(true);
@@ -82,11 +88,11 @@ class GenerateDataCommand extends Command
                 $dataToLog . "\n" . str_repeat("=", 20) . "\n\n"
             );
 
-            return false;
+            $success = false;
         }
 
         $this->info('End creating your orders');
 
-        return true;
+        return $success;
     }
 }
