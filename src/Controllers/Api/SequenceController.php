@@ -24,7 +24,7 @@ class SequenceController extends Controller
         return $this->facade->create($request);
     }
 
-    public function show(SequenceShowRequest $request, WORKCENTER|string|null ...$parameters): JsonResponse
+    public function show(SequenceShowRequest $request, ...$parameters): JsonResponse
     {
         return $this->facade->show($request, $parameters);
     }
