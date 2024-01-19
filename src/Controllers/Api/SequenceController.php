@@ -26,6 +26,6 @@ class SequenceController extends Controller
 
     public function show(WORKCENTER $WCSHNA, string|null $pillar, SequenceShowRequest $request): JsonResponse
     {
-        return $this->facade->show($request, [$WCSHNA, $pillar]);
+        return $this->facade->show($request, $WCSHNA, $pillar);
     }
 }
