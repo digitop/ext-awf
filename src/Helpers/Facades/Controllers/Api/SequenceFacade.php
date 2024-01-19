@@ -81,6 +81,13 @@ class SequenceFacade extends Facade
                 $sequence = AWF_SEQUENCE::where('SEQUID', '=', $log->SEQUID)
                     ->where('SESIDE', '=', $request->side)
                     ->first();
+
+                if ($pillar !== null) {
+                    $sequence = AWF_SEQUENCE::where('SEQUID', '=', $log->SEQUID)
+                        ->where('SESIDE', '=', $request->side)
+                        ->where('SEPILL', '=', $pillar)
+                        ->first();
+                }
             }
 
             if (!empty($sequence)) {
