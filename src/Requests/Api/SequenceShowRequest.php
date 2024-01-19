@@ -21,7 +21,7 @@ class SequenceShowRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'pillar' => ['nullable', 'string', 'max:1', 'min:1', 'in:R,L'],
+            'side' => ['nullable', 'string', 'max:1', 'min:1', 'in:R,L'],
         ];
     }
 
@@ -33,11 +33,10 @@ class SequenceShowRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'pillar.required' => __('validation.required', ['attribute' =>'pillar']),
-            'pillar.in' => __('validation.required', ['attribute' =>'pillar']),
-            'pillar.string' => __('validation.string', ['attribute' =>'pillar']),
-            'pillar.max' => __('validation.max.string', ['attribute' =>'pillar']),
-            'pillar.min' => __('validation.min.string', ['attribute' =>'pillar']),
+            'side.in' => __('validation.required', ['attribute' =>'pillar']),
+            'side.string' => __('validation.string', ['attribute' =>'pillar']),
+            'side.max' => __('validation.max.string', ['attribute' =>'pillar']),
+            'side.min' => __('validation.min.string', ['attribute' =>'pillar']),
         ];
     }
 }
