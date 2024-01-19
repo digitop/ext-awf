@@ -44,9 +44,11 @@ class SequenceFacade extends Facade
         ));
     }
 
-    public function show(Request|FormRequest|null $request = null, Model ...$model): JsonResponse|null
+    public function show(Request|FormRequest|null $request = null, Model|string|null ...$model): JsonResponse|null
     {
-        $logs = AWF_SEQUENCE_LOG::where('WCSHNA', '=', $model[0]->WCSHNA)
+        list($workCenter, $pillar) = $model;
+
+        $logs = AWF_SEQUENCE_LOG::where('WCSHNA', '=', $workCenter->WCSHNA)
             ->whereNull('LSTIME')
             ->whereNull('LETIME')
             ->get();
@@ -66,6 +68,10 @@ class SequenceFacade extends Facade
 
         foreach ($logs as $log) {
             $sequence = AWF_SEQUENCE::where('SEQUID', '=', $log->SEQUID)->first();
+
+            if ($pillar !== null) {
+                $sequence = AWF_SEQUENCE::where('SEQUID', '=', $log->SEQUID)->where('SEPILL', '=', $pillar)->first();
+            }
 
             if (array_key_exists('pillar', $request->all())) {
                 $sequence = AWF_SEQUENCE::where('SEQUID', '=', $log->SEQUID)
@@ -102,7 +108,7 @@ class SequenceFacade extends Facade
             ->take($request->limit ?? 2);
 
         foreach ($sequence as $item) {
-            AWF_SEQUENCE_LOG::where('WCSHNA', '=', $model[0]->WCSHNA)
+            AWF_SEQUENCE_LOG::where('WCSHNA', '=', $workCenter->WCSHNA)
                 ->where('SEQUID', '=', $item->SEQUID)
                 ->whereNull('LSTIME')
                 ->whereNull('LETIME')
@@ -114,7 +120,7 @@ class SequenceFacade extends Facade
         return new CustomJsonResponse(new JsonResponseModel(
             new ResponseData(
                 true,
-                (new SequenceFacadeResponse($sequence, $model[0]))->generate()
+                (new SequenceFacadeResponse($sequence, $workCenter))->generate()
             ),
             Response::HTTP_OK
         ));

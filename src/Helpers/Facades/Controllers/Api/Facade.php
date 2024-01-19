@@ -15,7 +15,7 @@ class Facade implements ApiControllerFacadeInterface
         return null;
     }
 
-    public function show(Request|FormRequest|null $request = null, Model ...$model): JsonResponse|null
+    public function show(Request|FormRequest|null $request = null, Model|string|null ...$model): JsonResponse|null
     {
         return null;
     }
