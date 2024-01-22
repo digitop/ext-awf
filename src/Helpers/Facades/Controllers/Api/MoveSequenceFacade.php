@@ -40,22 +40,22 @@ class MoveSequenceFacade extends Facade
 
         $nextProductWorkCenterData = $this->getNextWorkCenterData($request, $sequence);
 
-        $this->move($request, $sequence, $nextProductWorkCenterData);
+        if ($this->move($request, $sequence, $nextProductWorkCenterData)) {
+            $workCenter = WORKCENTER::where('WCSHNA', '=', $nextProductWorkCenterData?->WCSHNA)->first();
 
-        $workCenter = WORKCENTER::where('WCSHNA', '=', $nextProductWorkCenterData?->WCSHNA)->first();
+            if (empty($workCenter)) {
+                $workCenter = WORKCENTER::where('WCSHNA', '=', $request->WCSHNA)->first();
+            }
 
-        if (empty($workCenter)) {
-            $workCenter = WORKCENTER::where('WCSHNA', '=', $request->WCSHNA)->first();
+            publishMqtt(env('DEPLOYMENT_SUBDOMAIN') . '/api/SEQUENCE_CHANGE/', [
+                [
+                    "to" => 'dh:' . $workCenter?->operatorPanels[0]->dashboard->DHIDEN,
+                    "payload" => [
+                        "title" => "alert.2",
+                    ],
+                ]
+            ]);
         }
-
-        publishMqtt(env('DEPLOYMENT_SUBDOMAIN') . '/api/SEQUENCE_CHANGE/', [
-            [
-                "to" => 'dh:' . $workCenter?->operatorPanels[0]->dashboard->DHIDEN,
-                "payload" => [
-                    "title" => "alert.2",
-                ],
-            ]
-        ]);
 
         return new CustomJsonResponse(new JsonResponseModel(
             new ResponseData(
@@ -97,7 +97,7 @@ class MoveSequenceFacade extends Facade
         return $nextProductWorkCenterData ?? null;
     }
 
-    protected function move(FormRequest|Request $request, Model $sequence, Model|null $nextProductWorkCenterData): void
+    protected function move(FormRequest|Request $request, Model $sequence, Model|null $nextProductWorkCenterData): bool
     {
         if ($sequence->SEINPR === false) {
             $sequence->update([
@@ -119,16 +119,25 @@ class MoveSequenceFacade extends Facade
                 ['RNOLAC', 0]
             ])->first();
 
-            AWF_SEQUENCE_WORKCENTER::create([
-                'SEQUID' => $request->SEQUID,
-                'WCSHNA' => $nextProductWorkCenterData->WCSHNA,
-                'RNREPN' => $repno->RNREPN,
-            ]);
+            if (
+                AWF_SEQUENCE_WORKCENTER::where('SEQUID', '=', $request->SEQUID)
+                    ->where('WCSHNA','=', $nextProductWorkCenterData->WCSHNA)->first() === null
+            ) {
+                AWF_SEQUENCE_WORKCENTER::create([
+                    'SEQUID' => $request->SEQUID,
+                    'WCSHNA' => $nextProductWorkCenterData->WCSHNA,
+                    'RNREPN' => $repno->RNREPN,
+                ]);
 
-            AWF_SEQUENCE_LOG::create([
-                'SEQUID' => $request->SEQUID,
-                'WCSHNA' => $nextProductWorkCenterData->WCSHNA,
-            ]);
+                AWF_SEQUENCE_LOG::create([
+                    'SEQUID' => $request->SEQUID,
+                    'WCSHNA' => $nextProductWorkCenterData->WCSHNA,
+                ]);
+
+                return true;
+            }
         }
+
+        return false;
     }
 }
