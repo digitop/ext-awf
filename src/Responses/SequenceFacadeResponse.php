@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\PRODUCT;
 use App\Models\WORKCENTER;
+use App\Models\REPNO;
 
 class SequenceFacadeResponse
 {
@@ -78,6 +79,9 @@ class SequenceFacadeResponse
             ))
             ->setColor($product?->features()->where('FESHNA', '=', 'SZASZ')->first()?->FEVALU)
             ->setColorDesignation($product?->features()->where('FESHNA', '=', 'TESZNE')->first()?->FEVALU)
-            ->setMaterial($product?->features()->where('FESHNA', '=', 'SZAA')->first()?->FEVALU);
+            ->setMaterial($product?->features()->where('FESHNA', '=', 'SZAA')->first()?->FEVALU)
+            ->setPreviousRepnos(
+                REPNO::where('WCSHNA', '=', $this->workCenter?->WCSHNA)->where('RNOLAC', '=', 1)->get()
+            );
     }
 }

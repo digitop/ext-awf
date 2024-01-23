@@ -3,6 +3,7 @@
 namespace AWF\Extension\Helpers\Models;
 
 use App\Models\OPERATOR_PANEL;
+use Illuminate\Database\Eloquent\Collection;
 
 class SequenceResponseModel extends ObjectToArray
 {
@@ -20,6 +21,7 @@ class SequenceResponseModel extends ObjectToArray
     protected string $color;
     protected string|null $colorDesignation = null;
     protected string $material;
+    protected array $previousRepnos = [];
 
     public function getSEQUID(): int
     {
@@ -177,6 +179,26 @@ class SequenceResponseModel extends ObjectToArray
     public function setMaterial(string $material): SequenceResponseModel
     {
         $this->material = $material;
+        return $this;
+    }
+
+    public function getPreviousRepnos(): array
+    {
+        return $this->previousRepnos;
+    }
+
+    public function setPreviousRepnos(Collection $previousRepnos): SequenceResponseModel
+    {
+        if (!empty($previousRepnos)) {
+            foreach ($previousRepnos as $previousRepno) {
+                $this->previousRepnos[] = [
+                    'ORCODE' => $previousRepno->ORCODE,
+                    'RNREPN' => $previousRepnos->RNREPN,
+                    'RNOLMU' => 1,
+                    'type' => 'unassigned',
+                ];
+            }
+        }
         return $this;
     }
 }
