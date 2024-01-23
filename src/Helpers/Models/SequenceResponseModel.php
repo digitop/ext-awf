@@ -193,7 +193,7 @@ class SequenceResponseModel extends ObjectToArray
             foreach ($previousRepnos as $previousRepno) {
                 $this->previousRepnos[] = [
                     'ORCODE' => $previousRepno->ORCODE,
-                    'RNREPN' => $previousRepnos->RNREPN,
+                    'RNREPN' => $previousRepno->RNREPN,
                     'RNOLMU' => 1,
                     'type' => 'unassigned',
                 ];
