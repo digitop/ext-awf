@@ -189,7 +189,7 @@ class SequenceResponseModel extends ObjectToArray
 
     public function setPreviousRepnos(Collection $previousRepnos): SequenceResponseModel
     {
-        if (!empty($previousRepnos)) {
+        if (!empty($previousRepnos) && !empty($previousRepnos[0])) {
             foreach ($previousRepnos as $previousRepno) {
                 $this->previousRepnos[] = [
                     'ORCODE' => $previousRepno->ORCODE,
