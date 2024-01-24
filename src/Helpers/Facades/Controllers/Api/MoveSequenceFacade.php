@@ -119,11 +119,18 @@ class MoveSequenceFacade extends Facade
                 ['RNOLAC', 0]
             ])->first();
 
-            AWF_SEQUENCE_WORKCENTER::create([
-                'SEQUID' => $request->SEQUID,
-                'WCSHNA' => $nextProductWorkCenterData->WCSHNA,
-                'RNREPN' => $repno->RNREPN,
-            ]);
+            $sequenceWorkCenter = AWF_SEQUENCE_WORKCENTER::where('SEQUID', '=', $request->SEQUID)
+                ->where('WCSHNA', '=', $nextProductWorkCenterData->WCSHNA)
+                ->where('RNREPN', '=', $repno->RNREPN)
+                ->first();
+
+            if (empty($sequenceWorkCenter)) {
+                AWF_SEQUENCE_WORKCENTER::create([
+                    'SEQUID' => $request->SEQUID,
+                    'WCSHNA' => $nextProductWorkCenterData->WCSHNA,
+                    'RNREPN' => $repno->RNREPN,
+                ]);
+            }
 
             AWF_SEQUENCE_LOG::create([
                 'SEQUID' => $request->SEQUID,
