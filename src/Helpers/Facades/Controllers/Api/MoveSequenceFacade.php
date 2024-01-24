@@ -132,10 +132,16 @@ class MoveSequenceFacade extends Facade
                 ]);
             }
 
-            AWF_SEQUENCE_LOG::create([
-                'SEQUID' => $request->SEQUID,
-                'WCSHNA' => $nextProductWorkCenterData->WCSHNA,
-            ]);
+            $sequenceLog = AWF_SEQUENCE_LOG::where('SEQUID', '=', $request->SEQUID)
+                ->where('WCSHNA', '=', $nextProductWorkCenterData->WCSHNA)
+                ->first();
+
+            if (empty($sequenceLog)) {
+                AWF_SEQUENCE_LOG::create([
+                    'SEQUID' => $request->SEQUID,
+                    'WCSHNA' => $nextProductWorkCenterData->WCSHNA,
+                ]);
+            }
         }
     }
 }
