@@ -8,6 +8,10 @@ GET localhost:8000/api/ext/awf-extension/product-feature/get/colors
 Accept: application/json
 Content-Type: application/json
 
+{
+  "dashboard": ""
+}
+
 ### get features of all product - materials
 GET localhost:8000/api/ext/awf-extension/product-feature/get/materials
 Accept: application/json
