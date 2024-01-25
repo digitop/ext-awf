@@ -109,6 +109,18 @@ class GenerateDataFacade extends Facade
                 $day = substr($data[5], 6, 2);
                 $expiration = new \DateTime($year . '-' . $month . '-' . $day);
 
+                $sequence = AWF_SEQUENCE::where('SEPONR', '=', $data[0])
+                    ->where('SEPSEQ', '=', $data[1])
+                    ->where('SEARNU', '=', $data[2])
+                    ->where('SESIDE', '=', $data[4])
+                    ->where('SEPILL', '=', $data[3][6])
+                    ->where('SEINPR', '=', 1)
+                    ->first();
+
+                if (!empty($sequence)) {
+                    continue;
+                }
+
                 $sequenceData = AWF_SEQUENCE::create([
                     'SEPONR' => $data[0],
                     'SEPSEQ' => $data[1],
