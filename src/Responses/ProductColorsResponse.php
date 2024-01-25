@@ -40,9 +40,7 @@ class ProductColorsResponse
             }
         }
 
-        $data[] = [
-            'status' => $this->workCenter?->features()->where('WFSHNA', '=', 'OPSTATUS')->first() ?? 'default',
-        ];
+        $data['status'] = $this->workCenter?->features()->where('WFSHNA', '=', 'OPSTATUS')->first() ?? 'default';
 
         return $data;
     }
