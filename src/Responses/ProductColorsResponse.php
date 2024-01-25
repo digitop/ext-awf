@@ -34,12 +34,15 @@ class ProductColorsResponse
                 $data[] = [
                     'designation' => $designation,
                     'color' => $product?->features()->where('FESHNA', '=', 'SZASZ')->first()?->FEVALU,
-                    'status' => $this->workCenter?->features()->where('WFSHNA', '=', 'OPSTATUS')->first() ?? 'default'
                 ];
 
                 $availableColors[] = $designation;
             }
         }
+
+        $data[] = [
+            'status' => $this->workCenter?->features()->where('WFSHNA', '=', 'OPSTATUS')->first() ?? 'default',
+        ];
 
         return $data;
     }
