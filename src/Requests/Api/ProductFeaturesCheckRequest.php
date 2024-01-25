@@ -21,7 +21,7 @@ class ProductFeaturesCheckRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'productCode' => ['required', 'string', 'min:1', 'max:32', 'exists:PRODUCT,PRCODE'],
+            'dashboard' => ['required', 'string', 'min:1', 'max:32', 'exists:DASHBOARD,DHIDEN'],
             'color' => ['required', 'string', 'max:6', 'min:6'],
         ];
     }
@@ -34,11 +34,11 @@ class ProductFeaturesCheckRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'productCode.required' => __('validation.required', ['attribute' =>'productCode']),
-            'productCode.string' => __('validation.integer', ['attribute' =>'productCode']),
-            'productCode.max' => __('validation.max.string', ['attribute' =>'productCode']),
-            'productCode.min' => __('validation.min.numeric', ['attribute' =>'productCode']),
-            'productCode.exists' => __('validation.exists', ['attribute' =>'productCode']),
+            'dashboard.required' => __('validation.required', ['attribute' =>'productCode']),
+            'dashboard.string' => __('validation.integer', ['attribute' =>'productCode']),
+            'dashboard.max' => __('validation.max.string', ['attribute' =>'productCode']),
+            'dashboard.min' => __('validation.min.numeric', ['attribute' =>'productCode']),
+            'dashboard.exists' => __('validation.exists', ['attribute' =>'productCode']),
             'color.required' => __('validation.required', ['attribute' =>'color']),
             'color.string' => __('validation.string', ['attribute' =>'color']),
             'color.max' => __('validation.max.string', ['attribute' =>'color']),

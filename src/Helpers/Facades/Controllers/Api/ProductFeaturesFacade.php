@@ -4,6 +4,8 @@ namespace AWF\Extension\Helpers\Facades\Controllers\Api;
 
 use AWF\Extension\Helpers\Responses\JsonResponseModel;
 use AWF\Extension\Helpers\Responses\ResponseData;
+use AWF\Extension\Models\AWF_SEQUENCE;
+use AWF\Extension\Models\AWF_SEQUENCE_LOG;
 use AWF\Extension\Responses\CustomJsonResponse;
 use AWF\Extension\Responses\ProductColorsResponse;
 use AWF\Extension\Responses\ProductFeaturesResponse;
@@ -14,6 +16,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
 use App\Models\PRODUCT;
+use App\Models\DASHBOARD;
 
 class ProductFeaturesFacade extends Facade
 {
@@ -74,9 +77,19 @@ class ProductFeaturesFacade extends Facade
 
     public function check(Request|FormRequest|null $request = null): JsonResponse|null
     {
-        $product = PRODUCT::where('PRCODE', '=', $request->productCode)
-            ->where('PRACTV', '=', 1)
+        $sequenceLog = AWF_SEQUENCE_LOG::where(
+            'WCSHNA',
+            '=',
+            DASHBOARD::where('DHIDEN', '=', $request->dashboard)->first()->operatorPanels[0]->WCSHNA
+        )
+            ->whereNull('LSTIME')
+            ->whereNull('LETIME')
+            ->orderBy('SEQUID')
             ->first();
+
+        $sequence = AWF_SEQUENCE::where('SEQUID', '=', $sequenceLog->SEQUID)->first();
+
+        $product = PRODUCT::where('PRCODE', '=', $sequence->PRCODE)->first();
 
         if ($product->features()->where('FESHNA', '=', 'SZASZ')->first() === null) {
             return new CustomJsonResponse(

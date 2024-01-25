@@ -13,6 +13,6 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "productCode": "",
+  "dashboard": "",
   "color": ""
 }
