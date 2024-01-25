@@ -5,6 +5,7 @@ namespace AWF\Extension\Controllers\Api;
 use App\Http\Controllers\Controller;
 use AWF\Extension\Helpers\Facades\Controllers\Api\ProductFeaturesFacade;
 use AWF\Extension\Interfaces\ApiControllerFacadeInterface;
+use AWF\Extension\Requests\Api\ProductFeatureColorsRequest;
 use AWF\Extension\Requests\Api\ProductFeaturesCheckRequest;
 use AWF\Extension\Requests\Api\ProductFeaturesShowRequest;
 use Illuminate\Http\Request;
@@ -29,7 +30,7 @@ class ProductFeaturesController extends Controller
         return $this->facade->show($request);
     }
 
-    public function colors(Request $request): JsonResponse
+    public function colors(ProductFeatureColorsRequest|null $request = null): JsonResponse
     {
         return $this->facade->colors($request);
     }

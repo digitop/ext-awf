@@ -14,6 +14,10 @@ class ProductColorsResponse
     {
         $this->products = $products;
         $this->workCenter = $workCenter;
+
+        $this->workCenter->features()->where('WFSHNA', '=', 'OPSTATUS')->first()?->update([
+            'WFVALU' => 'default',
+        ]);
     }
 
     public function generate(): array
@@ -30,6 +34,7 @@ class ProductColorsResponse
                 $data[] = [
                     'designation' => $designation,
                     'color' => $product?->features()->where('FESHNA', '=', 'SZASZ')->first()?->FEVALU,
+                    'status' => $this->workCenter?->features()->where('WFSHNA', '=', 'OPSTATUS')->first() ?? 'default'
                 ];
 
                 $availableColors[] = $designation;

@@ -17,6 +17,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
 use App\Models\PRODUCT;
 use App\Models\DASHBOARD;
+use App\Models\WORKCENTER;
 
 class ProductFeaturesFacade extends Facade
 {
@@ -49,13 +50,18 @@ class ProductFeaturesFacade extends Facade
         ));
     }
 
-    public function colors(): JsonResponse|null
+    public function colors(Request|FormRequest|null $request = null): JsonResponse|null
     {
         return new CustomJsonResponse(new JsonResponseModel(
             new ResponseData(
                 true,
                 (new ProductColorsResponse(
-                    PRODUCT::whereNull('DELDAT')->where('PRACTV', '=', 1)->get()
+                    PRODUCT::whereNull('DELDAT')->where('PRACTV', '=', 1)->get(),
+                    WORKCENTER::where(
+                        'WCSHNA',
+                        '=',
+                        DASHBOARD::where('DHIDEN', '=', $request->dashboard)->first()->operatorPanels[0]->WCSHNA
+                    )->first()
                 ))->generate()
             ),
             Response::HTTP_OK
@@ -77,11 +83,13 @@ class ProductFeaturesFacade extends Facade
 
     public function check(Request|FormRequest|null $request = null): JsonResponse|null
     {
-        $sequenceLog = AWF_SEQUENCE_LOG::where(
-            'WCSHNA',
-            '=',
-            DASHBOARD::where('DHIDEN', '=', $request->dashboard)->first()->operatorPanels[0]->WCSHNA
-        )
+        $workCenter = WORKCENTER::where(
+        'WCSHNA',
+        '=',
+        DASHBOARD::where('DHIDEN', '=', $request->dashboard)->first()->operatorPanels[0]->WCSHNA
+        )->first();
+
+        $sequenceLog = AWF_SEQUENCE_LOG::where('WCSHNA', '=', $workCenter->WCSHNA)
             ->whereNull('LSTIME')
             ->whereNull('LETIME')
             ->orderBy('SEQUID')
@@ -92,6 +100,10 @@ class ProductFeaturesFacade extends Facade
         $product = PRODUCT::where('PRCODE', '=', $sequence->PRCODE)->first();
 
         if ($product->features()->where('FESHNA', '=', 'SZASZ')->first() === null) {
+            $workCenter->features()->where('WFSHNA', '=', 'OPSTATUS')->first()?->update([
+                'WFVALU' => 'fail',
+            ]);
+
             return new CustomJsonResponse(
                 new JsonResponseModel(
                     new ResponseData(false, [], __('response.check.empty_color')),
@@ -103,6 +115,10 @@ class ProductFeaturesFacade extends Facade
         $color = $product->features()->where('FESHNA', '=', 'SZASZ')->first();
 
         if ($color->FEVALU !== $request->color) {
+            $workCenter->features()->where('WFSHNA', '=', 'OPSTATUS')->first()?->update([
+                'WFVALU' => 'fail',
+            ]);
+
             return new CustomJsonResponse(
                 new JsonResponseModel(
                     new ResponseData(false, [], __('response.check.wrong_color')),
@@ -110,6 +126,10 @@ class ProductFeaturesFacade extends Facade
                 )
             );
         }
+
+        $workCenter->features()->where('WFSHNA', '=', 'OPSTATUS')->first()?->update([
+            'WFVALU' => 'success',
+        ]);
 
         return new CustomJsonResponse(new JsonResponseModel(new ResponseData(true), Response::HTTP_OK));
     }
