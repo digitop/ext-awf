@@ -41,8 +41,8 @@ class ServiceProvider extends IlluminateServiceProvider
 
         Event::listen('*', function ($event, $data) {
             switch ($event) {
-                case 'App\\Events\\Dashboard\\ProductQualified':
-                    (new ScrapFacade())->create($data[0]);
+                case 'App\\Events\\Dashboard\\ProductQualifie':
+                    (new ScrapFacade())->index($data[0]);
                     break;
                 default:
                     break;
