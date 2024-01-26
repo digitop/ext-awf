@@ -12,12 +12,12 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Foundation\Http\FormRequest;
-use App\Events\Dashboard\ProductQualifie;
+use App\Events\Dashboard\ProductQualified;
 use App\Models\QUALREPHEAD;
 
 class ScrapFacade extends Facade
 {
-    public function index(ProductQualifie $event): JsonResponse
+    public function index(ProductQualified $event): JsonResponse
     {
         if ($event->scrapReport !== false) {
             $qualification = QUALREPHEAD::where('QRIDEN', '=', $event->scrapReport)->first();

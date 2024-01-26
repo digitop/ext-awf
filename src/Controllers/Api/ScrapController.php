@@ -7,7 +7,7 @@ use AWF\Extension\Helpers\Facades\Controllers\Api\ScrapFacade;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use AWF\Extension\Interfaces\ApiControllerFacadeInterface;
-use App\Events\Dashboard\ProductQualifie;
+use App\Events\Dashboard\ProductQualified;
 
 class ScrapController extends Controller
 {
@@ -18,7 +18,7 @@ class ScrapController extends Controller
         $this->facade = new ScrapFacade();
     }
 
-    public function index(ProductQualifie $event): JsonResponse
+    public function index(ProductQualified $event): JsonResponse
     {
         return $this->facade->create($event);
     }
