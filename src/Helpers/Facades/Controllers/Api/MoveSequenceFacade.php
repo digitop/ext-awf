@@ -52,7 +52,7 @@ class MoveSequenceFacade extends Facade
             [
                 "to" => 'dh:' . $workCenter?->operatorPanels[0]->dashboard->DHIDEN,
                 "payload" => [
-                    "title" => "alert.2",
+                    "status" => "success",
                 ],
             ]
         ]);
