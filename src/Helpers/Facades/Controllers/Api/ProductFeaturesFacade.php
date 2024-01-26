@@ -31,7 +31,8 @@ class ProductFeaturesFacade extends Facade
                 ))->generate()
             ),
             Response::HTTP_OK
-        ));
+        )
+        );
     }
 
     public function show(Request|FormRequest|null $request = null, Model|string|null ...$model): JsonResponse|null
@@ -47,25 +48,35 @@ class ProductFeaturesFacade extends Facade
                 ))->generate()
             ),
             Response::HTTP_OK
-        ));
+        )
+        );
     }
 
     public function colors(Request|FormRequest|null $request = null): JsonResponse|null
     {
+        $workCenter = WORKCENTER::where(
+            'WCSHNA',
+            '=',
+            DASHBOARD::where('DHIDEN', '=', $request->dashboard)->first()->operatorPanels[0]->WCSHNA
+        )->first();
+
+        $workCenter->features()->where('WFSHNA', '=', 'OPSTATUS')->first()?->update([
+            'WFVALU' => 'default',
+        ]);
+
         return new CustomJsonResponse(new JsonResponseModel(
             new ResponseData(
                 true,
-                (new ProductColorsResponse(
-                    PRODUCT::whereNull('DELDAT')->where('PRACTV', '=', 1)->get(),
-                    WORKCENTER::where(
-                        'WCSHNA',
-                        '=',
-                        DASHBOARD::where('DHIDEN', '=', $request->dashboard)->first()->operatorPanels[0]->WCSHNA
-                    )->first()
-                ))->generate()
+                [
+                    'data' => (new ProductColorsResponse(
+                        PRODUCT::whereNull('DELDAT')->where('PRACTV', '=', 1)->get(),
+                    ))->generate(),
+                    'status' => $workCenter?->features()->where('WFSHNA', '=', 'OPSTATUS')->first() ?? 'default',
+                ]
             ),
             Response::HTTP_OK
-        ));
+        )
+        );
     }
 
     public function materials(): JsonResponse|null
@@ -78,15 +89,16 @@ class ProductFeaturesFacade extends Facade
                 ))->generate()
             ),
             Response::HTTP_OK
-        ));
+        )
+        );
     }
 
     public function check(Request|FormRequest|null $request = null): JsonResponse|null
     {
         $workCenter = WORKCENTER::where(
-        'WCSHNA',
-        '=',
-        DASHBOARD::where('DHIDEN', '=', $request->dashboard)->first()->operatorPanels[0]->WCSHNA
+            'WCSHNA',
+            '=',
+            DASHBOARD::where('DHIDEN', '=', $request->dashboard)->first()->operatorPanels[0]->WCSHNA
         )->first();
 
         $sequenceLog = AWF_SEQUENCE_LOG::where('WCSHNA', '=', $workCenter->WCSHNA)

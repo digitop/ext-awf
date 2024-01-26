@@ -3,7 +3,9 @@
 namespace AWF\Extension\Providers;
 
 use AWF\Extension\Commands\GenerateDataCommand;
+use AWF\Extension\Helpers\Facades\Controllers\Api\ScrapFacade;
 use Illuminate\Support\ServiceProvider as IlluminateServiceProvider;
+use Illuminate\Support\Facades\Event;
 
 class ServiceProvider extends IlluminateServiceProvider
 {
@@ -36,6 +38,16 @@ class ServiceProvider extends IlluminateServiceProvider
             $this->tagName
         );
         $this->publishes([__DIR__ . '/../lang' => resource_path('lang/')], $this->tagName);
+
+        Event::listen('*', function ($event, $data) {
+            switch ($event) {
+                case 'App\\Events\\Dashboard\\ProductQualified':
+                    (new ScrapFacade())->create($data[0]);
+                    break;
+                default:
+                    break;
+            }
+        });
 
         $this->app->config["filesystems.disks.awfSequenceFtp"] = [
             'driver' => 'ftp',
