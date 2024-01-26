@@ -114,7 +114,7 @@ class ProductFeaturesFacade extends Facade
                     [],
                     __('response.no_new_data_available')
                 ),
-                Response::HTTP_UNPROCESSABLE_ENTITY
+                Response::HTTP_OK
             ));
         }
 
@@ -130,7 +130,7 @@ class ProductFeaturesFacade extends Facade
             return new CustomJsonResponse(
                 new JsonResponseModel(
                     new ResponseData(false, [], __('response.check.empty_color')),
-                    Response::HTTP_BAD_REQUEST
+                    Response::HTTP_OK
                 )
             );
         }
@@ -145,7 +145,7 @@ class ProductFeaturesFacade extends Facade
             return new CustomJsonResponse(
                 new JsonResponseModel(
                     new ResponseData(false, [], __('response.check.wrong_color')),
-                    Response::HTTP_UNPROCESSABLE_ENTITY
+                    Response::HTTP_OK
                 )
             );
         }

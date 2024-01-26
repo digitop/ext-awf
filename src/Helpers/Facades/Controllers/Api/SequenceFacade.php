@@ -27,11 +27,11 @@ class SequenceFacade extends Facade
         if ($sequences === null || !array_key_exists(0, $sequences->all()) || empty($sequences[0])) {
             return new CustomJsonResponse(new JsonResponseModel(
                 new ResponseData(
-                    true,
+                    false,
                     [],
                     __('response.unprocessable_entity')
                 ),
-                Response::HTTP_UNPROCESSABLE_ENTITY
+                Response::HTTP_OK
             ));
         }
 
@@ -60,11 +60,11 @@ class SequenceFacade extends Facade
         if ($logs === null || !array_key_exists(0, $logs->all()) || empty($logs[0])) {
             return new CustomJsonResponse(new JsonResponseModel(
                 new ResponseData(
-                    true,
+                    false,
                     [],
                     __('response.no_new_data_available')
                 ),
-                Response::HTTP_UNPROCESSABLE_ENTITY
+                Response::HTTP_OK
             ));
         }
 

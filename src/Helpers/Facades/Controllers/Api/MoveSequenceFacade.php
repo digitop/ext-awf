@@ -30,11 +30,11 @@ class MoveSequenceFacade extends Facade
         if (empty($sequence)) {
             return new CustomJsonResponse(new JsonResponseModel(
                 new ResponseData(
-                    true,
+                    false,
                     [],
                     __('response.no_new_data_available')
                 ),
-                Response::HTTP_UNPROCESSABLE_ENTITY
+                Response::HTTP_OK
             ));
         }
 

@@ -61,7 +61,7 @@ class ScrapFacade extends Facade
                 [],
                 __('response.unprocessable_entity')
             ),
-            Response::HTTP_UNPROCESSABLE_ENTITY
+            Response::HTTP_OK
         ));
     }
 }
