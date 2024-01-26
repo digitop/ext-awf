@@ -55,6 +55,7 @@ class AWF_SEQUENCE extends Model
         'SEINPR',
         'PRCODE',
         'ORCODE',
+        'SESCRA',
     ];
 
     /**
