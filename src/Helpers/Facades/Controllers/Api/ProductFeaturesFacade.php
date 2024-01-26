@@ -70,6 +70,7 @@ class ProductFeaturesFacade extends Facade
                 [
                     'data' => (new ProductColorsResponse(
                         PRODUCT::whereNull('DELDAT')->where('PRACTV', '=', 1)->get(),
+                        $workCenter
                     ))->generate(),
                     'status' => $workCenter?->features()->where('WFSHNA', '=', 'OPSTATUS')->first() ?? 'default',
                 ]
