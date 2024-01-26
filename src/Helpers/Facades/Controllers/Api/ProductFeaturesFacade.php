@@ -76,8 +76,7 @@ class ProductFeaturesFacade extends Facade
                 ]
             ),
             Response::HTTP_OK
-        )
-        );
+        ));
     }
 
     public function materials(): JsonResponse|null

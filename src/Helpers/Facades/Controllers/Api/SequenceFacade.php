@@ -128,6 +128,19 @@ class SequenceFacade extends Facade
                 ]);
         }
 
+        $workCenter->features()->where('WFSHNA', '=', 'OPSTATUS')->first()?->update([
+            'WFVALU' => 'default',
+        ]);
+
+        publishMqtt(env('DEPLOYMENT_SUBDOMAIN') . '/api/SEQUENCE_CHANGE/', [
+            [
+                "to" => 'dh:' . $workCenter->operatorPanels[0]->dashboard->DHIDEN,
+                "payload" => [
+                    "status" => "default",
+                ],
+            ]
+        ]);
+
         return new CustomJsonResponse(new JsonResponseModel(
             new ResponseData(
                 true,

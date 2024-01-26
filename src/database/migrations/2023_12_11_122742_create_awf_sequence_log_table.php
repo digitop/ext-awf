@@ -20,7 +20,7 @@ return new class extends Migration {
             $table->string('WCSHNA', 8)->nullable()->comment('Workcenter short name (WORKCENTER:WCSHNA)');
             $table->timestamp('LSTIME')->nullable()->comment('Timestamp when the workcenter started the work process');
             $table->timestamp('LETIME')->nullable()->comment('Timestamp when the workcenter ended the work process');
-            $table->unique(['SEQUID', 'WCSHNA'], 'SEQUID_WCSHNA_UNIQUE');
+            $table->unique(['SEQUID', 'WCSHNA', 'LSTIME', 'LETIME'], 'SEQUID_WCSHNA_LSTIME_LETIME_UNIQUE');
         });
 
         Schema::connection('custom_mysql')->table('AWF_SEQUENCE_LOG', function (Blueprint $table) use ($database) {
