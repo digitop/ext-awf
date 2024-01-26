@@ -111,7 +111,7 @@ class ProductFeaturesFacade extends Facade
         if (empty($sequenceLog)) {
             return new CustomJsonResponse(new JsonResponseModel(
                 new ResponseData(
-                    true,
+                    false,
                     [],
                     __('response.no_new_data_available')
                 ),
