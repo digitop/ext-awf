@@ -108,6 +108,17 @@ class ProductFeaturesFacade extends Facade
             ->orderBy('SEQUID')
             ->first();
 
+        if (empty($sequenceLog)) {
+            return new CustomJsonResponse(new JsonResponseModel(
+                new ResponseData(
+                    true,
+                    [],
+                    __('response.no_new_data_available')
+                ),
+                Response::HTTP_UNPROCESSABLE_ENTITY
+            ));
+        }
+
         $sequence = AWF_SEQUENCE::where('SEQUID', '=', $sequenceLog->SEQUID)->first();
 
         $product = PRODUCT::where('PRCODE', '=', $sequence->PRCODE)->first();
