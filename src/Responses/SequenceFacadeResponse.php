@@ -64,6 +64,7 @@ class SequenceFacadeResponse
             ->setSEARNU($sequence->SEARNU)
             ->setSESIDE($sequence->SESIDE)
             ->setORCODE($sequence->ORCODE)
+            ->setSESCRA($sequence->SESCRA)
             ->setOPNAME(
                 isset($this->workCenter?->operatorPanels) &&
                 !empty($this->workCenter?->operatorPanels[0]) ?

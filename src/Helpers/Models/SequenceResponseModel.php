@@ -16,6 +16,7 @@ class SequenceResponseModel extends ObjectToArray
     protected string|null $OPNAME;
     protected string|null $RNREPN;
     protected string|null $DHIDEN;
+    protected bool $SESCRA = false;
     protected string|null $preparatory = null;
     protected string|null $welder = null;
     protected string $color;
@@ -146,6 +147,17 @@ class SequenceResponseModel extends ObjectToArray
     public function setWelder(string|null $welder): SequenceResponseModel
     {
         $this->welder = $welder;
+        return $this;
+    }
+
+    public function isSESCRA(): bool
+    {
+        return $this->SESCRA;
+    }
+
+    public function setSESCRA(bool|null $SESCRA = false): SequenceResponseModel
+    {
+        $this->SESCRA = $SESCRA;
         return $this;
     }
 

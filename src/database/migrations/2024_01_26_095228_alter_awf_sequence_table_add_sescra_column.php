@@ -13,7 +13,7 @@ return new class extends Migration {
     public function up()
     {
         Schema::connection('custom_mysql')->table('AWF_SEQUENCE', function (Blueprint $table) {
-            $table->boolean('SESCRA')->default(false)->comment();
+            $table->boolean('SESCRA')->default(false)->comment('Remanufacturing due to scrap product');
         });
     }
 

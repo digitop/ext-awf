@@ -65,6 +65,7 @@ class AWF_SEQUENCE extends Model
      */
     protected $casts = [
         'SEINPR' => 'bool',
+        'SESCRA' => 'bool',
     ];
 
     public function logs(): BelongsTo
