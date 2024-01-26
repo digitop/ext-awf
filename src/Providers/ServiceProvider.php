@@ -39,16 +39,6 @@ class ServiceProvider extends IlluminateServiceProvider
         );
         $this->publishes([__DIR__ . '/../lang' => resource_path('lang/')], $this->tagName);
 
-        Event::listen('*', function ($event, $data) {
-            switch ($event) {
-                case 'App\\Events\\Dashboard\\ProductQualified':
-                    (new ScrapFacade())->create($data[0]);
-                    break;
-                default:
-                    break;
-            }
-        });
-
         $this->app->config["filesystems.disks.awfSequenceFtp"] = [
             'driver' => 'ftp',
             'host' => '',
