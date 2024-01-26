@@ -30,7 +30,7 @@ class ProductFeaturesController extends Controller
         return $this->facade->show($request);
     }
 
-    public function colors(ProductFeatureColorsRequest|null $request = null): JsonResponse
+    public function colors(ProductFeatureColorsRequest $request): JsonResponse
     {
         return $this->facade->colors($request);
     }
