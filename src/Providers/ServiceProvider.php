@@ -14,6 +14,7 @@ class ServiceProvider extends IlluminateServiceProvider
     public function boot()
     {
         include __DIR__ . '/../routes/api.php';
+        include __DIR__ . '/../routes/web.php';
 
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
         $this->loadViewsFrom(__DIR__ . '/../views', $this->tagName);
@@ -28,6 +29,10 @@ class ServiceProvider extends IlluminateServiceProvider
         );
         $this->publishes(
             [__DIR__ . '/../css' => public_path('vendor/oeem-extensions/awf/extension/css')],
+            $this->tagName
+        );
+        $this->publishes(
+            [__DIR__ . '/../images' => public_path('vendor/oeem-extensions/awf/extension/images')],
             $this->tagName
         );
         $this->publishes(

@@ -4,6 +4,7 @@ namespace AWF\Extension\Responses;
 
 use AWF\Extension\Helpers\Models\SequenceResponseModel;
 use AWF\Extension\Helpers\ProductFeaturesImagesUrl;
+use AWF\Extension\Interfaces\ResponseInterface;
 use AWF\Extension\Models\AWF_SEQUENCE;
 use AWF\Extension\Models\AWF_SEQUENCE_WORKCENTER;
 use Illuminate\Database\Eloquent\Collection;
@@ -12,7 +13,7 @@ use App\Models\PRODUCT;
 use App\Models\WORKCENTER;
 use App\Models\REPNO;
 
-class SequenceFacadeResponse
+class SequenceFacadeResponse  implements ResponseInterface
 {
     protected Collection|Model $sequences;
     protected Model|null $workCenter = null;
@@ -38,6 +39,25 @@ class SequenceFacadeResponse
         }
 
         return $data;
+    }
+
+    public function getCollection(): Collection|Model
+    {
+        return $this->sequences;
+    }
+    public function setCollection(Collection|Model $collection): ResponseInterface
+    {
+        $this->sequences = $collection;
+        return $this;
+    }
+    public function getModel(): Model|null
+    {
+        return $this->workCenter;
+    }
+    public function setModel(Model|null $model): ResponseInterface
+    {
+        $this->workCenter = $model;
+        return $this;
     }
 
     protected function setWorkCenter(Model|null $workCenter, Model|null $sequence): void

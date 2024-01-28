@@ -1,0 +1,122 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 99%;
+    height: 99%;
+}
+
+body {
+    background-color: #777;
+    color: #000;
+}
+
+.container {
+    margin: 1%;
+    padding: 0;
+    width: 100%;
+}
+
+.upper {
+    height: 10%;
+}
+
+.middle {
+    height: 50%;
+    margin-bottom: 0 !important;
+}
+
+.bottom {
+    height: 38%;
+    margin-top: 0 !important;
+}
+
+.button {
+    align-items: center;
+    padding: 1% 5%;
+    font-family: -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
+    font-size: xxx-large;
+    border-radius: 6px;
+    border: none;
+    color: #fff;
+    background: linear-gradient(180deg, #1256b8 0%, #05358a 100%);
+    background-origin: border-box;
+    box-shadow: 0px 0.5px 1.5px rgba(54, 122, 246, 0.25), inset 0px 0.8px 0px -0.25px rgba(255, 255, 255, 0.2);
+}
+
+.left {
+    margin-left: 15%;
+    float: left;
+}
+
+.right {
+    margin-right: 15%;
+    float: right;
+}
+
+.half {
+    position: fixed;
+    width: 50%;
+}
+
+.half-right {
+    float: right;
+    margin-left: 50%;
+    margin-right: 0;
+}
+
+.middle-image {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+.middle-circle {
+    margin: auto;
+    border: 1px #AAA solid;
+    border-radius: 50%;
+    width: 45vh;
+    height: 45vh;
+}
+
+.datas {
+    width: 100%;
+    font-size: xxx-large;
+    font-weight: bold;
+}
+
+.piece {
+    text-align: center;
+}
+
+.half-table {
+    position: relative;
+    width: 50%;
+    margin-top: 7%;
+    font-size: large;
+    font-weight: normal;
+    color: #222;
+}
+
+.half-table th {
+    text-align: left;
+    width: 60%;
+    font-weight: normal;
+}
+
+.line-separated {
+    padding-bottom: 2%;
+}
+
+.table-right {
+    float: right;
+}
+
+.timer {
+    margin-bottom: 1%;
+    margin-right: 5%;
+    font-size: 13vh;
+    float: right;
+    position: fixed;
+    right: 0;
+    bottom: 0;
+}

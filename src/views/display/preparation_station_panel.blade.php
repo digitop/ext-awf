@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link rel="stylesheet"
+          href="{{ url('vendor/oeem-extensions/awf/extension/css/display/preparation_station_panel.css') }}">
+    <title></title>
+</head>
+<body>
+<div class="container upper">
+            <span class="button left">
+                P992
+            </span>
+    <span class="button right">
+                G16
+            </span>
+</div>
+<div class="container middle">
+            <span class="half">
+                <img class="middle-image" src="{{ url('vendor/oeem-extensions/awf/extension/images/default.png') }}"
+                     alt="Product picture">
+            </span>
+    <span class="half half-right">
+                <div class="middle-circle">
+                </div>
+            </span>
+</div>
+<div class="container bottom">
+    <div class="datas">
+        <div class="half piece">
+            C-Säule links
+        </div>
+        <div class="half half-right piece">
+            Dinamica schwarz
+        </div>
+    </div>
+    <span class="half">
+        <table class="half-table">
+            <tr>
+                <th class="line-separated">{{ __('display.sequenceIndex') }}:</th>
+                <td></td>
+            </tr>
+            <tr>
+                <th class="line-separated">{{ __('display.fabricShelf') }}:</th>
+                <td></td>
+            </tr>
+            <tr>
+                <th class="line-separated">{{ __('display.myInput') }}:</th>
+                <td></td>
+            </tr>
+            <tr>
+                <th class="line-separated">{{ __('display.myString') }}:</th>
+                <td></td>
+            </tr>
+            <tr>
+                <th>{{ __('display.isActive') }}:</th>
+                <td></td>
+            </tr>
+            <tr>
+                <th>{{ __('display.barcode') }}:</th>
+                <td></td>
+            </tr>
+            <tr>
+                <th>{{ __('display.sqlSyncRun') }}:</th>
+                <td></td>
+            </tr>
+        </table>
+    </span>
+    <span class="half half-right">
+        <table class="half-table">
+            <tr>
+                <th class="line-separated">{{ __('display.sequenceIndex') }}:</th>
+                <td></td>
+            </tr>
+            <tr>
+                <th class="line-separated">{{ __('display.fabricShelf') }}:</th>
+                <td></td>
+            </tr>
+        </table>
+    </span>
+    <div class="timer">
+        <span id="time"></span>
+    </div>
+</div>
+
+<script>
+    function refreshTime() {
+        $('#time').html('')
+        const date = new Date()
+
+        $('#time').append(date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds())
+    }
+
+    $(document).ready(function () {
+        setInterval(refreshTime, 1000)
+    })
+</script>
+</body>
+</html>
