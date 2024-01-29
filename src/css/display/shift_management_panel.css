@@ -1,0 +1,27 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 99%;
+    height: 99%;
+}
+
+body {
+    background-color: #777;
+    color: #000;
+}
+
+.container {
+    margin: 1%;
+    padding: 0;
+    width: 100%;
+}
+
+.timer {
+    margin-bottom: 1%;
+    margin-right: 5%;
+    font-size: xx-large;
+    float: right;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+}

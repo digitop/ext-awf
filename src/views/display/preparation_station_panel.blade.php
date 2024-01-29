@@ -88,7 +88,7 @@
 </div>
 
 
-<div class="hide">
+<div class="hide" style="display: {{ $default === true ? 'block' : 'none' }};">
     <div class="timer">
         <span id="hidden-time"></span>
     </div>

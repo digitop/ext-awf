@@ -12,14 +12,20 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class PreparationStationPanelFacade extends Facade
+class ShiftManagementPanelFacade extends Facade
 {
     public function create(Request|FormRequest|null $request = null,
                            Model|string|null        $model = null
     ): Application|Factory|View|IlluminateView|ContractsApplication|null
     {
-        return view('awf-extension::display/preparation_station_panel', [
-            'default' => $request?->default === 'true'
+        $type = 'start';
+
+        if (!empty($request) && $request->has('type')) {
+            $type = $request->type;
+        }
+
+        return view('awf-extension::display/shift_management_panel.default', [
+            'type' => $type
         ]);
     }
 }
