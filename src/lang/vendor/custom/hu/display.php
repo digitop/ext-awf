@@ -8,4 +8,6 @@ return [
     'isActive' => 'Aktív',
     'barcode' => 'Vonalkód',
     'sqlSyncRun' => 'SQL szinkronizáció él',
+    'systemTime' => 'Rendszeridő',
+    'change' => 'Módosítás',
 ];

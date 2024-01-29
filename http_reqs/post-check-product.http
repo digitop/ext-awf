@@ -1,0 +1,9 @@
+### check if it is the next product
+POST localhost:8000/api/ext/awf-extension/product/check
+Accept: application/json
+Content-Type: application/json
+
+{
+  "dashboard": 13,
+  "serial": 1
+}

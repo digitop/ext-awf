@@ -8,5 +8,7 @@ return [
     'check' => [
         'wrong_color' => 'You entered the product color incorrectly!',
         'empty_color' => 'There is no color for the product!',
+        'serial_not_found' => 'Serial number not found!',
+        'not_next_product' => 'This is not the next product!',
     ],
 ];

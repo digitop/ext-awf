@@ -8,5 +8,7 @@ return [
     'check' => [
         'wrong_color' => 'Hibás termék szín!',
         'empty_color' => 'Nem létezik szín a termékhez!',
+        'serial_not_found' => 'Sorozatszám nem található!',
+        'not_next_product' => 'Nem ez a következő termék!',
     ],
 ];

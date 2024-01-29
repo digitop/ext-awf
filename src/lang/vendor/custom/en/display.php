@@ -8,4 +8,6 @@ return [
     'isActive' => 'Active',
     'barcode' => 'Barcode',
     'sqlSyncRun' => 'SQL sync is running',
+    'systemTime' => 'System time',
+    'change' => 'Edit',
 ];

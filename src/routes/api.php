@@ -31,5 +31,8 @@ Route::group(
             ->name('product-feature.show');
         Route::post('/product-feature/check', ['uses' => 'ProductFeaturesController@check'])
             ->name('product-feature.check');
+
+        Route::post('/product/check', ['uses' => 'CheckProductController@check'])
+            ->name('product.check');
     }
 );
