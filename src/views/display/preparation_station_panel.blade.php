@@ -26,17 +26,17 @@
                  alt="Product picture">
         </span>
         <span class="half half-right">
-            <div class="middle-circle" style="background-color: #000;">
+            <div class="middle-circle" style="background-color: {{ $nextSequence?->color ?? '#000' }};">
             </div>
         </span>
     </div>
     <div class="container bottom">
         <div class="datas">
             <div class="half piece">
-                C-Säule links
+                {{ $nextSequence?->designation ?? 'C-Säule links' }}
             </div>
             <div class="half half-right piece">
-                Dinamica schwarz
+                {{ $nextSequence?->materialAndColor ?? 'Dinamica schwarz'}}
             </div>
         </div>
         <span class="half">

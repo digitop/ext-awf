@@ -2,9 +2,11 @@
 
 namespace AWF\Extension\Responses;
 
+use AWF\Extension\Helpers\Models\NextProductEventModel;
 use AWF\Extension\Interfaces\ResponseInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\PRODUCT;
 
 class NextProductEventResponse  implements ResponseInterface
 {
@@ -13,11 +15,21 @@ class NextProductEventResponse  implements ResponseInterface
 
     public function __construct(Model|Collection $collection, Model|null $model)
     {
+        $this->collection = $collection;
+        $this->model = $model;
     }
 
     public function generate(): array
     {
-        // TODO: Implement generate() method.
+        $data = [];
+
+        foreach ($this->collection as $item) {
+            $data[] = (new NextProductEventModel(
+                PRODUCT::where()
+            ))->get();
+        }
+
+        return $data;
     }
 
     public function getCollection(): Collection|Model
