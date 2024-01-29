@@ -6,6 +6,7 @@ use AWF\Extension\Helpers\Responses\JsonResponseModel;
 use AWF\Extension\Helpers\Responses\ResponseData;
 use AWF\Extension\Models\AWF_SEQUENCE;
 use AWF\Extension\Models\AWF_SEQUENCE_LOG;
+use AWF\Extension\Models\AWF_SEQUENCE_WORKCENTER;
 use AWF\Extension\Responses\CustomJsonResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Database\Eloquent\Model;
@@ -13,13 +14,15 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
 use App\Models\SERIALNUMBER;
 use App\Models\WORKCENTER;
-use App\Models\PRODUCT;
+use App\Models\REPNO;
+use App\Models\DASHBOARD;
+use Symfony\Component\HttpFoundation\Response;
 
 class CheckProductFacade extends Facade
 {
     public function check(Request|FormRequest|null $request = null, Model|string|null $model = null): JsonResponse|null
     {
-        $serial = SERIALNUMBER::where('SNSERN', '=', $request->SNSERN)->first();
+        $serial = SERIALNUMBER::where('SNSERN', '=', $request->serial)->first();
 
         if (empty($serial)) {
             return new CustomJsonResponse(new JsonResponseModel(
@@ -32,31 +35,7 @@ class CheckProductFacade extends Facade
             ));
         }
 
-        $product = PRODUCT::where('PRCODE', '=', $serial->PRCODE)->first();
-        $sequences = AWF_SEQUENCE::where('PRCODE', '=', $product->PRCODE)->get();
-
-        $sequence = $sequences->sort(function ($a, $b) {
-            foreach ([['column' => 'SEPILL', 'order' => 'desc'], ['column' => 'SEQUID']] as $sortingInstruction) {
-
-                $a[$sortingInstruction['column']] = $a[$sortingInstruction['column']] ?? '';
-                $b[$sortingInstruction['column']] = $b[$sortingInstruction['column']] ?? '';
-
-                if (empty($sortingInstruction['order']) || strtolower($sortingInstruction['order']) === 'asc') {
-                    $x = ($a[$sortingInstruction['column']] <=> $b[$sortingInstruction['column']]);
-                }
-                else {
-                    $x = ($b[$sortingInstruction['column']] <=> $a[$sortingInstruction['column']]);
-                }
-
-                if ($x !== 0) {
-                    return $x;
-                }
-
-            }
-
-            return 0;
-        })
-            ->take(1);
+        $repno = REPNO::where('RNREPN', '=', $serial->RNREPN)->first();
 
         $workCenter = WORKCENTER::where(
             'WCSHNA',
@@ -64,11 +43,13 @@ class CheckProductFacade extends Facade
             DASHBOARD::where('DHIDEN', '=', $request->dashboard)->first()->operatorPanels[0]->WCSHNA
         )->first();
 
+        $sequenceWorkCenter = AWF_SEQUENCE_WORKCENTER::where('RNREPN', '=', $repno->RNREPN)->first();
+;
         $sequenceLog = AWF_SEQUENCE_LOG::where('WCSHNA', '=', $workCenter->WCSHNA)
-            ->where('SEQUID', '=', $sequence->SEQUID)
+            ->where('SEQUID', '=', $sequenceWorkCenter->SEQUID)
             ->whereNull('LSTIME')
             ->whereNull('LETIME')
-            ->fist();
+            ->first();
 
         if (empty($sequenceLog)) {
             return new CustomJsonResponse(new JsonResponseModel(

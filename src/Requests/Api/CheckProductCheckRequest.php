@@ -2,6 +2,8 @@
 
 namespace AWF\Extension\Requests\Api;
 
+use Illuminate\Foundation\Http\FormRequest;
+
 class CheckProductCheckRequest extends FormRequest
 {
     /**
