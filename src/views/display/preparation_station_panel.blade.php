@@ -11,82 +11,83 @@
     <title></title>
 </head>
 <body>
-<div class="container upper">
-            <span class="button left">
-                P992
-            </span>
-    <span class="button right">
-                G16
-            </span>
-</div>
-<div class="container middle">
-            <span class="half">
-                <img class="middle-image" src="{{ url('vendor/oeem-extensions/awf/extension/images/default.png') }}"
-                     alt="Product picture">
-            </span>
-    <span class="half half-right">
-                <div class="middle-circle">
-                </div>
-            </span>
-</div>
-<div class="container bottom">
-    <div class="datas">
-        <div class="half piece">
-            C-Säule links
+<div id="vue-app">
+    <div class="container upper">
+        <span class="button left">
+            P992
+        </span>
+        <span class="button right">
+            G16
+        </span>
+    </div>
+    <div class="container middle">
+        <span class="half">
+            <img class="middle-image" src="{{ url('vendor/oeem-extensions/awf/extension/images/default.png') }}"
+                 alt="Product picture">
+        </span>
+        <span class="half half-right">
+            <div class="middle-circle" style="background-color: #000;">
+            </div>
+        </span>
+    </div>
+    <div class="container bottom">
+        <div class="datas">
+            <div class="half piece">
+                C-Säule links
+            </div>
+            <div class="half half-right piece">
+                Dinamica schwarz
+            </div>
         </div>
-        <div class="half half-right piece">
-            Dinamica schwarz
+        <span class="half">
+            <table class="half-table">
+                <tr>
+                    <th class="line-separated">{{ __('display.sequenceIndex') }}:</th>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th class="line-separated">{{ __('display.fabricShelf') }}:</th>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th class="line-separated">{{ __('display.myInput') }}:</th>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th class="line-separated">{{ __('display.myString') }}:</th>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th>{{ __('display.isActive') }}:</th>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th>{{ __('display.barcode') }}:</th>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th>{{ __('display.sqlSyncRun') }}:</th>
+                    <td></td>
+                </tr>
+            </table>
+        </span>
+        <span class="half half-right">
+            <table class="half-table">
+                <tr>
+                    <th class="line-separated">{{ __('display.sequenceIndex') }}:</th>
+                    <td></td>
+                </tr>
+                <tr>
+                    <th class="line-separated">{{ __('display.fabricShelf') }}:</th>
+                    <td></td>
+                </tr>
+            </table>
+        </span>
+        <div class="timer">
+            <span id="time"></span>
         </div>
     </div>
-    <span class="half">
-        <table class="half-table">
-            <tr>
-                <th class="line-separated">{{ __('display.sequenceIndex') }}:</th>
-                <td></td>
-            </tr>
-            <tr>
-                <th class="line-separated">{{ __('display.fabricShelf') }}:</th>
-                <td></td>
-            </tr>
-            <tr>
-                <th class="line-separated">{{ __('display.myInput') }}:</th>
-                <td></td>
-            </tr>
-            <tr>
-                <th class="line-separated">{{ __('display.myString') }}:</th>
-                <td></td>
-            </tr>
-            <tr>
-                <th>{{ __('display.isActive') }}:</th>
-                <td></td>
-            </tr>
-            <tr>
-                <th>{{ __('display.barcode') }}:</th>
-                <td></td>
-            </tr>
-            <tr>
-                <th>{{ __('display.sqlSyncRun') }}:</th>
-                <td></td>
-            </tr>
-        </table>
-    </span>
-    <span class="half half-right">
-        <table class="half-table">
-            <tr>
-                <th class="line-separated">{{ __('display.sequenceIndex') }}:</th>
-                <td></td>
-            </tr>
-            <tr>
-                <th class="line-separated">{{ __('display.fabricShelf') }}:</th>
-                <td></td>
-            </tr>
-        </table>
-    </span>
-    <div class="timer">
-        <span id="time"></span>
-    </div>
 </div>
-
 
 <div class="hide" style="display: {{ $default === true ? 'block' : 'none' }};">
     <div class="timer">
@@ -121,5 +122,14 @@
             })
     })
 </script>
+
+<script>
+    var viewAppletData = {
+        nextSequence: JSON.parse('{!! json_encode($nextSequence) !!}'),
+    };
+</script>
+<script src="{!! asset('/dist/vue.js') !!}"></script>
+<script src="{!! asset('dist/vue/echo.js') !!}?random_cache_buster={{rand()}}"></script>
+<script src="{!! asset('vendor/oeem-extensions/awf/extension/js/PreparationStationPanel.js?cache_buster=').time() !!}"></script>
 </body>
 </html>

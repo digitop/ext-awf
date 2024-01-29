@@ -18,8 +18,14 @@ class PreparationStationPanelFacade extends Facade
                            Model|string|null        $model = null
     ): Application|Factory|View|IlluminateView|ContractsApplication|null
     {
+        $default = true;
+
+        if ($request?->has('default')) {
+            $default = $request?->default === 'true';
+        }
         return view('awf-extension::display/preparation_station_panel', [
-            'default' => $request?->default === 'true'
+            'default' => $default,
+            'nextSequence' => [],
         ]);
     }
 }
