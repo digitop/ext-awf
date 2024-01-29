@@ -21,7 +21,7 @@ class ShiftStartDataTable extends DataTable
     {
         $dataTables =  new EloquentDataTable($this->query());
 
-        return $dataTables->make(true);
+        return $dataTables->make();
     }
 
     /**
@@ -33,8 +33,7 @@ class ShiftStartDataTable extends DataTable
     {
         $records = AWF_SEQUENCE::where('SEINPR', '=', 0)
             ->orderBy('SEPILL', 'DESC')
-            ->orderBy('SEQUID', 'ASC')
-            ->get();
+            ->orderBy('SEQUID', 'ASC');
 
         return $this->applyScopes($records);
     }
@@ -48,8 +47,10 @@ class ShiftStartDataTable extends DataTable
     {
         return $this->builder()
             ->columns([
-                ['data' => 'CRNAME', 'name' => 'CRNAME', 'title' => __('semperform-logistic.fields.CRNAME')],
-                ['data' => 'actions', 'name' => 'actions', 'title' => __('button.operations'), 'class' => 'text-right all', 'orderable' => false, 'searchable' => false],
+                ['data' => 'SEPONR', 'name' => 'SEPONR', 'title' => __('awf-extension::display.data.shift-sequence.porscheOrderNumber')],
+                ['data' => 'SEPSEQ', 'name' => 'SEPSEQ', 'title' => __('awf-extension::display.data.shift-sequence.porscheSequenceNumber')],
+                ['data' => 'SEARNU', 'name' => 'SEARNU', 'title' => __('awf-extension::display.data.shift-sequence.articleNumber')],
+//                ['data' => 'actions', 'name' => 'actions', 'title' => __('button.operations'), 'class' => 'text-right all', 'orderable' => false, 'searchable' => false],
             ])
             ->parameters(getStandardParameters(false));
     }

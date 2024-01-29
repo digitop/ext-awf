@@ -10,4 +10,18 @@ return [
     'sqlSyncRun' => 'Die SQL-Synchronisierung wird ausgeführt',
     'systemTime' => 'System Zeit',
     'change' => 'Bearbeiten',
+    'button' => [
+        'shiftStart' => 'Schicht beginnen',
+        'production' => 'Produktionsdetails',
+        'reason' => 'Schluss mit Gründen',
+        'back' => 'Zurück',
+    ],
+    'data' => [
+        'shift-sequence' => [
+            'porscheOrderNumber' => 'Porsche-Auftragsnummer',
+            'porscheSequenceNumber' => 'Porsche-Sequenznummer',
+            'articleNumber' => 'Artikelnummer',
+        ],
+    ],
+    'pillar' => 'Säule',
 ];

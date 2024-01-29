@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="hu">
+<html lang="{{ explode('_', Session::get('locale'))[0] }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"

@@ -18,10 +18,114 @@ body {
 
 .timer {
     margin-bottom: 1%;
-    margin-right: 5%;
+    margin-left: 5%;
     font-size: xx-large;
     float: right;
     position: fixed;
     left: 0;
     bottom: 0;
+}
+
+.title {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+.title-svg {
+    width: 30%;
+    margin-left: 3vh;
+    margin-top: 4vh;
+}
+
+.title-image {
+    float: right;
+    margin: 0;
+    padding: 0;
+    margin-right: 3vh;
+    margin-top: 1vh;
+    object-fit: cover;
+}
+
+.shift-management-table {
+    width: 90%;
+    position: absolute;
+    right: auto;
+    top: 40%;
+    bottom: auto;
+    margin-left: 6vh;
+}
+
+.shift-management-table td {
+    width: 30%;
+    text-align: center;
+}
+
+a {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+a.button {
+    padding: 3vh 5vh;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    border-radius: 2vh;
+    font-size: xxx-large;
+}
+
+a.button-blue:link, a.button-blue:visited {
+    background-color: #537ade;
+    color: white;
+}
+
+a.button-blue:hover, a.button-blue:active {
+    background-color: #1d47d7;
+    color: white;
+}
+
+a.button-red:link, a.button-red:visited {
+    background-color: #de5b53;
+    color: white;
+}
+
+a.button-red:hover, a.button-red:active {
+    background-color: #f44336;
+    color: white;
+}
+
+a.button-green:link, a.button-green:visited {
+    background-color: #529d52;
+    color: white;
+}
+
+a.button-green:hover, a.button-green:active {
+    background-color: #21811a;
+    color: white;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+a.back {
+    float: right;
+    margin-right: 5vh;
+    margin-bottom: 3vh;
+    padding: 1vh 3vh;
+    font-size: x-large;
+}
+
+a.back:link, a.back:visited {
+    background-color: #ef665c;
+    color: white;
+}
+
+a.back:hover, a.button-blue:active {
+    background-color: #c74f48;
+    color: white;
 }
