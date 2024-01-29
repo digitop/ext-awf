@@ -25,4 +25,9 @@ class NextProductEvent implements ShouldBroadcast
     {
         return new Channel('next-product');
     }
+
+    public function broadcastAs()
+    {
+        return 'next-product-event';
+    }
 }

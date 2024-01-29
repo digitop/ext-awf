@@ -87,16 +87,38 @@
     </div>
 </div>
 
+
+<div class="hide">
+    <div class="timer">
+        <span id="hidden-time"></span>
+    </div>
+</div>
+
 <script>
     function refreshTime() {
         $('#time').html('')
+        $('#hidden-time').html('')
         const date = new Date()
 
-        $('#time').append(date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds())
+        var hours = date.getHours()
+        var minutes = date.getMinutes()
+        var seconds = date.getSeconds()
+
+        hours = ('0' + hours).slice(-2)
+        minutes = ('0' + minutes).slice(-2)
+        seconds = ('0' + seconds).slice(-2)
+
+        $('#time').append(hours + ':' + minutes + ':' + seconds)
+        $('#hidden-time').append(hours + ':' + minutes + ':' + seconds)
     }
 
     $(document).ready(function () {
         setInterval(refreshTime, 1000)
+
+        window.Echo.channel('next-product')
+            .listen('.next-product-event', (e) => {
+                var data = e[0]
+            })
     })
 </script>
 </body>
