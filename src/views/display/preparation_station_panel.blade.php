@@ -9,15 +9,22 @@
     <link rel="stylesheet"
           href="{{ url('vendor/oeem-extensions/awf/extension/css/display/preparation_station_panel.css') }}">
     <title></title>
+
+    @if(env('APP_ENV') === 'production')
+        @include('common.inc.production.scripts', ['path'=>asset('dist/production')])
+    @else
+        @include('common.inc.development.scripts', ['path'=>asset('dist/development')])
+    @endif
+
 </head>
 <body>
 <div id="vue-app" style="margin-left: 3vh;">
-    <div class="container upper">
+    <div class="awf-container upper">
         <span class="button center">
             P992
         </span>
     </div>
-    <div class="container middle">
+    <div class="awf-container middle">
         <span class="half" style="padding-left: 7vh;">
             <img class="middle-image" src="{{ url('vendor/oeem-extensions/awf/extension/images/default.png') }}"
                  alt="Product picture">
@@ -27,7 +34,7 @@
             </div>
         </span>
     </div>
-    <div class="container bottom">
+    <div class="awf-container bottom">
         <div class="datas">
             <span class="half half-left piece">
                 {{ $nextSequence?->designation ?? 'C-Säule links' }}
@@ -72,6 +79,8 @@
         window.Echo.channel('next-product')
             .listen('.next-product-event', (e) => {
                 var data = e[0]
+
+                console.log('data: ' + data)
             })
     })
 </script>
