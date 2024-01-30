@@ -55,11 +55,19 @@ body {
     top: 40%;
     bottom: auto;
     margin-left: 6vh;
+    font-size: xx-large;
+    background-color: white;
+    padding: 2vh 4vh;
 }
 
 .shift-management-table td {
     width: 30%;
     text-align: center;
+    border-bottom: 1px solid black;
+}
+
+.shift-management-table tbody th {
+    border-bottom: 1px solid black;
 }
 
 a {
