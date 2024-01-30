@@ -14,14 +14,21 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View as IlluminateView;
+use Illuminate\Support\Facades\Session;
 
 class ShiftManagementShiftStartPanelFacade extends Facade
 {
     public function index(
-        ShiftStartDataTable $dataTable
+        ShiftStartDataTable $dataTable,
+        string|null $pillar
     ): Application|Factory|View|IlluminateView|ContractsApplication|JsonResponse|null
     {
-        return $dataTable->render('awf-extension::display/shift_management_panel.partials.shift_start');
+        if (empty(Session::get('locale'))) {
+            Session::put('locale', 'hu_HU');
+        }
+
+        $dataTable->setPillar($pillar);
+        return $dataTable->render('awf-extension::display/shift_management_panel.partials.table');
     }
 
     public function create(Request|FormRequest|null $request = null,

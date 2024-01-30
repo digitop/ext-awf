@@ -20,6 +20,8 @@ Route::group(
             ->name('awf-sequence.show');
         Route::post('/move-sequence', ['uses' => 'MoveSequenceController@store'])
             ->name('awf-sequence.store');
+        Route::get('/set-sequence/{pillar}/{sequenceId}', ['uses' => 'SequenceController@set'])
+            ->name('awf-sequence.set');
 
         Route::get('/product-feature/get', ['uses' => 'ProductFeaturesController@create'])
             ->name('product-feature.create');

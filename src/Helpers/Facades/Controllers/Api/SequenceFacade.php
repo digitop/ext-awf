@@ -11,6 +11,7 @@ use AWF\Extension\Models\AWF_SEQUENCE_LOG;
 use AWF\Extension\Responses\CustomJsonResponse;
 use AWF\Extension\Responses\NextProductEventResponse;
 use AWF\Extension\Responses\SequenceFacadeResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Database\Eloquent\Collection;
@@ -159,5 +160,17 @@ class SequenceFacade extends Facade
             ),
             Response::HTTP_OK
         ));
+    }
+
+    public function set(string $pillar, string $sequenceId): RedirectResponse
+    {
+        $sequences = AWF_SEQUENCE::where('SEPILL', '=', $pillar)
+            ->where('SEQUID', '<', $sequenceId)
+            ->where('SEINPR', '=', 0)
+            ->update([
+                'SEINPR' => 1,
+            ]);
+
+        return back()->with('notification-success', __('responses.update'));
     }
 }

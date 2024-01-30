@@ -4,6 +4,13 @@ Accept: application/json
 Content-Type: application/json
 
 ### get data by WC
-GET localhost:8000/api/ext/awf-extension/get-sequence/EL01
+GET localhost:8000/api/ext/awf-extension/get-sequence/EL01/A
 Accept: application/json
 Content-Type: application/json
+
+{
+  "pillar": "A",
+  "side": "R",
+  "WCSHNA": "EL01",
+  "limit": 1
+}

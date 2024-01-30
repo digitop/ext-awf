@@ -12,6 +12,8 @@ use Illuminate\Http\JsonResponse;
 
 class ShiftStartDataTable extends DataTable
 {
+    protected string|null $pillar = null;
+
     /**
      * Display ajax response.
      *
@@ -21,7 +23,12 @@ class ShiftStartDataTable extends DataTable
     {
         $dataTables =  new EloquentDataTable($this->query());
 
-        return $dataTables->make();
+        return $dataTables
+            ->addColumn('actions', function ($record) {
+                return '<a href="' . route('awf-sequence.set', ['pillar' => $this->getPillar(), 'sequenceId' => $record->SEQUID]) .'">' . __('display.button.setAsStart') . '</a>';
+            })
+            ->rawColumns(['actions'])
+            ->make();
     }
 
     /**
@@ -31,7 +38,13 @@ class ShiftStartDataTable extends DataTable
      */
     public function query(): QueryBuilder|EloquentBuilder
     {
-        $records = AWF_SEQUENCE::where('SEINPR', '=', 0)
+         $records = AWF_SEQUENCE::where('SEINPR', '=', 0);
+
+         if ($this->getPillar() !== null) {
+             $records->where('SEPILL', '=', $this->getPillar());
+         }
+
+         $records
             ->orderBy('SEPILL', 'DESC')
             ->orderBy('SEQUID', 'ASC');
 
@@ -47,11 +60,23 @@ class ShiftStartDataTable extends DataTable
     {
         return $this->builder()
             ->columns([
+                ['data' => 'SEQUID', 'name' => 'SEQUID', 'title' => __('awf-extension::display.data.shift-sequence.sequenceId')],
                 ['data' => 'SEPONR', 'name' => 'SEPONR', 'title' => __('awf-extension::display.data.shift-sequence.porscheOrderNumber')],
                 ['data' => 'SEPSEQ', 'name' => 'SEPSEQ', 'title' => __('awf-extension::display.data.shift-sequence.porscheSequenceNumber')],
                 ['data' => 'SEARNU', 'name' => 'SEARNU', 'title' => __('awf-extension::display.data.shift-sequence.articleNumber')],
-//                ['data' => 'actions', 'name' => 'actions', 'title' => __('button.operations'), 'class' => 'text-right all', 'orderable' => false, 'searchable' => false],
+                ['data' => 'actions', 'name' => 'actions', 'title' => __('button.operations'), 'class' => 'datatable-action', 'orderable' => false, 'searchable' => false],
             ])
             ->parameters(getStandardParameters(false));
+    }
+
+    public function getPillar(): ?string
+    {
+        return $this->pillar;
+    }
+
+    public function setPillar(?string $pillar): ShiftStartDataTable
+    {
+        $this->pillar = $pillar;
+        return $this;
     }
 }

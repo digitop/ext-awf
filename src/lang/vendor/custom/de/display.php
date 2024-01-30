@@ -15,9 +15,11 @@ return [
         'production' => 'Produktionsdetails',
         'reason' => 'Schluss mit Gründen',
         'back' => 'Zurück',
+        'setAsStart' => 'Als Startsequenz festlegen',
     ],
     'data' => [
         'shift-sequence' => [
+            'sequenceId' => 'Sequenz-ID',
             'porscheOrderNumber' => 'Porsche-Auftragsnummer',
             'porscheSequenceNumber' => 'Porsche-Sequenznummer',
             'articleNumber' => 'Artikelnummer',

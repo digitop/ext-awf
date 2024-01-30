@@ -1,9 +1,7 @@
 @extends('awf-extension::display.shift_management_panel.shift_management_base')
 
 @section('awf-shift-content')
-    {{--    {{ $dataTable->table() }}--}}
-
-    <table class="shift-management-table">
+    <table class="shift-management-table start-shift">
         <thead>
         <tr>
             <th></th>
@@ -19,30 +17,40 @@
             <td>{{ $aPillar->SEPONR }}</td>
             <td>{{ $aPillar->SEPSEQ }}</td>
             <td>{{ $aPillar->SEARNU }}</td>
-            <td>{{ __('button.operations') }}</td>
+            <td>
+                <a class="button-small button-blue" href="{{ route('awf-shift-management-panel.shift-start.index', ['pillar' => 'A']) }}">
+                    {{ __('button.operations') }}
+                </a>
+            </td>
         </tr>
         <tr>
             <th style="width: 10%;">B-{{ __('awf-extension::display.pillar') }}</th>
             <td>{{ $bPillar->SEPONR }}</td>
             <td>{{ $bPillar->SEPSEQ }}</td>
             <td>{{ $bPillar->SEARNU }}</td>
-            <td>{{ __('button.operations') }}</td>
+            <td>
+                <a class="button-small button-blue" href="{{ route('awf-shift-management-panel.shift-start.index', ['pillar' => 'B']) }}">
+                    {{ __('button.operations') }}
+                </a>
+            </td>
         </tr>
         <tr>
             <th style="width: 10%;">C-{{ __('awf-extension::display.pillar') }}</th>
             <td>{{ $cPillar->SEPONR }}</td>
             <td>{{ $cPillar->SEPSEQ }}</td>
             <td>{{ $cPillar->SEARNU }}</td>
-            <td>{{ __('button.operations') }}</td>
+            <td>
+                <a class="button-small button-blue" href="{{ route('awf-shift-management-panel.shift-start.index', ['pillar' => 'C']) }}">
+                    {{ __('button.operations') }}
+                </a>
+            </td>
         </tr>
         </tbody>
     </table>
 
     <div class="footer">
-        <a href="{{ url()->previous() }}" class="back">
+        <a href="{{ route('awf-shift-management-panel.default') }}" class="back">
             {{ __('display.button.back') }}
         </a>
     </div>
-
-    {{--        {{ $dataTable->scripts() }}--}}
 @endsection

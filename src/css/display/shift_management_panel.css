@@ -51,22 +51,30 @@ body {
 .shift-management-table {
     width: 90%;
     position: absolute;
+    left: 1%;
     right: auto;
     top: 40%;
     bottom: auto;
     margin-left: 6vh;
     font-size: xx-large;
-    background-color: white;
     padding: 2vh 4vh;
 }
 
 .shift-management-table td {
     width: 30%;
     text-align: center;
+}
+
+.start-shift {
+    background-color: white;
+    top: 37% !important;
+}
+
+.start-shift td {
     border-bottom: 1px solid black;
 }
 
-.shift-management-table tbody th {
+.start-shift tbody th {
     border-bottom: 1px solid black;
 }
 
@@ -82,6 +90,15 @@ a.button {
     display: inline-block;
     border-radius: 2vh;
     font-size: xxx-large;
+}
+
+a.button-small {
+    padding: 1vh 2vh;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    border-radius: 2vh;
+    font-size: x-large;
 }
 
 a.button-blue:link, a.button-blue:visited {
@@ -136,4 +153,54 @@ a.back:link, a.back:visited {
 a.back:hover, a.button-blue:active {
     background-color: #c74f48;
     color: white;
+}
+
+.table-content {
+    position: absolute;
+    top: 18vh;
+    width: 100%;
+    background-color: white;
+}
+
+.dataTable {
+    width: 100% !important;
+    font-size: x-large;
+}
+
+.dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter,
+.dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_processing,
+.dataTables_wrapper .dataTables_paginate
+{
+    font-size: x-large;
+    margin: 1vh;
+}
+
+.dataTables_length select {
+    font-size: large;
+}
+
+.datatable-action {
+    text-align: center;
+}
+
+.datatable-action a {
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    background-color: #537ade;
+    color: white;
+    padding: 1vh 2vh;
+    font-size: large;
+}
+
+.datatable-action a:hover, .datatable-action a:active {
+    background-color: #1d47d7;
+    color: white;
+}
+
+.dataTable tbody tr {
+    text-align: center;
+}
+.dataTable tbody .even {
+    background-color: #ddd;
 }

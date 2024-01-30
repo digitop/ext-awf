@@ -25,10 +25,11 @@ class ShiftManagementShiftStartPanelController extends Controller
         $this->facade = new ShiftManagementShiftStartPanelFacade();
     }
     public function index(
-        ShiftStartDataTable $dataTable
+        ShiftStartDataTable $dataTable,
+        string $pillar
     ): Application|Factory|View|IlluminateView|JsonResponse|ContractsApplication|null
     {
-        return $this->facade->index($dataTable);
+        return $this->facade->index($dataTable, $pillar);
     }
 
     public function create(Request|FormRequest|null $request = null,

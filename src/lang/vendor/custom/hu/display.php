@@ -15,9 +15,11 @@ return [
         'production' => 'Termelési adatok',
         'reason' => 'Állásindok választás',
         'back' => 'Vissza',
+        'setAsStart' => 'Kezdő szekvenciának állítás',
     ],
     'data' => [
         'shift-sequence' => [
+            'sequenceId' => 'Szekvencia azonosító',
             'porscheOrderNumber' => 'Porsche megrendelés azonosító',
             'porscheSequenceNumber' => 'Porsche szekvencia szám',
             'articleNumber' => 'Termék azonosító',

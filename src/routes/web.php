@@ -15,6 +15,8 @@ Route::group(
             ->name('awf-shift-management-panel.default');
         Route::get('shift-management/shift-start', ['uses' => 'ShiftManagementShiftStartPanelController@create'])
             ->name('awf-shift-management-panel.shift-start');
+        Route::get('shift-management/shift-start/{pillar}', ['uses' => 'ShiftManagementShiftStartPanelController@index'])
+            ->name('awf-shift-management-panel.shift-start.index');
         Route::get('shift-management/production', ['uses' => 'ShiftManagementProductionPanelController@create'])
             ->name('awf-shift-management-panel.production');
         Route::get('shift-management/reason', ['uses' => 'ShiftManagementReasonPanelController@create'])

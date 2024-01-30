@@ -5,6 +5,7 @@ namespace AWF\Extension\Controllers\Api;
 use App\Http\Controllers\Controller;
 use AWF\Extension\Requests\Api\SequenceShowRequest;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Models\WORKCENTER;
 use AWF\Extension\Interfaces\ApiControllerFacadeInterface;
@@ -27,5 +28,10 @@ class SequenceController extends Controller
     public function show(SequenceShowRequest $request, WORKCENTER $WCSHNA, string|null $pillar  = null): JsonResponse
     {
         return $this->facade->show($request, $WCSHNA, $pillar);
+    }
+
+    public function set(string $pillar, string $sequenceId): RedirectResponse
+    {
+        return $this->facade->set($pillar, $sequenceId);
     }
 }

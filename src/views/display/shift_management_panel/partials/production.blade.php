@@ -3,7 +3,7 @@
 @section('awf-shift-content')
     production
     <div class="footer">
-        <a href="{{ url()->previous() }}" class="back">
+        <a href="{{ route('awf-shift-management-panel.default') }}" class="back">
             {{ __('display.button.back') }}
         </a>
     </div>
