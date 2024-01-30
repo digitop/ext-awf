@@ -21,7 +21,7 @@ class CheckProductCheckRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'serial' => ['required', 'int', 'max:64', 'min:1'],
+            'serial' => ['required', 'string', 'max:64', 'min:1'],
             'dashboard' => ['required', 'string', 'min:1', 'max:32', 'exists:DASHBOARD,DHIDEN'],
         ];
     }
