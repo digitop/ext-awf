@@ -53,7 +53,7 @@ body {
 }
 
 .center {
-    margin-left: 80vh;
+    margin-left: 65vh;
 }
 
 .right {
@@ -76,7 +76,7 @@ body {
 }
 
 .middle-image {
-    height: 38vh;
+    height: 28vh;
     object-fit: cover;
 }
 
@@ -84,15 +84,15 @@ body {
     margin: auto;
     border: 1px #AAA solid;
     border-radius: 50%;
-    width: 40vh;
-    height: 40vh;
+    width: 35vh;
+    height: 35vh;
 }
 
 .datas {
     width: 100%;
     font-size: xxx-large;
     font-weight: bold;
-    margin-top: 6vh;
+    margin-top: 3vh;
 }
 
 .piece {

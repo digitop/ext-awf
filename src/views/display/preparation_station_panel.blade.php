@@ -18,7 +18,7 @@
         </span>
     </div>
     <div class="container middle">
-        <span class="half">
+        <span class="half" style="padding-left: 7vh;">
             <img class="middle-image" src="{{ url('vendor/oeem-extensions/awf/extension/images/default.png') }}"
                  alt="Product picture">
         </span>
