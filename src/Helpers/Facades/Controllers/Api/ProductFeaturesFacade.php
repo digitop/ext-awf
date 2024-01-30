@@ -10,6 +10,7 @@ use AWF\Extension\Responses\CustomJsonResponse;
 use AWF\Extension\Responses\ProductColorsResponse;
 use AWF\Extension\Responses\ProductFeaturesResponse;
 use AWF\Extension\Responses\ProductMaterialsResponse;
+use AWF\Extension\Responses\SequenceFacadeResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Database\Eloquent\Model;
@@ -154,6 +155,12 @@ class ProductFeaturesFacade extends Facade
             'WFVALU' => 'success',
         ]);
 
-        return new CustomJsonResponse(new JsonResponseModel(new ResponseData(true), Response::HTTP_OK));
+        return new CustomJsonResponse(new JsonResponseModel(
+            new ResponseData(
+                true,
+                (new SequenceFacadeResponse($sequence, $workCenter))
+            ),
+            Response::HTTP_OK
+        ));
     }
 }
