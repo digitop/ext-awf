@@ -6,6 +6,7 @@ use AWF\Extension\Helpers\Responses\JsonResponseModel;
 use AWF\Extension\Helpers\Responses\ResponseData;
 use AWF\Extension\Models\AWF_SEQUENCE;
 use AWF\Extension\Models\AWF_SEQUENCE_LOG;
+use AWF\Extension\Models\AWF_SEQUENCE_WORKCENTER;
 use AWF\Extension\Responses\CustomJsonResponse;
 use AWF\Extension\Responses\ProductColorsResponse;
 use AWF\Extension\Responses\ProductFeaturesResponse;
@@ -155,10 +156,24 @@ class ProductFeaturesFacade extends Facade
             'WFVALU' => 'success',
         ]);
 
+        $sequenceWorkCenter = AWF_SEQUENCE_WORKCENTER::where('SEQUID', '=', $sequence->SEQUID)
+            ->where('WCSHNA', '=', $workCenter->WCSHNA)
+            ->first();
+
+
+
         return new CustomJsonResponse(new JsonResponseModel(
             new ResponseData(
                 true,
-                (new SequenceFacadeResponse($sequence, $workCenter))
+                [
+                    'RNREPN' => $sequenceWorkCenter->RNREPN,
+                    'PRCODE' => $product->PRCODE,
+                    'SNCOUN' => 1,
+                    'SNRDCN' => 1,
+                    'SNSERN' => null,
+                    'parentSNSERN' => false,
+                    'subProduct' => false,
+                ]
             ),
             Response::HTTP_OK
         ));
