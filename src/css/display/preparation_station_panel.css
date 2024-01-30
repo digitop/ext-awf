@@ -8,6 +8,7 @@ html, body {
 body {
     background-color: #777;
     color: #000;
+    height: 90%;
 }
 
 .container {
@@ -18,12 +19,14 @@ body {
 }
 
 .upper {
-    height: 10%;
+    height: 10vh;
+    margin-top: 6vh;
 }
 
 .middle {
-    height: 50%;
+    height: 40vh;
     margin-bottom: 0 !important;
+    margin-top: 3vh;
 }
 
 .bottom {
@@ -49,27 +52,31 @@ body {
     float: left;
 }
 
+.center {
+    margin-left: 80vh;
+}
+
 .right {
     margin-right: 15%;
     float: right;
 }
 
 .half {
-    position: fixed;
     width: 50%;
-    top: 15vh;
-    left: 4vh;
+}
+
+.half-left {
+    float: left;
+    font-size: 8vh;
 }
 
 .half-right {
     float: right;
-    margin-left: 50%;
-    margin-right: 0;
+    font-size: 8vh;
 }
 
 .middle-image {
-    height: 100%;
-    width: 100%;
+    height: 38vh;
     object-fit: cover;
 }
 
@@ -85,6 +92,7 @@ body {
     width: 100%;
     font-size: xxx-large;
     font-weight: bold;
+    margin-top: 6vh;
 }
 
 .piece {
@@ -117,13 +125,12 @@ body {
 }
 
 .timer {
-    margin-bottom: 1%;
-    margin-right: 5%;
+    margin-right: 8vh;
     font-size: 13vh;
+    margin-top: 11vh;
     float: right;
-    position: fixed;
-    right: 0;
-    bottom: 0;
+    text-align: right;
+    width: 100%;
 }
 
 .hide {

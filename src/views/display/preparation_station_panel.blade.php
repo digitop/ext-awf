@@ -11,13 +11,10 @@
     <title></title>
 </head>
 <body>
-<div id="vue-app">
+<div id="vue-app" style="margin-left: 3vh;">
     <div class="container upper">
-        <span class="button left">
+        <span class="button center">
             P992
-        </span>
-        <span class="button right">
-            G16
         </span>
     </div>
     <div class="container middle">
@@ -32,57 +29,13 @@
     </div>
     <div class="container bottom">
         <div class="datas">
-            <div class="half piece">
+            <span class="half half-left piece">
                 {{ $nextSequence?->designation ?? 'C-Säule links' }}
-            </div>
-            <div class="half half-right piece">
+            </span>
+            <span class="half half-right piece">
                 {{ $nextSequence?->materialAndColor ?? 'Dinamica schwarz'}}
-            </div>
+            </span>
         </div>
-        <span class="half">
-            <table class="half-table">
-                <tr>
-                    <th class="line-separated">{{ __('display.sequenceIndex') }}:</th>
-                    <td></td>
-                </tr>
-                <tr>
-                    <th class="line-separated">{{ __('display.fabricShelf') }}:</th>
-                    <td></td>
-                </tr>
-                <tr>
-                    <th class="line-separated">{{ __('display.myInput') }}:</th>
-                    <td></td>
-                </tr>
-                <tr>
-                    <th class="line-separated">{{ __('display.myString') }}:</th>
-                    <td></td>
-                </tr>
-                <tr>
-                    <th>{{ __('display.isActive') }}:</th>
-                    <td></td>
-                </tr>
-                <tr>
-                    <th>{{ __('display.barcode') }}:</th>
-                    <td></td>
-                </tr>
-                <tr>
-                    <th>{{ __('display.sqlSyncRun') }}:</th>
-                    <td></td>
-                </tr>
-            </table>
-        </span>
-        <span class="half half-right">
-            <table class="half-table">
-                <tr>
-                    <th class="line-separated">{{ __('display.sequenceIndex') }}:</th>
-                    <td></td>
-                </tr>
-                <tr>
-                    <th class="line-separated">{{ __('display.fabricShelf') }}:</th>
-                    <td></td>
-                </tr>
-            </table>
-        </span>
         <div class="timer">
             <span id="time"></span>
         </div>
