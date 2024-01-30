@@ -2,6 +2,8 @@
 
 namespace AWF\Extension\Helpers\Facades\Controllers\Web;
 
+use AWF\Extension\Events\NextProductEvent;
+use AWF\Extension\Helpers\Models\NextProductEventModel;
 use Illuminate\Contracts\Foundation\Application as ContractsApplication;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -25,7 +27,15 @@ class PreparationStationPanelFacade extends Facade
         }
         return view('awf-extension::display/preparation_station_panel', [
             'default' => $default,
-            'nextSequence' => [],
+            'nextSequence' => new NextProductEventModel(),
         ]);
+    }
+
+    public function default(): void
+    {
+        event(new NextProductEvent(
+                (new NextProductEventModel())->get()
+            )
+        );
     }
 }

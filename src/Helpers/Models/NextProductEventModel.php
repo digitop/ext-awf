@@ -8,7 +8,8 @@ class NextProductEventModel extends ObjectToArray
     protected string|null $color = null;
     protected string|null $materialAndColor = null;
 
-    public function __construct(string|null $designation = null,
+    public function __construct(
+        string|null $designation = null,
             string|null $color = null,
             string|null $materialAndColor = null
     )

@@ -36,5 +36,8 @@ Route::group(
 
         Route::post('/product/check', ['uses' => 'CheckProductController@check'])
             ->name('product.check');
+
+        Route::get('/preparation-panel/default', ['uses' => 'PreparationStationPanelController@default'])
+            ->name('awf-preparation-panel.default');
     }
 );

@@ -14,9 +14,9 @@ class NextProductEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    protected CustomJsonResponse $message;
+    protected array $message;
     
-    public function __construct(JsonResponse $message)
+    public function __construct(array $message)
     {
         $this->message = $message;
     }
@@ -29,5 +29,10 @@ class NextProductEvent implements ShouldBroadcast
     public function broadcastAs()
     {
         return 'next-product-event';
+    }
+
+    public function broadcastWith()
+    {
+        return $this->message;
     }
 }

@@ -5,6 +5,7 @@ namespace AWF\Extension\Helpers\Facades\Controllers\Api;
 use AWF\Extension\Events\NextProductEvent;
 use AWF\Extension\Helpers\Models\NextProductEventModel;
 use AWF\Extension\Helpers\Responses\JsonResponseModel;
+use AWF\Extension\Helpers\Responses\NextProductResponseData;
 use AWF\Extension\Helpers\Responses\ResponseData;
 use AWF\Extension\Models\AWF_SEQUENCE;
 use AWF\Extension\Models\AWF_SEQUENCE_LOG;
@@ -122,13 +123,11 @@ class SequenceFacade extends Facade
         })
             ->take($request->limit ?? 2);
 
-        broadcast(new CustomJsonResponse(new JsonResponseModel(
-            new ResponseData(
-                true,
-                (new NextProductEventResponse($sequences, null))->generate()
-            ),
-            Response::HTTP_OK
-        )));
+
+        event(new NextProductEvent(
+                (new NextProductEventResponse($sequence, null))->generate()
+            )
+        );
 
         foreach ($sequence as $item) {
             AWF_SEQUENCE_LOG::where('WCSHNA', '=', $workCenter->WCSHNA)

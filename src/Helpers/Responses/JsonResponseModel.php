@@ -4,13 +4,13 @@ namespace AWF\Extension\Helpers\Responses;
 
 class JsonResponseModel
 {
-    protected ResponseData|null $responseData = null;
+    protected ResponseData|NextProductResponseData|null $responseData = null;
     protected int  $status = 200;
     protected array  $headers = [];
     protected int  $options = 0;
     protected bool  $json = false;
 
-    public function __construct(ResponseData $data = null, int $status = 200)
+    public function __construct(ResponseData|NextProductResponseData|null $data = null, int $status = 200)
     {
         $this->responseData = $data;
         $this->status = $status;

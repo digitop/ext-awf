@@ -18,7 +18,7 @@
 
 </head>
 <body>
-<div id="vue-app" style="margin-left: 3vh;">
+<div id="vue-app">
     <div class="awf-container upper">
         <span class="button center">
             P992
@@ -30,17 +30,15 @@
                  alt="Product picture">
         </span>
         <span class="half half-right">
-            <div class="middle-circle" style="background-color: {{ $nextSequence?->color ?? '#000' }};">
+            <div id="product-color" class="middle-circle" style="background-color: #000;">
             </div>
         </span>
     </div>
     <div class="awf-container bottom">
         <div class="datas">
-            <span class="half half-left piece">
-                {{ $nextSequence?->designation ?? 'C-Säule links' }}
+            <span id="product-designation" class="half half-left piece">
             </span>
-            <span class="half half-right piece">
-                {{ $nextSequence?->materialAndColor ?? 'Dinamica schwarz'}}
+            <span id="product-material"  class="half half-right piece">
             </span>
         </div>
         <div class="timer">
@@ -49,9 +47,11 @@
     </div>
 </div>
 
-<div class="hide" style="display: {{ $default === true ? 'block' : 'none' }};">
-    <div class="timer">
-        <span id="hidden-time"></span>
+<div id="hide-app" class="hide">
+    <div class="timer-bottom">
+        <div class="timer">
+            <span id="hidden-time"></span>
+        </div>
     </div>
 </div>
 
@@ -75,20 +75,15 @@
 
     $(document).ready(function () {
         setInterval(refreshTime, 1000)
-
-        window.Echo.channel('next-product')
-            .listen('.next-product-event', (e) => {
-                var data = e[0]
-
-                console.log('data: ' + data)
-            })
     })
 </script>
 
 <script>
     var viewAppletData = {
-        nextSequence: JSON.parse('{!! json_encode($nextSequence) !!}'),
+        nextSequence: JSON.parse('{{ json_encode($nextSequence) }}'),
     };
+
+    console.log('viewAppletData: ' + JSON.stringify(viewAppletData))
 </script>
 <script src="{!! asset('/dist/vue.js') !!}"></script>
 <script src="{!! asset('dist/vue/echo.js') !!}?random_cache_buster={{rand()}}"></script>

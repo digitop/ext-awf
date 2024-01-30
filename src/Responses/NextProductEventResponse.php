@@ -24,9 +24,15 @@ class NextProductEventResponse  implements ResponseInterface
         $data = [];
 
         foreach ($this->collection as $item) {
+            $product = PRODUCT::where('PRCODE', '=', $item->PRCODE)->first();
+
             $data[] = (new NextProductEventModel(
-                PRODUCT::where()
+                $product->PRNAME,
+                $product->features()->where('FESHNA', '=', 'SZASZ')->first()?->FEVALU,
+                $product->features()->where('FESHNA', '=', 'TESZNE')->first()?->FEVALU,
             ))->get();
+
+            $data['sequenceId'] = $item->SEQUID;
         }
 
         return $data;
