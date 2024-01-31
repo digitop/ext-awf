@@ -12,7 +12,7 @@
 
             <script>
                 $('#button{{ $dashboard->DHIDEN }}').bind('click', function () {
-                    $.get('http://localhost:8000/api/ext/awf-extension/shift-management/set-default/{{ $dashboard->DHIDEN }}')
+                    $.get('{{ env('APP_URL') }} /api/ext/awf-extension/shift-management/set-default/{{ $dashboard->DHIDEN }}')
                 })
             </script>
         @endforeach

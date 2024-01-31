@@ -82,8 +82,6 @@
     var viewAppletData = {
         nextSequence: JSON.parse('{{ json_encode($nextSequence) }}'),
     };
-
-    console.log('viewAppletData: ' + JSON.stringify(viewAppletData))
 </script>
 <script src="{!! asset('/dist/vue.js') !!}"></script>
 <script src="{!! asset('dist/vue/echo.js') !!}?random_cache_buster={{rand()}}"></script>

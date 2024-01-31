@@ -24,7 +24,7 @@ class ShiftManagementPanelFacade extends Facade
 
         publishMqtt(env('DEPLOYMENT_SUBDOMAIN') . '/api/SEQUENCE_CHANGE/', [
             [
-                "to" => 'dh:' . $dashboardId,
+                "to" => 'dh:' . (int)$dashboardId,
                 "payload" => [
                     "status" => "default",
                 ],
