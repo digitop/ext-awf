@@ -156,8 +156,6 @@ class ProductFeaturesFacade extends Facade
             ->where('WCSHNA', '=', $workCenter->WCSHNA)
             ->first();
 
-
-
         return new CustomJsonResponse(new JsonResponseModel(
             new ResponseData(
                 true,

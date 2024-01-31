@@ -11,6 +11,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use App\Models\WORKCENTER;
 use Illuminate\View\View as IlluminateView;
 
 class ShiftManagementReasonPanelFacade extends Facade
@@ -19,6 +20,23 @@ class ShiftManagementReasonPanelFacade extends Facade
                            Model|string|null        $model = null
     ): Application|Factory|View|IlluminateView|ContractsApplication|null
     {
-        return view('awf-extension::display.shift_management_panel.partials.reason');
+        $dashboards = [];
+
+        $workCenters = WORKCENTER::where('WCSHNA', '!=', 'EL01')
+            ->where('WCSHNA', '!=', 'HA01')
+            ->where('WCSHNA', '!=', 'HB01')
+            ->where('WCSHNA', '!=', 'HC01')
+            ->with('operatorPanels')
+            ->get();
+
+        foreach ($workCenters as $workCenter) {
+            if ($workCenter->operatorPanels->has('0')) {
+                $dashboards[] = $workCenter->operatorPanels[0]?->dashboard;
+            }
+        }
+
+        return view('awf-extension::display.shift_management_panel.partials.reason', [
+            'dashboards' => $dashboards,
+        ]);
     }
 }

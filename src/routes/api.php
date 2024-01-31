@@ -39,5 +39,8 @@ Route::group(
 
         Route::get('/preparation-panel/default', ['uses' => 'PreparationStationPanelController@default'])
             ->name('awf-preparation-panel.default');
+
+        Route::get('/shift-management/set-default/{dashboardId}', ['uses' => 'ShiftManagementPanelController@default'])
+            ->name('shift-management.dashboard.default');
     }
 );

@@ -138,9 +138,11 @@ class SequenceFacade extends Facade
                 ]);
         }
 
-        $workCenter->features()->where('WFSHNA', '=', 'OPSTATUS')->first()?->update([
-            'WFVALU' => 'default',
-        ]);
+        if ($workCenter->features()->where('WFSHNA', '=', 'OPSTATUS')->first()->WFVALU == 'success') {
+            $workCenter->features()->where('WFSHNA', '=', 'OPSTATUS')->first()?->update([
+                'WFVALU' => 'default',
+            ]);
+        }
 
         publishMqtt(env('DEPLOYMENT_SUBDOMAIN') . '/api/SEQUENCE_CHANGE/', [
             [
