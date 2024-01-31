@@ -14,5 +14,5 @@ Content-Type: application/json
 
 {
   "dashboard": "1",
-  "color": "ffffff"
+  "color": "000000"
 }

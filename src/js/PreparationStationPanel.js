@@ -19,7 +19,7 @@ const app = new Vue({
                     $('#hide-app').css('display', 'none')
                     $('#vue-app').css('display', 'block')
 
-                    $('#product-color').css('background-color', data.color)
+                    $('#product-color').css('background-color', '#' . data.color)
                     $('#product-designation').append(data.designation)
 
                     if (data.designation.length > 25) {

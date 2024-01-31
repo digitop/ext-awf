@@ -41,7 +41,7 @@ class CheckProductFacade extends Facade
             ->where('RNREPN', '=', $sequenceWorkCenter->RNREPN)
             ->first();
 
-        if (!empty($serial) && (int)$serial->SNCYID > 0) {
+        if (empty($serial) || (int)$serial->SNCYID > 0) {
             return new CustomJsonResponse(new JsonResponseModel(
                 new ResponseData(
                     false,
