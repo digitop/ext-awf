@@ -62,10 +62,6 @@ class ProductFeaturesFacade extends Facade
             DASHBOARD::where('DHIDEN', '=', $request->dashboard)->first()->operatorPanels[0]->WCSHNA
         )->first();
 
-        $workCenter->features()->where('WFSHNA', '=', 'OPSTATUS')->first()?->update([
-            'WFVALU' => 'default',
-        ]);
-
         return new CustomJsonResponse(new JsonResponseModel(
             new ResponseData(
                 true,
