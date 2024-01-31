@@ -22,36 +22,26 @@ class CheckProductFacade extends Facade
 {
     public function check(Request|FormRequest|null $request = null, Model|string|null $model = null): JsonResponse|null
     {
-        $serial = SERIALNUMBER::where('SNSERN', '=', $request->serial)->first();
-
-        if (empty($serial)) {
-            return new CustomJsonResponse(new JsonResponseModel(
-                new ResponseData(
-                    false,
-                    [],
-                    __('response.check.serial_not_found')
-                ),
-                Response::HTTP_OK
-            ));
-        }
-
-        $repno = REPNO::where('RNREPN', '=', $serial->RNREPN)->first();
-
         $workCenter = WORKCENTER::where(
             'WCSHNA',
             '=',
             DASHBOARD::where('DHIDEN', '=', $request->dashboard)->first()->operatorPanels[0]->WCSHNA
         )->first();
 
-        $sequenceWorkCenter = AWF_SEQUENCE_WORKCENTER::where('RNREPN', '=', $repno->RNREPN)->first();
-;
         $sequenceLog = AWF_SEQUENCE_LOG::where('WCSHNA', '=', $workCenter->WCSHNA)
-            ->where('SEQUID', '=', $sequenceWorkCenter->SEQUID)
             ->whereNull('LSTIME')
             ->whereNull('LETIME')
             ->first();
 
-        if (empty($sequenceLog)) {
+        $sequenceWorkCenter = AWF_SEQUENCE_WORKCENTER::where('WCSHNA', '=', $workCenter->WCSHNA)
+            ->where('SEQUID', '=', $sequenceLog->SEQUID)
+            ->first();
+
+        $serial = SERIALNUMBER::where('SNSERN', '=', $request->serial)
+            ->where('RNREPN', '=', $sequenceWorkCenter->RNREPN)
+            ->first();
+
+        if (!empty($serial) && (int)$serial->SNCYID > 0) {
             return new CustomJsonResponse(new JsonResponseModel(
                 new ResponseData(
                     false,
