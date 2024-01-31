@@ -4,13 +4,14 @@ namespace AWF\Extension\Events;
 
 use AWF\Extension\Responses\CustomJsonResponse;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Broadcasting\Channel;
 
-class NextProductEvent implements ShouldBroadcast
+class NextProductEvent implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 

@@ -123,7 +123,6 @@ class SequenceFacade extends Facade
         })
             ->take($request->limit ?? 2);
 
-
         event(new NextProductEvent(
                 (new NextProductEventResponse($sequence, null))->generate()
             )
