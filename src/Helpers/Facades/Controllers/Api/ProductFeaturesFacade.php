@@ -70,7 +70,7 @@ class ProductFeaturesFacade extends Facade
                         PRODUCT::whereNull('DELDAT')->where('PRACTV', '=', 1)->get(),
                         $workCenter
                     ))->generate(),
-                    'status' => $workCenter?->features()->where('WFSHNA', '=', 'OPSTATUS')->first() ?? 'default',
+                    'status' => $workCenter?->features()->where('WFSHNA', '=', 'OPSTATUS')->first()->WFVALU ?? 'default',
                 ]
             ),
             Response::HTTP_OK
