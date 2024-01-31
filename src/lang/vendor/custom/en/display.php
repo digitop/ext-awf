@@ -13,7 +13,7 @@ return [
     'button' => [
         'shiftStart' => 'Start shift',
         'production' => 'Production details',
-        'reason' => 'Stop reasons',
+        'reason' => 'Operator panel management',
         'back' => 'Back',
         'setAsStart' => 'Set as starting sequence',
     ],

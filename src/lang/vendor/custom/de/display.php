@@ -13,7 +13,7 @@ return [
     'button' => [
         'shiftStart' => 'Schicht beginnen',
         'production' => 'Produktionsdetails',
-        'reason' => 'Schluss mit Gründen',
+        'reason' => 'Verwaltung des Bedienfelds',
         'back' => 'Zurück',
         'setAsStart' => 'Als Startsequenz festlegen',
     ],

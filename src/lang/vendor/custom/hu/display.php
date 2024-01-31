@@ -13,7 +13,7 @@ return [
     'button' => [
         'shiftStart' => 'Műszak kezdés',
         'production' => 'Termelési adatok',
-        'reason' => 'Állásindok választás',
+        'reason' => 'Operátor panel kezelés',
         'back' => 'Vissza',
         'setAsStart' => 'Kezdő szekvenciának állítás',
     ],
