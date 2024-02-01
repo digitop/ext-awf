@@ -33,6 +33,17 @@ class CheckProductFacade extends Facade
             ->whereNull('LETIME')
             ->first();
 
+        if (empty($sequenceLog)) {
+            return new CustomJsonResponse(new JsonResponseModel(
+                new ResponseData(
+                    false,
+                    [],
+                    'gfgdfg'
+                ),
+                Response::HTTP_OK
+            ));
+        }
+
         $sequenceWorkCenter = AWF_SEQUENCE_WORKCENTER::where('WCSHNA', '=', $workCenter->WCSHNA)
             ->where('SEQUID', '=', $sequenceLog->SEQUID)
             ->first();
@@ -55,6 +66,9 @@ class CheckProductFacade extends Facade
         return new CustomJsonResponse(new JsonResponseModel(
             new ResponseData(
                 true,
+                [
+                    'orderCode' => AWF_SEQUENCE::where('SEQUID', '=', $sequenceWorkCenter->SEQUID)->first()->ORCODE,
+                ]
             ),
             Response::HTTP_OK
         ));

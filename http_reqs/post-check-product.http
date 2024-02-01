@@ -4,6 +4,6 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "dashboard": "15",
+  "dashboard": "2",
   "serial": "HW01000203762"
 }
