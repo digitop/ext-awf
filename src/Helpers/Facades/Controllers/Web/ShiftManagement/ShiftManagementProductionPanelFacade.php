@@ -28,7 +28,7 @@ class ShiftManagementProductionPanelFacade extends Facade
     ): Application|Factory|View|IlluminateView|ContractsApplication|null
     {
         $data = [];
-        $now = new \DateTime('2024-01-25 08:43:32');
+        $now = new \DateTime();
         $start = $now->format('Y-m-d') . ' 00:00:00';
 
         $sequences = DB::connection('custom_mysql')->select('
@@ -36,7 +36,7 @@ class ShiftManagementProductionPanelFacade extends Facade
             from AWF_SEQUENCE a
             join AWF_SEQUENCE_WORKCENTER asw on asw.SEQUID = a.SEQUID
             left join AWF_SEQUENCE_LOG asl on asl.SEQUID = a.SEQUID and asl.WCSHNA = asw.WCSHNA
-            where asl.LSTIME >= "' . $start . '" and asl.LETIME is null
+            where asl.LSTIME is null and asl.LETIME is null
         ');
 
         foreach ($sequences as $sequence) {
@@ -51,6 +51,12 @@ class ShiftManagementProductionPanelFacade extends Facade
                 'productColor' => $product->features()->where('FESHNA', '=', 'SZASZ')->first()->FEVALU,
                 'productMaterial' => ucfirst($product->features()->where('FESHNA', '=', 'SZAA')->first()->FEVALU),
             ];
+        }
+
+        foreach (WORKCENTER::all() as $workCenter) {
+            if (!array_key_exists($workCenter->WCSHNA, $data)) {
+                $data[$workCenter->WCSHNA] = [];
+            }
         }
 
         return view('awf-extension::display.shift_management_panel.partials.production', ['data' => $data]);

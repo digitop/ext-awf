@@ -10,7 +10,7 @@
             background-color: #bbbdc2;
         }
     </style>
-    <table style="margin-top: 25vh; margin-left: 20vh; width: 80%; text-align: center; font-size: x-large; background-color: white;">
+    <table style="margin-top: 15vh; margin-left: 20vh; width: 80%; text-align: center; font-size: large; background-color: white;">
         <thead>
         <tr>
             <th></th>
@@ -28,16 +28,20 @@
         @foreach($data as $workCenter => $values)
             <tr class="{{ $i % 2 == 0 ? 'odd': 'even' }}">
                 <th>{{ $workCenter }}</th>
-                <td>{{ $values['porscheProduct'] }}</td>
-                <td>{{ $values['porscheSequence'] }}</td>
-                <td>{{ $values['pillar'] }}</td>
-                <td>{{ $values['side'] }}</td>
-                <td>{{ $values['product'] }}</td>
-                <td>
-                    <div style="width: 4vh; height: 4vh; border-radius: 50%; background-color: {{ '#' . $values['productColor'] }}; margin-left: 30%;"></div>
+                @if(empty($values))
+                    <td colspan="7"></td>
+                @else
+                    <td>{{ $values['porscheProduct'] }}</td>
+                    <td>{{ $values['porscheSequence'] }}</td>
+                    <td>{{ $values['pillar'] }}</td>
+                    <td>{{ $values['side'] }}</td>
+                    <td>{{ $values['product'] }}</td>
+                    <td>
+                        <div style="width: 3vh; height: 3vh; border-radius: 50%; background-color: {{ '#' . $values['productColor'] }}; margin-left: 30%;"></div>
 
-                </td>
-                <td>{{ $values['productMaterial'] }}</td>
+                    </td>
+                    <td>{{ $values['productMaterial'] }}</td>
+                @endif
             </tr>
             @php($i++)
         @endforeach
