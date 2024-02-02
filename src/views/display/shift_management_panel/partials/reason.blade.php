@@ -2,20 +2,21 @@
 
 @section('awf-shift-content')
 
-    <div class="content" style="margin-top: 20vh;">
-        <div>
+    <div style="margin-top: 20vh;">
+        <div class="reason-title">
             Visszaállítás:
         </div>
+        <div class="reason-content">
+            @foreach($dashboards as $dashboard)
+                <button id="button{{ $dashboard->DHIDEN }}" class="oppanel-button">{{ $dashboard->DHNAME }}</button>
 
-        @foreach($dashboards as $dashboard)
-            <button id="button{{ $dashboard->DHIDEN }}">{{ $dashboard->DHNAME }}</button>
-
-            <script>
-                $('#button{{ $dashboard->DHIDEN }}').bind('click', function () {
-                    $.get('{{ env('APP_URL') }} /api/ext/awf-extension/shift-management/set-default/{{ $dashboard->DHIDEN }}')
-                })
-            </script>
-        @endforeach
+                <script>
+                    $('#button{{ $dashboard->DHIDEN }}').bind('click', function () {
+                        $.get('{{ env('APP_URL') }} /api/ext/awf-extension/shift-management/set-default/{{ $dashboard->DHIDEN }}')
+                    })
+                </script>
+            @endforeach
+        </div>
     </div>
 
     <div class="footer">
