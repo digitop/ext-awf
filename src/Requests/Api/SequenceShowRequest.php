@@ -22,6 +22,7 @@ class SequenceShowRequest extends FormRequest
     {
         return [
             'side' => ['nullable', 'string', 'max:1', 'min:1', 'in:R,L'],
+            'no_change' => ['nullable', 'string'],
         ];
     }
 
