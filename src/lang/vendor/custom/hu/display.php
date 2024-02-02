@@ -16,6 +16,8 @@ return [
         'reason' => 'Operátor panel kezelés',
         'back' => 'Vissza',
         'setAsStart' => 'Kezdő szekvenciának állítás',
+        'manualProductSave' => 'Kézi adatrögzítés',
+        'productLifecycle' => 'Termék lekérdezése vonalkód alapján',
     ],
     'data' => [
         'shift-sequence' => [

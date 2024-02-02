@@ -19,5 +19,17 @@
                 </a>
             </td>
         </tr>
+        <tr>
+            <td colspan="2" style="width: 60%; padding-top: 5vh;">
+                <a class="button button-red" href="{{ route('awf-shift-management-panel.reason') }}">
+                    {{ __('display.button.productLifecycle') }}
+                </a>
+            </td>
+            <td style="width: 40%; padding-top: 5vh;">
+                <a class="button button-green" href="{{ route('awf-shift-management-panel.production') }}">
+                    {{ __('display.button.manualProductSave') }}
+                </a>
+            </td>
+        </tr>
     </table>
 @endsection

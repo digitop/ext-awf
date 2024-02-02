@@ -16,6 +16,8 @@ return [
         'reason' => 'Verwaltung des Bedienfelds',
         'back' => 'Zurück',
         'setAsStart' => 'Als Startsequenz festlegen',
+        'manualProductSave' => 'Manuelle Datenaufzeichnung',
+        'productLifecycle' => 'Fragen Sie ein Produkt anhand eines Barcodes ab',
     ],
     'data' => [
         'shift-sequence' => [

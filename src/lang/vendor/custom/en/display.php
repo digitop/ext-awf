@@ -16,6 +16,8 @@ return [
         'reason' => 'Operator panel management',
         'back' => 'Back',
         'setAsStart' => 'Set as starting sequence',
+        'manualProductSave' => 'Manual data recording',
+        'productLifecycle' => 'Query a product based on a barcode',
     ],
     'data' => [
         'shift-sequence' => [
