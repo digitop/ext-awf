@@ -19,6 +19,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\PRODUCT;
+use App\Models\OEE_REPNO;
+use App\Models\REPNO_ACTIVITY_LOG;
 use Illuminate\Support\Facades\File;
 
 class GenerateDataFacade extends Facade
@@ -176,11 +178,16 @@ class GenerateDataFacade extends Facade
 
         foreach ($sequences as $sequence) {
             AWF_SEQUENCE_LOG::where('SEQUID', '=', $sequence->SEQUID)?->delete();
-            AWF_SEQUENCE_WORKCENTER::where('SEQUID', '=', $sequence->SEQUID)->delete();
+            $sequenceWorkCenter = AWF_SEQUENCE_WORKCENTER::where('SEQUID', '=', $sequence->SEQUID)->first();
+
+            $repno = $sequenceWorkCenter->RNREPN;
+            $sequenceWorkCenter->delete();
 
             $orderCode = $sequence->ORCODE;
             $sequence->delete();
 
+            REPNO_ACTIVITY_LOG::WHERE('RNREPN', '=', $repno)->first()?->delete();
+            OEE_REPNO::WHERE('RNREPN', '=', $repno)->first()?->delete();
             ORDERHEAD::where('ORCODE', '=', $orderCode)->delete();
         }
     }
