@@ -9,6 +9,7 @@ body {
     background-color: #777;
     color: #000;
     height: 90%;
+    font-family: 'lato', sans-serif;
 }
 
 #vue-app {
