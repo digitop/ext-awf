@@ -12,7 +12,8 @@ Content-Type: application/json
   "pillar": "A",
   "side": "R",
   "WCSHNA": "EL01",
-  "limit": 1
+  "limit": 1,
+  "no_change": true
 }
 
 ### get default preparation panel

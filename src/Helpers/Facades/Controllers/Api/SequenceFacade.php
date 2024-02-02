@@ -128,14 +128,28 @@ class SequenceFacade extends Facade
             );
         }
 
-        foreach ($sequence as $item) {
-            AWF_SEQUENCE_LOG::where('WCSHNA', '=', $workCenter->WCSHNA)
-                ->where('SEQUID', '=', $item->SEQUID)
-                ->whereNull('LSTIME')
-                ->whereNull('LETIME')
-                ->update([
-                    'LSTIME' => (new \DateTime()),
-                ]);
+        $noChange = false;
+
+        if (
+            $request->has('no_change') &&
+            (
+                (is_string($request->no_change) && $request->no_change == 'true') ||
+                (is_bool($request->no_change) && $request->no_change == true)
+            )
+        ) {
+            $noChange = true;
+        }
+
+        if (!$noChange) {
+            foreach ($sequence as $item) {
+                AWF_SEQUENCE_LOG::where('WCSHNA', '=', $workCenter->WCSHNA)
+                    ->where('SEQUID', '=', $item->SEQUID)
+                    ->whereNull('LSTIME')
+                    ->whereNull('LETIME')
+                    ->update([
+                        'LSTIME' => (new \DateTime()),
+                    ]);
+            }
         }
 
         if ($workCenter->features()->where('WFSHNA', '=', 'OPSTATUS')->first()?->WFVALU == 'success') {
