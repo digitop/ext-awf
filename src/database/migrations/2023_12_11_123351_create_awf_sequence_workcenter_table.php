@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->id('SEWCID')->comment('The unique identifier of the table connecting workcenters and sequences of the uniquely developed module of awf');
             $table->unsignedBigInteger('SEQUID')->comment('AWF uniquely developed module sequence identifier (AWF_SEQUENCE:SEQUID)');
             $table->string('WCSHNA', 8)->comment('Workcenter short name (WORKCENTER:WCSHNA)');
+            $table->string('RNREPN', 64)->comment('Reporting number (REPNO:RNREPN)');
         });
 
         Schema::connection('custom_mysql')->table('AWF_SEQUENCE_WORKCENTER', function (Blueprint $table) use ($database) {
@@ -29,6 +30,11 @@ return new class extends Migration {
             $table->foreign('WCSHNA', 'FK_AWF_SEQUENCE_WORKCENTER_TO_WORKCENTER_WCSHNA')
                 ->references('WCSHNA')
                 ->on($database . '.WORKCENTER')
+                ->onUpdate('CASCADE');
+
+            $table->foreign('RNREPN', 'FK_AWF_SEQUENCE_WORKCENTER_TO_REPNO_RNREPN')
+                ->references('RNREPN')
+                ->on($database . '.REPNO')
                 ->onUpdate('CASCADE');
         });
     }
