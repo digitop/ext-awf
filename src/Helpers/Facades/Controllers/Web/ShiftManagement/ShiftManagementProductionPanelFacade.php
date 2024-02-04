@@ -28,35 +28,35 @@ class ShiftManagementProductionPanelFacade extends Facade
     ): Application|Factory|View|IlluminateView|ContractsApplication|null
     {
         $data = [];
-        $now = new \DateTime();
-        $start = $now->format('Y-m-d') . ' 00:00:00';
+        $workCenters = WORKCENTER::whereNotIn('WCSHNA', ["EL01", "PSAPB01", "PSAPJ01", "PSZAPB01", "PSZAPJ01"])
+            ->orderBy('WCSHNA')
+            ->get();
 
         $sequences = DB::connection('custom_mysql')->select('
-            select asw.WCSHNA, a.PRCODE, a.SEPILL, a.SESIDE, asl.LSTIME, asw.RNREPN, a.ORCODE, a.SEPONR, a.SEPSEQ
-            from AWF_SEQUENCE a
-            join AWF_SEQUENCE_WORKCENTER asw on asw.SEQUID = a.SEQUID
-            left join AWF_SEQUENCE_LOG asl on asl.SEQUID = a.SEQUID and asl.WCSHNA = asw.WCSHNA
-            where asl.LSTIME is null and asl.LETIME is null
+            select asw.WCSHNA, a.PRCODE, a.SEPILL, a.SESIDE, asl.LSTIME, asw.RNREPN, a.ORCODE, a.SEPONR, a.SEPSEQ, pf.FEVALU as color, pf2.FEVALU as material
+                from AWF_SEQUENCE a
+                join AWF_SEQUENCE_WORKCENTER asw on asw.SEQUID = a.SEQUID and asw.WCSHNA not in ("EL01", "PSAPB01", "PSAPJ01", "PSZAPB01", "PSZAPJ01")
+                left join AWF_SEQUENCE_LOG asl on asl.SEQUID = a.SEQUID and asl.WCSHNA = asw.WCSHNA
+                join OEEM_AWF.PRODUCTFEATURE pf on pf.PRCODE = a.PRCODE and pf.FESHNA = "SZASZ"
+                join OEEM_AWF.PRODUCTFEATURE pf2 on pf2.PRCODE = a.PRCODE and pf2.FESHNA = "SZAA"
+                where asl.LSTIME is null and asl.LETIME is null
+            order by asw.WCSHNA
         ');
 
-        foreach ($sequences as $sequence) {
-            $product = PRODUCT::where('PRCODE', '=', $sequence->PRCODE)->with('features')->first();
+        foreach ($workCenters as $workCenter) {
+            $data[$workCenter->WCSHNA] = [];
+        }
 
+        foreach ($sequences as $sequence) {
             $data[$sequence->WCSHNA] = [
                 'porscheProduct' => $sequence->SEPONR,
                 'porscheSequence' => $sequence->SEPSEQ,
                 'side' => $sequence->SESIDE,
                 'pillar' => $sequence->SEPILL,
                 'product' => $sequence->PRCODE,
-                'productColor' => $product->features()->where('FESHNA', '=', 'SZASZ')->first()->FEVALU,
-                'productMaterial' => ucfirst($product->features()->where('FESHNA', '=', 'SZAA')->first()->FEVALU),
+                'productColor' => $sequence->color,
+                'productMaterial' => ucfirst($sequence->material),
             ];
-        }
-
-        foreach (WORKCENTER::all() as $workCenter) {
-            if (!array_key_exists($workCenter->WCSHNA, $data)) {
-                $data[$workCenter->WCSHNA] = [];
-            }
         }
 
         return view('awf-extension::display.shift_management_panel.partials.production', ['data' => $data]);
