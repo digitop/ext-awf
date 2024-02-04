@@ -59,6 +59,12 @@ body {
     padding: 2vh 4vh;
 }
 
+.default {
+    width: 99% !important;
+    margin-left: 0 !important;
+    left: -2% !important;
+}
+
 .shift-management-table td {
     text-align: center;
 }
@@ -87,7 +93,7 @@ a.button {
     text-decoration: none;
     display: inline-block;
     border-radius: 2vh;
-    font-size: xxx-large;
+    font-size: 4.5vh;
 }
 
 a.button-small {
@@ -115,7 +121,7 @@ a.button-red:link, a.button-red:visited {
 }
 
 a.button-red:hover, a.button-red:active {
-    background-color: #f44336;
+    background-color: #a82a1f;
     color: white;
 }
 
@@ -125,7 +131,17 @@ a.button-green:link, a.button-green:visited {
 }
 
 a.button-green:hover, a.button-green:active {
-    background-color: #21811a;
+    background-color: #22791c;
+    color: white;
+}
+
+a.button-light-green:link, a.button-light-green:visited {
+    background-color: #3ebd94;
+    color: white;
+}
+
+a.button-light-green:hover, a.button-light-green:active {
+    background-color: #1b7757;
     color: white;
 }
 

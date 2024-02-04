@@ -8,20 +8,12 @@ use Illuminate\Database\Eloquent\Collection;
 class SequenceResponseModel extends ObjectToArray
 {
     protected int $SEQUID;
-    protected string $SEPONR;
-    protected string $SEPSEQ;
-    protected string $SEARNU;
-    protected string $SESIDE;
     protected string $ORCODE;
-    protected string|null $OPNAME;
-    protected string|null $RNREPN;
-    protected string|null $DHIDEN;
-    protected bool $SESCRA = false;
-    protected string|null $preparatory = null;
-    protected string|null $welder = null;
-    protected string $color;
-    protected string|null $colorDesignation = null;
-    protected string $material;
+    protected string $SESIDE;
+    protected string|null $OPNAME = null;
+    protected string|null $RNREPN = null;
+    protected string|null $DHIDEN = null;
+    protected string|null $plc = null;
     protected array $previousRepnos = [];
 
     public function getSEQUID(): int
@@ -32,50 +24,6 @@ class SequenceResponseModel extends ObjectToArray
     public function setSEQUID(int $SEQUID): SequenceResponseModel
     {
         $this->SEQUID = $SEQUID;
-        return $this;
-    }
-
-    public function getSEPONR(): string
-    {
-        return $this->SEPONR;
-    }
-
-    public function setSEPONR(string $SEPONR): SequenceResponseModel
-    {
-        $this->SEPONR = $SEPONR;
-        return $this;
-    }
-
-    public function getSEPSEQ(): string
-    {
-        return $this->SEPSEQ;
-    }
-
-    public function setSEPSEQ(string $SEPSEQ): SequenceResponseModel
-    {
-        $this->SEPSEQ = $SEPSEQ;
-        return $this;
-    }
-
-    public function getSEARNU(): string
-    {
-        return $this->SEARNU;
-    }
-
-    public function setSEARNU(string $SEARNU): SequenceResponseModel
-    {
-        $this->SEARNU = $SEARNU;
-        return $this;
-    }
-
-    public function getSESIDE(): string
-    {
-        return $this->SESIDE;
-    }
-
-    public function setSESIDE(string $SESIDE): SequenceResponseModel
-    {
-        $this->SESIDE = $SESIDE;
         return $this;
     }
 
@@ -90,6 +38,17 @@ class SequenceResponseModel extends ObjectToArray
         return $this;
     }
 
+    public function getSESIDE(): string
+    {
+        return $this->SESIDE;
+    }
+
+    public function setSESIDE(string $SESIDE): SequenceResponseModel
+    {
+        $this->SESIDE = $SESIDE;
+        return $this;
+    }
+    
     public function getOPNAME(): null|string
     {
         return $this->OPNAME;
@@ -128,69 +87,14 @@ class SequenceResponseModel extends ObjectToArray
         return $this;
     }
 
-    public function getPreparatory(): string|null
+    public function getPlc(): string|null
     {
-        return $this->preparatory;
+        return $this->plc;
     }
 
-    public function setPreparatory(string|null $preparatory): SequenceResponseModel
+    public function setPlc(string|null $plc): SequenceResponseModel
     {
-        $this->preparatory = $preparatory;
-        return $this;
-    }
-
-    public function getWelder(): string|null
-    {
-        return $this->welder;
-    }
-
-    public function setWelder(string|null $welder): SequenceResponseModel
-    {
-        $this->welder = $welder;
-        return $this;
-    }
-
-    public function isSESCRA(): bool
-    {
-        return $this->SESCRA;
-    }
-
-    public function setSESCRA(bool|null $SESCRA = false): SequenceResponseModel
-    {
-        $this->SESCRA = $SESCRA;
-        return $this;
-    }
-
-    public function getColor(): string
-    {
-        return $this->color;
-    }
-
-    public function setColor(string $color): SequenceResponseModel
-    {
-        $this->color = $color;
-        return $this;
-    }
-
-    public function getColorDesignation(): ?string
-    {
-        return $this->colorDesignation;
-    }
-
-    public function setColorDesignation(?string $colorDesignation): SequenceResponseModel
-    {
-        $this->colorDesignation = $colorDesignation;
-        return $this;
-    }
-
-    public function getMaterial(): string
-    {
-        return $this->material;
-    }
-
-    public function setMaterial(string $material): SequenceResponseModel
-    {
-        $this->material = $material;
+        $this->plc = $plc;
         return $this;
     }
 

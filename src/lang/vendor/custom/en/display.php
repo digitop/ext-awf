@@ -18,6 +18,7 @@ return [
         'setAsStart' => 'Set as starting sequence',
         'manualProductSave' => 'Manual data recording',
         'productLifecycle' => 'Query a product based on a barcode',
+        'sequenceUpdate' => 'Update sequence',
     ],
     'data' => [
         'shift-sequence' => [

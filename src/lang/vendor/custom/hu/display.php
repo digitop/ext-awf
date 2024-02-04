@@ -18,6 +18,7 @@ return [
         'setAsStart' => 'Kezdő szekvenciának állítás',
         'manualProductSave' => 'Kézi adatrögzítés',
         'productLifecycle' => 'Termék lekérdezése vonalkód alapján',
+        'sequenceUpdate' => 'Szekvencia frissítése',
     ],
     'data' => [
         'shift-sequence' => [

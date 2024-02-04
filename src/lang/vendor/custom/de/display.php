@@ -18,6 +18,7 @@ return [
         'setAsStart' => 'Als Startsequenz festlegen',
         'manualProductSave' => 'Manuelle Datenaufzeichnung',
         'productLifecycle' => 'Fragen Sie ein Produkt anhand eines Barcodes ab',
+        'sequenceUpdate' => 'Aktualisierungssequenz',
     ],
     'data' => [
         'shift-sequence' => [

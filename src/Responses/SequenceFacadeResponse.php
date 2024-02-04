@@ -75,16 +75,12 @@ class SequenceFacadeResponse  implements ResponseInterface
             ->where('WCSHNA', '=', $this->workCenter?->WCSHNA)
             ->first();
 
-        $product = PRODUCT::where('PRCODE', '=', $sequence->PRCODE)->first();
+        $product = PRODUCT::where('PRCODE', '=', $sequence->PRCODE)->with('features')->first();
 
         return (new SequenceResponseModel())
             ->setSEQUID($sequence->SEQUID)
-            ->setSEPONR($sequence->SEPONR)
-            ->setSEPSEQ($sequence->SEPSEQ)
-            ->setSEARNU($sequence->SEARNU)
-            ->setSESIDE($sequence->SESIDE)
             ->setORCODE($sequence->ORCODE)
-            ->setSESCRA($sequence->SESCRA)
+            ->setSESIDE($sequence->SESIDE)
             ->setOPNAME(
                 isset($this->workCenter?->operatorPanels) &&
                 !empty($this->workCenter?->operatorPanels[0]) ?
@@ -92,15 +88,7 @@ class SequenceFacadeResponse  implements ResponseInterface
                     null
             )
             ->setRNREPN($sequenceWorkCenter?->RNREPN)
-            ->setPreparatory(ProductFeaturesImagesUrl::getUrl(
-                $product?->features()->where('FESHNA', '=', 'TEKEEL')->first()?->FEVALU
-            ))
-            ->setWelder(ProductFeaturesImagesUrl::getUrl(
-                $product?->features()->where('FESHNA', '=', 'TEKEHE')->first()?->FEVALU
-            ))
-            ->setColor($product?->features()->where('FESHNA', '=', 'SZASZ')->first()?->FEVALU)
-            ->setColorDesignation($product?->features()->where('FESHNA', '=', 'TESZNE')->first()?->FEVALU)
-            ->setMaterial($product?->features()->where('FESHNA', '=', 'SZAA')->first()?->FEVALU)
+            ->setPlc($product->features()->where('FESHNA', '=', 'PLCCOLOR')->first()?->FEVALU ?? null)
             ->setPreviousRepnos(
                 REPNO::where('WCSHNA', '=', $this->workCenter?->WCSHNA)->where('RNOLAC', '=', 1)->get()
             );
