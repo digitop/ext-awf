@@ -34,13 +34,13 @@ class MoveSequenceRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'SEQUID.required' => __('validation.required', ['attribute' =>'SEQUID']),
-            'SEQUID.string' => __('validation.integer', ['attribute' =>'SEQUID']),
-            'SEQUID.min' => __('validation.min.numeric', ['attribute' =>'SEQUID']),
-            'WCSHNA.required' => __('validation.required', ['attribute' =>'WCSHNA']),
-            'WCSHNA.string' => __('validation.string', ['attribute' =>'WCSHNA']),
-            'WCSHNA.max' => __('validation.max.string', ['attribute' =>'WCSHNA']),
-            'WCSHNA.min' => __('validation.min.string', ['attribute' =>'WCSHNA']),
+            'SEQUID.required' => __('validation.required', ['attribute' => 'SEQUID']),
+            'SEQUID.string' => __('validation.integer', ['attribute' => 'SEQUID']),
+            'SEQUID.min' => __('validation.min.numeric', ['attribute' => 'SEQUID', 'min' => 1]),
+            'WCSHNA.required' => __('validation.required', ['attribute' => 'WCSHNA']),
+            'WCSHNA.string' => __('validation.string', ['attribute' => 'WCSHNA']),
+            'WCSHNA.max' => __('validation.max.string', ['attribute' => 'WCSHNA', 'max' => 32]),
+            'WCSHNA.min' => __('validation.min.string', ['attribute' => 'WCSHNA', 'min' => 1]),
         ];
     }
 }

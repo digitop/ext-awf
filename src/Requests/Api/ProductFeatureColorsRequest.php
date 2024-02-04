@@ -33,11 +33,11 @@ class ProductFeatureColorsRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'dashboard.required' => __('validation.required', ['attribute' =>'dashboard']),
-            'dashboard.string' => __('validation.integer', ['attribute' =>'dashboard']),
-            'dashboard.max' => __('validation.max.string', ['attribute' =>'dashboard']),
-            'dashboard.min' => __('validation.min.numeric', ['attribute' =>'dashboard']),
-            'dashboard.exists' => __('validation.exists', ['attribute' =>'dashboard']),
+            'dashboard.required' => __('validation.required', ['attribute' => 'dashboard']),
+            'dashboard.string' => __('validation.integer', ['attribute' => 'dashboard']),
+            'dashboard.max' => __('validation.max.string', ['attribute' => 'dashboard', 'max' => 32]),
+            'dashboard.min' => __('validation.min.numeric', ['attribute' => 'dashboard', 'min' => 1]),
+            'dashboard.exists' => __('validation.exists', ['attribute' => 'dashboard']),
         ];
     }
 }

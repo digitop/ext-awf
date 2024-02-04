@@ -34,15 +34,15 @@ class CheckProductCheckRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'serial.required' => __('validation.required', ['attribute' =>'serial']),
-            'serial.string' => __('validation.integer', ['attribute' =>'serial']),
-            'serial.max' => __('validation.max.string', ['attribute' =>'serial']),
-            'serial.min' => __('validation.min.numeric', ['attribute' =>'serial']),
-            'dashboard.required' => __('validation.required', ['attribute' =>'dashboard']),
-            'dashboard.string' => __('validation.integer', ['attribute' =>'dashboard']),
-            'dashboard.max' => __('validation.max.string', ['attribute' =>'dashboard']),
-            'dashboard.min' => __('validation.min.numeric', ['attribute' =>'dashboard']),
-            'dashboard.exists' => __('validation.exists', ['attribute' =>'dashboard']),
+            'serial.required' => __('validation.required', ['attribute' => 'serial']),
+            'serial.string' => __('validation.integer', ['attribute' => 'serial']),
+            'serial.max' => __('validation.max.string', ['attribute' => 'serial', 'max' => 64]),
+            'serial.min' => __('validation.min.string', ['attribute' => 'serial', 'min' => 1]),
+            'dashboard.required' => __('validation.required', ['attribute' => 'dashboard']),
+            'dashboard.string' => __('validation.integer', ['attribute' => 'dashboard']),
+            'dashboard.max' => __('validation.max.string', ['attribute' => 'dashboard', 'max' => 32]),
+            'dashboard.min' => __('validation.min.numeric', ['attribute' => 'dashboard', 'min' => 1]),
+            'dashboard.exists' => __('validation.exists', ['attribute' => 'dashboard']),
         ];
     }
 }

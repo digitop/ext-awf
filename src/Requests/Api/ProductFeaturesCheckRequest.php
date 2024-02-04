@@ -34,15 +34,15 @@ class ProductFeaturesCheckRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'dashboard.required' => __('validation.required', ['attribute' =>'dashboard']),
-            'dashboard.string' => __('validation.integer', ['attribute' =>'dashboard']),
-            'dashboard.max' => __('validation.max.string', ['attribute' =>'dashboard']),
-            'dashboard.min' => __('validation.min.numeric', ['attribute' =>'dashboard']),
-            'dashboard.exists' => __('validation.exists', ['attribute' =>'dashboard']),
-            'color.required' => __('validation.required', ['attribute' =>'color']),
-            'color.string' => __('validation.string', ['attribute' =>'color']),
-            'color.max' => __('validation.max.string', ['attribute' =>'color']),
-            'color.min' => __('validation.min.string', ['attribute' =>'color']),
+            'dashboard.required' => __('validation.required', ['attribute' => 'dashboard']),
+            'dashboard.string' => __('validation.integer', ['attribute' => 'dashboard']),
+            'dashboard.max' => __('validation.max.string', ['attribute' => 'dashboard', 'max' => 32]),
+            'dashboard.min' => __('validation.min.numeric', ['attribute' => 'dashboard', 'min' => 1]),
+            'dashboard.exists' => __('validation.exists', ['attribute' => 'dashboard']),
+            'color.required' => __('validation.required', ['attribute' => 'color']),
+            'color.string' => __('validation.string', ['attribute' => 'color']),
+            'color.max' => __('validation.max.string', ['attribute' => 'color', 'max' => 6]),
+            'color.min' => __('validation.min.string', ['attribute' => 'color', 'min' => 6]),
         ];
     }
 }

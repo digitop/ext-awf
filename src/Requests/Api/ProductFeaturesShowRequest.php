@@ -33,10 +33,10 @@ class ProductFeaturesShowRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'productCode.required' => __('validation.required', ['attribute' =>'productCode']),
-            'productCode.string' => __('validation.string', ['attribute' =>'productCode']),
-            'productCode.max' => __('validation.max.string', ['attribute' =>'productCode']),
-            'productCode.min' => __('validation.min.string', ['attribute' =>'productCode']),
+            'productCode.required' => __('validation.required', ['attribute' => 'productCode']),
+            'productCode.string' => __('validation.string', ['attribute' => 'productCode']),
+            'productCode.max' => __('validation.max.string', ['attribute' => 'productCode', 'max' => 32]),
+            'productCode.min' => __('validation.min.string', ['attribute' => 'productCode', 'min' => 1]),
         ];
     }
 }
