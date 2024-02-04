@@ -20,6 +20,6 @@ class ScrapController extends Controller
 
     public function index(ProductQualified $event): JsonResponse
     {
-        return $this->facade->create($event);
+        return $this->facade->index($event);
     }
 }

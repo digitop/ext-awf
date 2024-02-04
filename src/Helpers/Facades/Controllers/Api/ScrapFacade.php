@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Events\Dashboard\ProductQualified;
 use App\Models\QUALREPHEAD;
+use App\Models\SERIALNUMBER;
 use App\Models\REPNO;
 
 class ScrapFacade extends Facade
@@ -26,6 +27,11 @@ class ScrapFacade extends Facade
             $qualification = QUALREPHEAD::where('QRIDEN', '=', $event->scrapReport)->first();
 
             $sequence = AWF_SEQUENCE::where('ORCODE', '=', $qualification->ORCODE)->where('SEINPR', '=', 1)->first();
+            $repnos = REPNO::where('ORCODE', '=', $qualification->ORCODE)->get();
+
+            foreach ($repnos as $repno) {
+                SERIALNUMBER::where('RNREPN', '=', $repno->RNREPN)->delete();
+            }
 
             $sequence?->update([
                 'SEINPR' => 0,
