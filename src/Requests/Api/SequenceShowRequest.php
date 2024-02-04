@@ -22,7 +22,9 @@ class SequenceShowRequest extends FormRequest
     {
         return [
             'side' => ['nullable', 'string', 'max:1', 'min:1', 'in:R,L'],
-            'no_change' => ['nullable', 'string'],
+            'limit' => ['nullable', 'int', 'min:1'],
+            'no_change' => ['nullable', 'string', 'in:true,false'],
+            'porscheProductNumber' => ['nullable', 'string'],
         ];
     }
 
@@ -34,10 +36,15 @@ class SequenceShowRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'side.in' => __('validation.required', ['attribute' =>'pillar']),
-            'side.string' => __('validation.string', ['attribute' =>'pillar']),
-            'side.max' => __('validation.max.string', ['attribute' =>'pillar']),
-            'side.min' => __('validation.min.string', ['attribute' =>'pillar']),
+            'side.in' => __('validation.in', ['attribute' => 'side']),
+            'side.string' => __('validation.string', ['attribute' => 'side']),
+            'side.max' => __('validation.max.string', ['attribute' => 'side', 'max' => 1]),
+            'side.min' => __('validation.min.string', ['attribute' => 'side', 'min' => 1]),
+            'limit.int' => __('validation.integer', ['attribute' => 'limit']),
+            'limit.min' => __('validation.min.numeric', ['attribute' => 'limit', 'min' => 1]),
+            'no_change.in' => __('validation.in', ['attribute' => 'no_change']),
+            'no_change.string' => __('validation.string', ['attribute' => 'no_change']),
+            'porscheProductNumber.string' => __('validation.string', ['attribute' => 'porscheProductNumber']),
         ];
     }
 }

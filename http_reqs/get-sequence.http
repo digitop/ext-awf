@@ -9,11 +9,10 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "pillar": "A",
-  "side": "R",
-  "WCSHNA": "EL01",
+  "side": "L",
   "limit": 1,
-  "no_change": "true"
+  "no_change": "true",
+  "porscheProductNumber": "2743514"
 }
 
 ### get default preparation panel

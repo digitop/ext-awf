@@ -10,6 +10,7 @@ class SequenceResponseModel extends ObjectToArray
     protected int $SEQUID;
     protected string $ORCODE;
     protected string $SESIDE;
+    protected string|null $SEPONR = null;
     protected string|null $OPNAME = null;
     protected string|null $RNREPN = null;
     protected string|null $DHIDEN = null;
@@ -46,6 +47,17 @@ class SequenceResponseModel extends ObjectToArray
     public function setSESIDE(string $SESIDE): SequenceResponseModel
     {
         $this->SESIDE = $SESIDE;
+        return $this;
+    }
+
+    public function getSEPONR(): ?string
+    {
+        return $this->SEPONR;
+    }
+
+    public function setSEPONR(?string $SEPONR): SequenceResponseModel
+    {
+        $this->SEPONR = $SEPONR;
         return $this;
     }
     

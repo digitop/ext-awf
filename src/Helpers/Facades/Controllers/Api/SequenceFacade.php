@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -71,57 +72,42 @@ class SequenceFacade extends Facade
             ));
         }
 
-        $sequences = new Collection();
+        $porscheProductNumber = null;
 
-        foreach ($logs as $log) {
-            $sequence = AWF_SEQUENCE::where('SEQUID', '=', $log->SEQUID)->first();
-
-            if ($pillar !== null) {
-                $sequence = AWF_SEQUENCE::where('SEQUID', '=', $log->SEQUID)->where('SEPILL', '=', $pillar)->first();
-            }
-
-            if (array_key_exists('side', $request->all())) {
-                $sequence = AWF_SEQUENCE::where('SEQUID', '=', $log->SEQUID)
-                    ->where('SESIDE', '=', $request->side)
-                    ->first();
-
-                if ($pillar !== null) {
-                    $sequence = AWF_SEQUENCE::where('SEQUID', '=', $log->SEQUID)
-                        ->where('SESIDE', '=', $request->side)
-                        ->where('SEPILL', '=', $pillar)
-                        ->first();
-                }
-            }
-
-            if (!empty($sequence)) {
-                $sequences->add($sequence);
-            }
+        if (
+            $request->has('porscheProductNumber') &&
+            is_string($request->porscheProductNumber) &&
+            $request->porscheProductNumber !== 'null'
+        ) {
+            $porscheProductNumber = $request->porscheProductNumber;
         }
 
-        $sequence = $sequences->sort(function ($a, $b) {
-            foreach ([['column' => 'SEPILL', 'order' => 'desc'], ['column' => 'SEQUID']] as $sortingInstruction) {
+        $queryString = '
+        select ase.PRCODE, ase.SEQUID, ase.ORCODE, ase.SESIDE, ase.SEPILL, ase.SEPONR from AWF_SEQUENCE_LOG asl
+            join AWF_SEQUENCE ase on ase.SEQUID = asl.SEQUID
+            where asl.LSTIME is null and asl.LETIME is null and ase.SEINPR = 0 ' .
+            ($pillar !== null ? ' and ase.SEPILL = "' . $pillar .'"' : '') .
+            ($request->has('side') ? ' and ase.SESIDE = "' . $request->side . '"' : '') .
+            ($porscheProductNumber !== null ? ' and ase.SEPONR = "' . $porscheProductNumber . '"' : '') .
+            ' order by ase.SEPILL desc, ase.SEQUID limit 
+        ' . ($request->has('limit') ? $request->limit : 2);
 
-                $a[$sortingInstruction['column']] = $a[$sortingInstruction['column']] ?? '';
-                $b[$sortingInstruction['column']] = $b[$sortingInstruction['column']] ?? '';
+        $sequence = new Collection(DB::connection('custom_mysql')->select($queryString));
 
-                if (empty($sortingInstruction['order']) || strtolower($sortingInstruction['order']) === 'asc') {
-                    $x = ($a[$sortingInstruction['column']] <=> $b[$sortingInstruction['column']]);
-                }
-                else {
-                    $x = ($b[$sortingInstruction['column']] <=> $a[$sortingInstruction['column']]);
-                }
+        if (empty($sequence[0])) {
+            $sequence = new Collection([(object)
+                [
+                    'SEQUID' => 0,
+                    'PRCODE' => 'dummy',
+                    'ORCODE' => 'dummy',
+                    'SESIDE' => $request?->side,
+                    'SEPILL' => $pillar,
+                    'SEPONR' => $porscheProductNumber,
+                ]
+            ]);
+        }
 
-                if ($x !== 0) {
-                    return $x;
-                }
-
-            }
-
-            return 0;
-        })
-            ->take($request->limit ?? 2);
-
-        if ($workCenter->WCSHNA == 'EL01') {
+        if ($workCenter->WCSHNA === 'EL01' && $sequence[0]->PRCODE !== 'dummy') {
             event(new NextProductEvent(
                     (new NextProductEventResponse($sequence, null))->generate()
                 )
@@ -140,7 +126,7 @@ class SequenceFacade extends Facade
             $noChange = true;
         }
 
-        if (!$noChange) {
+        if (!$noChange && $sequence[0]->PRCODE !== 'dummy') {
             foreach ($sequence as $item) {
                 AWF_SEQUENCE_LOG::where('WCSHNA', '=', $workCenter->WCSHNA)
                     ->where('SEQUID', '=', $item->SEQUID)

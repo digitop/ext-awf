@@ -60,14 +60,14 @@ class SequenceFacadeResponse  implements ResponseInterface
         return $this;
     }
 
-    protected function setWorkCenter(Model|null $workCenter, Model|null $sequence): void
+    protected function setWorkCenter(Model|null $workCenter, Model|\stdClass|null $sequence): void
     {
         if ($workCenter !== null) {
             $this->workCenter = $workCenter;
         }
     }
 
-    protected function make(Model $sequence): SequenceResponseModel
+    protected function make(Model|\stdClass $sequence): SequenceResponseModel
     {
         $this->setWorkCenter($this->workCenter, $sequence);
 
@@ -81,6 +81,7 @@ class SequenceFacadeResponse  implements ResponseInterface
             ->setSEQUID($sequence->SEQUID)
             ->setORCODE($sequence->ORCODE)
             ->setSESIDE($sequence->SESIDE)
+            ->setSEPONR($sequence->SEPONR)
             ->setOPNAME(
                 isset($this->workCenter?->operatorPanels) &&
                 !empty($this->workCenter?->operatorPanels[0]) ?
@@ -88,7 +89,7 @@ class SequenceFacadeResponse  implements ResponseInterface
                     null
             )
             ->setRNREPN($sequenceWorkCenter?->RNREPN)
-            ->setPlc($product->features()->where('FESHNA', '=', 'PLCCOLOR')->first()?->FEVALU ?? null)
+            ->setPlc($product?->features()->where('FESHNA', '=', 'PLCCOLOR')->first()?->FEVALU ?? null)
             ->setPreviousRepnos(
                 REPNO::where('WCSHNA', '=', $this->workCenter?->WCSHNA)->where('RNOLAC', '=', 1)->get()
             );
