@@ -1,0 +1,30 @@
+.loading {
+    z-index: 20;
+    position: absolute;
+    top: 50%;
+    left: 40%;
+    width: 20%;
+    height: 20%;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+.loading-content {
+    position: absolute;
+    border: 3px solid #0b3576;
+    /* Light grey */
+    border-top: 3px solid #3498db;
+    /* Blue */
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    top: 40%;
+    left: 40%;
+    animation: spin 2s linear infinite;
+}
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

@@ -20,6 +20,8 @@ class MakeOrderFacade extends Facade
 {
     public function create(Request|FormRequest|null $request = null, Model|string|null $model = null): JsonResponse|null
     {
+        $success = false;
+
         $sequences = AWF_SEQUENCE::where('SEINPR', '=', 0)
             ->orderBy('SEPILL', 'DESC')
             ->orderBy('SEQUID', 'ASC')
@@ -29,6 +31,8 @@ class MakeOrderFacade extends Facade
             foreach ($sequences as $sequence) {
                 MakeOrder::makeOrder($sequence);
             }
+
+            $success = true;
         }
         catch (\Exception $exception) {
             $endTime = microtime(true);
@@ -42,21 +46,11 @@ class MakeOrderFacade extends Facade
                 'logs/awf_make_order_' . Carbon::now()->format('Ymd') . '.log',
                 $dataToLog . "\n" . str_repeat("=", 20) . "\n\n"
             );
-
-            return new CustomJsonResponse(new JsonResponseModel(
-                new ResponseData(
-                    false,
-                    [],
-                    __('response.unprocessable_entity')
-                ),
-                Response::HTTP_OK
-            ));
         }
 
         return new CustomJsonResponse(new JsonResponseModel(
             new ResponseData(
-                true,
-                (new SequenceFacadeResponse($sequences, $model))->generate()
+                $success
             ),
             Response::HTTP_OK
         ));

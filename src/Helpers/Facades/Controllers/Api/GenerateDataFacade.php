@@ -29,6 +29,8 @@ class GenerateDataFacade extends Facade
 
     public function create(Request|FormRequest|null $request = null, Model|string|null $model = null): JsonResponse|null
     {
+        $success = false;
+
         try {
             $this->generatePath();
             $this->deleteAllSequenceThatNotInProduction();
@@ -38,6 +40,8 @@ class GenerateDataFacade extends Facade
                     $this->generateData($filePath);
                 }
             }
+
+            $success = true;
         }
         catch (\Exception $exception) {
             $endTime = microtime(true);
@@ -51,15 +55,6 @@ class GenerateDataFacade extends Facade
                 'logs/awf_generate_porsche_data_' . Carbon::now()->format('Ymd') . '.log',
                 $dataToLog . "\n" . str_repeat("=", 20) . "\n\n"
             );
-
-            return new CustomJsonResponse(new JsonResponseModel(
-                new ResponseData(
-                    true,
-                    [],
-                    __('response.unprocessable_entity')
-                ),
-                Response::HTTP_OK
-            ));
         }
 
         try {
@@ -77,20 +72,11 @@ class GenerateDataFacade extends Facade
                 'logs/awf_send_porsche_mail_' . Carbon::now()->format('Ymd') . '.log',
                 $dataToLog . "\n" . str_repeat("=", 20) . "\n\n"
             );
-
-            return new CustomJsonResponse(new JsonResponseModel(
-                new ResponseData(
-                    true,
-                    [],
-                    __('response.email_error')
-                ),
-                Response::HTTP_OK
-            ));
         }
 
         return new CustomJsonResponse(new JsonResponseModel(
             new ResponseData(
-                true
+                $success
             ),
             Response::HTTP_OK
         ));

@@ -12,6 +12,8 @@
 
     <link rel="stylesheet"
           href="{{ url('vendor/oeem-extensions/awf/extension/css/display/shift_management_panel.css') }}">
+
+    @yield('awf-css')
     <title></title>
 </head>
 <body>

@@ -92,8 +92,22 @@ a.button {
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    border-radius: 2vh;
     font-size: 4.5vh;
+}
+
+button.button {
+    padding: 3vh 5vh;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 4.5vh;
+    border: none;
+    border-radius: 0;
+}
+
+button.button-light-green, button.button-light-green {
+    background-color: #3ebd94;
+    color: white;
 }
 
 a.button-small {
@@ -101,7 +115,6 @@ a.button-small {
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    border-radius: 2vh;
     font-size: x-large;
 }
 
@@ -141,6 +154,11 @@ a.button-light-green:link, a.button-light-green:visited {
 }
 
 a.button-light-green:hover, a.button-light-green:active {
+    background-color: #1b7757;
+    color: white;
+}
+
+button.button-light-green:hover, button.button-light-green:active {
     background-color: #1b7757;
     color: white;
 }
