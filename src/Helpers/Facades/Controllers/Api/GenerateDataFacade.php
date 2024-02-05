@@ -86,7 +86,7 @@ class GenerateDataFacade extends Facade
             new ResponseData(
                 $success,
                 [],
-                json_decode($details)
+                json_encode($details)
             ),
             Response::HTTP_OK
         ));
