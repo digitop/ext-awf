@@ -20,6 +20,10 @@ use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\PRODUCT;
 use App\Models\OEE_REPNO;
+use App\Models\CACHE_LOG_ANALOG_REPNO;
+use App\Models\CACHE_LOG_CYCLE_REPNO;
+use App\Models\LOG_ANALOG_REPNO;
+use App\Models\LOG_CYCLE_REPNO;
 use App\Models\REPNO_ACTIVITY_LOG;
 use Illuminate\Support\Facades\File;
 
@@ -57,22 +61,24 @@ class GenerateDataFacade extends Facade
             );
         }
 
-        try {
-            SavedData::check();
-        }
-        catch (\Exception $exception) {
-            $endTime = microtime(true);
-            $dataToLog = 'Type: ' . __CLASS__ . "\n";
-            $dataToLog .= 'Method: SendAwfMail' . "\n";
-            $dataToLog .= 'Time: ' . date("Y m d H:i:s") . "\n";
-            $dataToLog .= 'Duration: ' . number_format($endTime - LARAVEL_START, 3) . "\n";
-            $dataToLog .= 'Output: ' . $exception->getMessage() . "\n";
-
-            Storage::disk('local')->append(
-                'logs/awf_send_porsche_mail_' . Carbon::now()->format('Ymd') . '.log',
-                $dataToLog . "\n" . str_repeat("=", 20) . "\n\n"
-            );
-        }
+//        try {
+//            SavedData::check();
+//        }
+//        catch (\Exception $exception) {
+//            $endTime = microtime(true);
+//            $dataToLog = 'Type: ' . __CLASS__ . "\n";
+//            $dataToLog .= 'Method: SendAwfMail' . "\n";
+//            $dataToLog .= 'Time: ' . date("Y m d H:i:s") . "\n";
+//            $dataToLog .= 'Duration: ' . number_format($endTime - LARAVEL_START, 3) . "\n";
+//            $dataToLog .= 'Output: ' . $exception->getMessage() . "\n";
+//
+//            Storage::disk('local')->append(
+//                'logs/awf_send_porsche_mail_' . Carbon::now()->format('Ymd') . '.log',
+//                $dataToLog . "\n" . str_repeat("=", 20) . "\n\n"
+//            );
+//
+//            $message = $exception->getMessage();
+//        }
 
         return new CustomJsonResponse(new JsonResponseModel(
             new ResponseData(
@@ -166,15 +172,19 @@ class GenerateDataFacade extends Facade
             AWF_SEQUENCE_LOG::where('SEQUID', '=', $sequence->SEQUID)?->delete();
             $sequenceWorkCenter = AWF_SEQUENCE_WORKCENTER::where('SEQUID', '=', $sequence->SEQUID)->first();
 
-            $repno = $sequenceWorkCenter->RNREPN;
+            $repno = $sequenceWorkCenter?->RNREPN;
             $sequenceWorkCenter->delete();
 
             $orderCode = $sequence->ORCODE;
             $sequence->delete();
 
+            CACHE_LOG_ANALOG_REPNO::where('ORCODE', '=', $orderCode)->first()?->delete();
+            CACHE_LOG_CYCLE_REPNO::where('RNREPN', '=', $repno)->first()?->delete();
+            LOG_ANALOG_REPNO::where('ORCODE', '=', $orderCode)->first()?->delete();
+            LOG_CYCLE_REPNO::where('RNREPN', '=', $repno)->first()?->delete();
             REPNO_ACTIVITY_LOG::WHERE('RNREPN', '=', $repno)->first()?->delete();
             OEE_REPNO::WHERE('RNREPN', '=', $repno)->first()?->delete();
-            ORDERHEAD::where('ORCODE', '=', $orderCode)->delete();
+            ORDERHEAD::where('ORCODE', '=', $orderCode)?->delete();
         }
     }
 }
