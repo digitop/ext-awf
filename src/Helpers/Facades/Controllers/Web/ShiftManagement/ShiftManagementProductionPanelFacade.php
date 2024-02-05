@@ -32,13 +32,15 @@ class ShiftManagementProductionPanelFacade extends Facade
             ->orderBy('WCSHNA')
             ->get();
 
+        $database = config('database.connections.mysql.database');
+
         $sequences = DB::connection('custom_mysql')->select('
             select asw.WCSHNA, a.PRCODE, a.SEPILL, a.SESIDE, asl.LSTIME, asw.RNREPN, a.ORCODE, a.SEPONR, a.SEPSEQ, pf.FEVALU as color, pf2.FEVALU as material
                 from AWF_SEQUENCE a
                 join AWF_SEQUENCE_WORKCENTER asw on asw.SEQUID = a.SEQUID and asw.WCSHNA not in ("EL01", "PSAPB01", "PSAPJ01", "PSZAPB01", "PSZAPJ01")
                 left join AWF_SEQUENCE_LOG asl on asl.SEQUID = a.SEQUID and asl.WCSHNA = asw.WCSHNA
-                join OEEM_AWF.PRODUCTFEATURE pf on pf.PRCODE = a.PRCODE and pf.FESHNA = "SZASZ"
-                join OEEM_AWF.PRODUCTFEATURE pf2 on pf2.PRCODE = a.PRCODE and pf2.FESHNA = "SZAA"
+                join ' . $database . '.PRODUCTFEATURE pf on pf.PRCODE = a.PRCODE and pf.FESHNA = "SZASZ"
+                join ' . $database . '.PRODUCTFEATURE pf2 on pf2.PRCODE = a.PRCODE and pf2.FESHNA = "SZAA"
                 where asl.LSTIME is null and asl.LETIME is null
             order by asw.WCSHNA
         ');
