@@ -11,7 +11,7 @@ use AWF\Extension\Responses\CustomJsonResponse;
 use AWF\Extension\Responses\ProductColorsResponse;
 use AWF\Extension\Responses\ProductFeaturesResponse;
 use AWF\Extension\Responses\ProductMaterialsResponse;
-use AWF\Extension\Responses\SequenceFacadeResponse;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Database\Eloquent\Model;
@@ -62,6 +62,13 @@ class ProductFeaturesFacade extends Facade
             DASHBOARD::where('DHIDEN', '=', $request->dashboard)->first()->operatorPanels[0]->WCSHNA
         )->first();
 
+        $queryString = '
+        select PRCODE from AWF_SEQUENCE a
+            join AWF_SEQUENCE_WORKCENTER asw on asw.SEQUID = a.SEQUID
+            join AWF_SEQUENCE_LOG asl on asl.SEQUID = a.SEQUID
+            where a.SEINPR = 1 and asl.LSTIME is null and asl.LETIME is null and asw.WCSHNA = "' .
+            $workCenter->WCSHNA . '"';
+
         return new CustomJsonResponse(new JsonResponseModel(
             new ResponseData(
                 true,
@@ -69,7 +76,7 @@ class ProductFeaturesFacade extends Facade
                     'data' => (new ProductColorsResponse(
                         PRODUCT::whereNull('DELDAT')->where('PRACTV', '=', 1)->get(),
                         $workCenter
-                    ))->generate(),
+                    ))->setSequence(DB::connection('custom_mysql')->select($queryString))->generate(),
                     'status' => $workCenter?->features()->where('WFSHNA', '=', 'OPSTATUS')->first()->WFVALU ?? 'default',
                 ]
             ),

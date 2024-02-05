@@ -5,11 +5,13 @@ namespace AWF\Extension\Responses;
 use AWF\Extension\Interfaces\ResponseInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class ProductColorsResponse implements ResponseInterface
 {
     protected Collection $products;
     protected Model|null $workCenter = null;
+    protected \stdClass|null $sequence = null;
 
     public function __construct(Collection|Model $products, Model|null $workCenter = null)
     {
@@ -22,12 +24,30 @@ class ProductColorsResponse implements ResponseInterface
         $data = [];
         $availableColors = [];
 
+        if (!empty($this->sequence)) {
+            $sequenceProduct = DB::select(
+                'select pgc.PGIDEN from PRPG pgc
+                    where pgc.PRCODE = "' .
+                $this->sequence->PRCODE . '"'
+            )[0];
+        }
+
         foreach ($this->products as $product) {
-            if (!in_array(
-                $designation = $product?->features()->where('FESHNA', '=', 'TESZNE')->first()?->FEVALU,
-                $availableColors,
-                true
-            )) {
+            if (!empty($sequenceProduct)) {
+                $has = DB::select('
+                select * from PRPG pgc
+                 where pgc.PRCODE = "' . $product->PRCODE . '"' . ' and pgc.PGIDEN = ' . $sequenceProduct->PGIDEN
+                );
+            }
+
+            if (
+                (!empty($has) || !isset($has)) &&
+                !in_array(
+                    $designation = $product?->features()->where('FESHNA', '=', 'TESZNE')->first()?->FEVALU,
+                    $availableColors,
+                    true
+                )
+            ) {
                 $data[] = [
                     'designation' => $designation,
                     'color' => $product?->features()->where('FESHNA', '=', 'SZASZ')->first()?->FEVALU,
@@ -59,6 +79,20 @@ class ProductColorsResponse implements ResponseInterface
     public function setModel(Model|null $workCenter): ResponseInterface
     {
         $this->workCenter = $workCenter;
+        return $this;
+    }
+
+    public function getSequence(): \stdClass|null
+    {
+        return $this->sequence;
+    }
+
+    public function setSequence(\stdClass|array|null $sequence): ProductColorsResponse
+    {
+        if (array_key_exists(0, $sequence)) {
+            $this->sequence = $sequence[0];
+        }
+
         return $this;
     }
 }
