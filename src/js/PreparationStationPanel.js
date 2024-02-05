@@ -21,7 +21,7 @@ const app = new Vue({
                     $('#product-color').css('background-color', '#' + data.color)
                     $('#product-designation').append(data.designation)
 
-                    if (data.designation.length > 25) {
+                    if (data.designation.length > 20) {
                         $('#product-designation').css('font-size', '7vh')
                     }
                     else {
