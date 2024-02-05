@@ -44,9 +44,12 @@ class GenerateDataCommand extends Command
         $this->info('Start of downloading and processing data from a server');
         $this->info(str_repeat("=", 10));
 
+        $success = false;
 
         try {
-            $success = (new GenerateDataFacade())->create();
+            $response = (new GenerateDataFacade())->create();
+
+            $success = $response?->success ?? false;
         }
         catch (\Exception $exception) {
             $endTime = microtime(true);
@@ -67,7 +70,9 @@ class GenerateDataCommand extends Command
         $this->info(str_repeat("=", 10));
 
         try {
-            $success = (new MakeOrderFacade())->create();
+            $response = (new MakeOrderFacade())->create();
+
+            $success = $response?->success ?? false;
         }
         catch (\Exception $exception) {
             $endTime = microtime(true);

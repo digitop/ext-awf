@@ -59,6 +59,8 @@ class GenerateDataFacade extends Facade
                 'logs/awf_generate_porsche_data_' . Carbon::now()->format('Ymd') . '.log',
                 $dataToLog . "\n" . str_repeat("=", 20) . "\n\n"
             );
+
+            $details = ['message' => $exception->getMessage(), 'trace' => $exception->getTraceAsString()];
         }
 
 //        try {
@@ -82,7 +84,9 @@ class GenerateDataFacade extends Facade
 
         return new CustomJsonResponse(new JsonResponseModel(
             new ResponseData(
-                $success
+                $success,
+                [],
+                json_decode($details)
             ),
             Response::HTTP_OK
         ));
@@ -173,7 +177,7 @@ class GenerateDataFacade extends Facade
             $sequenceWorkCenter = AWF_SEQUENCE_WORKCENTER::where('SEQUID', '=', $sequence->SEQUID)->first();
 
             $repno = $sequenceWorkCenter?->RNREPN;
-            $sequenceWorkCenter->delete();
+            $sequenceWorkCenter?->delete();
 
             $orderCode = $sequence->ORCODE;
             $sequence->delete();
