@@ -38,7 +38,7 @@ class CheckProductFacade extends Facade
                 new ResponseData(
                     false,
                     [],
-                    'gfgdfg'
+                    __('response.check.not_next_product')
                 ),
                 Response::HTTP_OK
             ));
@@ -49,10 +49,9 @@ class CheckProductFacade extends Facade
             ->first();
 
         $serial = SERIALNUMBER::where('SNSERN', '=', $request->serial)
-            ->where('RNREPN', '=', $sequenceWorkCenter->RNREPN)
             ->first();
 
-        if (!empty($serial) && (int)$serial->SNCYID > 0) {
+        if (empty($serial) || (int)$serial->SNCYID > 0) {
             return new CustomJsonResponse(new JsonResponseModel(
                 new ResponseData(
                     false,
