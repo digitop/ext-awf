@@ -34,6 +34,7 @@ class GenerateDataFacade extends Facade
     public function create(Request|FormRequest|null $request = null, Model|string|null $model = null): JsonResponse|null
     {
         $success = false;
+        $details = [];
 
         try {
             $this->generatePath();
