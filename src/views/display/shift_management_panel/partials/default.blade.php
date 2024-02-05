@@ -50,23 +50,14 @@
         </tr>
         <tr>
             <td colspan="2" style="width: 55%; padding-top: 5vh;">
-                <a class="button button-red" href="{{ route('awf-shift-management-panel.reason') }}">
-                    {{ __('display.button.productLifecycle') }}
-                </a>
-            </td>
-            <td style="width: 45%; padding-top: 5vh;">
-                <a class="button button-green" href="{{ route('awf-shift-management-panel.production') }}">
-                    {{ __('display.button.manualProductSave') }}
-                </a>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2" style="width: 55%; padding-top: 5vh;">
                 <button class="button button-light-green" id="sequenceUpdate">
                     {{ __('display.button.sequenceUpdate') }}
                 </button>
             </td>
             <td style="width: 45%; padding-top: 5vh;">
+                <a class="button button-green" href="{{ route('awf-shift-management-panel.production') }}">
+                    {{ __('display.button.manualProductSave') }}
+                </a>
             </td>
         </tr>
     </table>
