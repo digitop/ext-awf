@@ -27,4 +27,9 @@ class ShiftManagementProductionPanelController extends Controller
     {
         return $this->facade->create($request);
     }
+
+    public function get(): JsonResponse
+    {
+        return $this->facade->get();
+    }
 }

@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Collection;
 class SequenceResponseModel extends ObjectToArray
 {
     protected int $SEQUID;
-    protected string $ORCODE;
-    protected string $SESIDE;
+    protected string|null $ORCODE = null;
+    protected string|null $SESIDE = null;
     protected string|null $SEPONR = null;
     protected string|null $OPNAME = null;
     protected string|null $RNREPN = null;
@@ -28,34 +28,34 @@ class SequenceResponseModel extends ObjectToArray
         return $this;
     }
 
-    public function getORCODE(): string
+    public function getORCODE(): string|null
     {
         return $this->ORCODE;
     }
 
-    public function setORCODE(string $ORCODE): SequenceResponseModel
+    public function setORCODE(string|null $ORCODE): SequenceResponseModel
     {
         $this->ORCODE = $ORCODE;
         return $this;
     }
 
-    public function getSESIDE(): string
+    public function getSESIDE(): string|null
     {
         return $this->SESIDE;
     }
 
-    public function setSESIDE(string $SESIDE): SequenceResponseModel
+    public function setSESIDE(string|null $SESIDE): SequenceResponseModel
     {
         $this->SESIDE = $SESIDE;
         return $this;
     }
 
-    public function getSEPONR(): ?string
+    public function getSEPONR(): string|null
     {
         return $this->SEPONR;
     }
 
-    public function setSEPONR(?string $SEPONR): SequenceResponseModel
+    public function setSEPONR(string|null $SEPONR): SequenceResponseModel
     {
         $this->SEPONR = $SEPONR;
         return $this;
