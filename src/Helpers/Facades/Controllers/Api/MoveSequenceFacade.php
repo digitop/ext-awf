@@ -15,6 +15,7 @@ use AWF\Extension\Responses\CustomJsonResponse;
 use AWF\Extension\Responses\SequenceFacadeResponse;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Database\Eloquent\Model;
@@ -58,24 +59,23 @@ class MoveSequenceFacade extends Facade
 
     protected function getNextWorkCenterData(FormRequest|Request $request, Model $sequence): PRWCDATA|null
     {
-        $product = PRODUCT::where('PRCODE', '=', $sequence->PRCODE)->first();
-        $productWorkCenterData = $product->workflows[0]->operationWorkcenters()
-            ->where('WCSHNA', '=', $request->WCSHNA)
-            ->first();
-        $productOperation = $product->workflows[0]->operations()
-            ->where('PFIDEN', '=', $productWorkCenterData->PFIDEN)
-            ->where('OPSHNA', '=', $productWorkCenterData->OPSHNA)
-            ->first();
+        $nextProductDetails = DB::select('
+            with porank as (select ppd.PORANK, ppd.PFIDEN
+                from PRODUCT p
+                       join PRWFDATA pfd on p.PRCODE = pfd.PRCODE
+                       join PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = "' . $request->WCSHNA . '"
+                       join PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
+                where p.PRCODE = "' . $sequence->PRCODE . '"
+                and ppd.PORANK
+            )
+            select ppd2.PFIDEN, ppd2.OPSHNA from PROPDATA ppd2
+                where ppd2.PORANK = (select porank.PORANK + 1 from porank where ppd2.PFIDEN = porank.PFIDEN)
+        ');
 
-        $nextProductOperation = $product->workflows[0]->operations()
-            ->where('PFIDEN', '=', $productWorkCenterData->PFIDEN)
-            ->where('PORANK', '=', (int)$productOperation->PORANK + 1)
-            ->first();
-
-        if (!empty($nextProductOperation)) {
-            $nextProductWorkCenterData = $product->workflows[0]->operationWorkcenters()
-                ->where('PFIDEN', '=', $nextProductOperation->PFIDEN)
-                ->where('OPSHNA', '=', $nextProductOperation->OPSHNA)
+        if (!empty($nextProductDetails[0])) {
+            $nextProductWorkCenterData = PRWCDATA::where('PFIDEN', '=', $nextProductDetails[0]->PFIDEN)
+                ->where('OPSHNA', '=', $nextProductDetails[0]->OPSHNA)
+                ->where('WCSHNA', '=', $request->WCSHNA)
                 ->first();
         }
 
@@ -84,12 +84,6 @@ class MoveSequenceFacade extends Facade
 
     protected function move(FormRequest|Request $request, Model $sequence, Model|null $nextProductWorkCenterData): void
     {
-        if ($sequence->SEINPR === false) {
-            $sequence->update([
-                'SEINPR' => true,
-            ]);
-        }
-
         AWF_SEQUENCE_LOG::where('WCSHNA', '=', $request->WCSHNA)
             ->where('SEQUID', '=', $request->SEQUID)
             ->first()

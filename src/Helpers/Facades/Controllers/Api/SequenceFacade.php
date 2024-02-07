@@ -82,16 +82,22 @@ class SequenceFacade extends Facade
             $porscheProductNumber = $request->porscheProductNumber;
         }
 
+        $database = config('database.connections.mysql.database');
+
         $queryString = '
-        select ase.PRCODE, ase.SEQUID, ase.ORCODE, ase.SESIDE, ase.SEPILL, ase.SEPONR from AWF_SEQUENCE_LOG asl
-            join AWF_SEQUENCE ase on ase.SEQUID = asl.SEQUID
-            where asl.LSTIME is null and asl.LETIME is null and ase.SEINPR = 0 and asl.WCSHNA = "' .
-            $workCenter->WCSHNA . '"' .
-            ($pillar !== null ? ' and ase.SEPILL = "' . $pillar .'"' : '') .
-            ($request->has('side') ? ' and ase.SESIDE = "' . $request->side . '"' : '') .
-            ($porscheProductNumber !== null ? ' and ase.SEPONR = "' . $porscheProductNumber . '"' : '') .
-            ' order by ase.SEPILL desc, ase.SEQUID limit 
-        ' . ($request->has('limit') ? $request->limit : 2);
+            select a.PRCODE, a.SEQUID, a.ORCODE,a.SESIDE,a.SEPILL, a.SEPONR, a.SEINPR from AWF_SEQUENCE_LOG asl
+                join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
+                join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
+                join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE
+                join ' . $database . '.PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = asl.WCSHNA
+                join ' . $database . '.PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
+            where asl.LSTIME is null and asl.LETIME is null and a.SEINPR = (ppd.PORANK - 1) and
+                asl.WCSHNA = "' . $workCenter->WCSHNA . '"' .
+                ($pillar !== null ? ' and a.SEPILL = "' . $pillar .'"' : '') .
+                ($request->has('side') ? ' and a.SESIDE = "' . $request->side . '"' : '') .
+                ($porscheProductNumber !== null ? ' and a.SEPONR = "' . $porscheProductNumber . '"' : '') .
+                ($request->has('limit') ? ' limit ' . $request->limit : '')
+        ;
 
         $sequence = new Collection(DB::connection('custom_mysql')->select($queryString));
 
@@ -106,6 +112,25 @@ class SequenceFacade extends Facade
                     'SEPONR' => $porscheProductNumber,
                 ]
             ]);
+        }
+        else {
+            $productRank = DB::select('
+                select ppd.PORANK
+                    from PRODUCT p
+                           join PRWFDATA pfd on p.PRCODE = pfd.PRCODE
+                           join PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = "' . $workCenter->WCSHNA . '"
+                           join PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
+                    where p.PRCODE = "' . $sequence[0]->PRCODE . '"
+                    and ppd.PORANK
+            ');
+
+            if (!empty($productRank[0])) {
+                AWF_SEQUENCE::where('SEQUID', '=', $sequence[0]->SEQUID)
+                    ->first()
+                    ->update([
+                        'SEINPR' => $productRank[0]->PORANK,
+                    ]);
+            }
         }
 
         if ($workCenter->WCSHNA === 'EL01' && $sequence[0]->PRCODE !== 'dummy') {
