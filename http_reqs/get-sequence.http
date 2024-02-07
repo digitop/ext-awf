@@ -11,8 +11,7 @@ Content-Type: application/json
 {
   "side": "L",
   "limit": 1,
-  "no_change": "true",
-  "porscheProductNumber": "2743514"
+  "no_change": "false"
 }
 
 ### get default preparation panel

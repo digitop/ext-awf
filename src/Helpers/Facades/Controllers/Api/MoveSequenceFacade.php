@@ -75,7 +75,6 @@ class MoveSequenceFacade extends Facade
         if (!empty($nextProductDetails[0])) {
             $nextProductWorkCenterData = PRWCDATA::where('PFIDEN', '=', $nextProductDetails[0]->PFIDEN)
                 ->where('OPSHNA', '=', $nextProductDetails[0]->OPSHNA)
-                ->where('WCSHNA', '=', $request->WCSHNA)
                 ->first();
         }
 
