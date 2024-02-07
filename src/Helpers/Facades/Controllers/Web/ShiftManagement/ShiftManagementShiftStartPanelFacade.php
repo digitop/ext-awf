@@ -40,6 +40,9 @@ class ShiftManagementShiftStartPanelFacade extends Facade
             ->get();
 
         $data = [];
+        $data['A'] = [];
+        $data['B'] = [];
+        $data['C'] = [];
 
         foreach ($collection as $item) {
             if (!array_key_exists($item->SEPILL, $data)) {

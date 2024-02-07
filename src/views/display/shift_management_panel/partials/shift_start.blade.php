@@ -14,36 +14,48 @@
         <tbody>
         <tr>
             <th style="width: 10%;">A-{{ __('awf-extension::display.pillar') }}</th>
-            <td>{{ $aPillar->SEPONR }}</td>
-            <td>{{ $aPillar->SEPSEQ }}</td>
-            <td>{{ $aPillar->SEARNU }}</td>
-            <td>
-                <a class="button-small button-blue" href="{{ route('awf-shift-management-panel.shift-start.index', ['pillar' => 'A']) }}">
-                    {{ __('button.operations') }}
-                </a>
-            </td>
+            @if(!empty($aPillar))
+                <td>{{ $aPillar->SEPONR }}</td>
+                <td>{{ $aPillar->SEPSEQ }}</td>
+                <td>{{ $aPillar->SEARNU }}</td>
+                <td>
+                    <a class="button-small button-blue" href="{{ route('awf-shift-management-panel.shift-start.index', ['pillar' => 'A']) }}">
+                        {{ __('button.operations') }}
+                    </a>
+                </td>
+            @else
+                <td colspan="4">{{ __('display.noData') }}</td>
+            @endif
         </tr>
         <tr>
             <th style="width: 10%;">B-{{ __('awf-extension::display.pillar') }}</th>
-            <td>{{ $bPillar->SEPONR }}</td>
-            <td>{{ $bPillar->SEPSEQ }}</td>
-            <td>{{ $bPillar->SEARNU }}</td>
-            <td>
-                <a class="button-small button-blue" href="{{ route('awf-shift-management-panel.shift-start.index', ['pillar' => 'B']) }}">
-                    {{ __('button.operations') }}
-                </a>
-            </td>
+            @if(!empty($bPillar))
+                <td>{{ $bPillar->SEPONR }}</td>
+                <td>{{ $bPillar->SEPSEQ }}</td>
+                <td>{{ $bPillar->SEARNU }}</td>
+                <td>
+                    <a class="button-small button-blue" href="{{ route('awf-shift-management-panel.shift-start.index', ['pillar' => 'B']) }}">
+                        {{ __('button.operations') }}
+                    </a>
+                </td>
+            @else
+                <td colspan="4">{{ __('display.noData') }}</td>
+            @endif
         </tr>
         <tr>
             <th style="width: 10%;">C-{{ __('awf-extension::display.pillar') }}</th>
-            <td>{{ $cPillar->SEPONR }}</td>
-            <td>{{ $cPillar->SEPSEQ }}</td>
-            <td>{{ $cPillar->SEARNU }}</td>
-            <td>
-                <a class="button-small button-blue" href="{{ route('awf-shift-management-panel.shift-start.index', ['pillar' => 'C']) }}">
-                    {{ __('button.operations') }}
-                </a>
-            </td>
+            @if(!empty($cPillar))
+                <td>{{ $cPillar->SEPONR }}</td>
+                <td>{{ $cPillar->SEPSEQ }}</td>
+                <td>{{ $cPillar->SEARNU }}</td>
+                <td>
+                    <a class="button-small button-blue" href="{{ route('awf-shift-management-panel.shift-start.index', ['pillar' => 'C']) }}">
+                        {{ __('button.operations') }}
+                    </a>
+                </td>
+            @else
+                <td colspan="4">{{ __('display.noData') }}</td>
+            @endif
         </tr>
         </tbody>
     </table>
