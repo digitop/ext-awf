@@ -113,25 +113,6 @@ class SequenceFacade extends Facade
                 ]
             ]);
         }
-        else {
-            $productRank = DB::select('
-                select ppd.PORANK
-                    from PRODUCT p
-                           join PRWFDATA pfd on p.PRCODE = pfd.PRCODE
-                           join PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = "' . $workCenter->WCSHNA . '"
-                           join PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
-                    where p.PRCODE = "' . $sequence[0]->PRCODE . '"
-                    and ppd.PORANK
-            ');
-
-            if (!empty($productRank[0])) {
-                AWF_SEQUENCE::where('SEQUID', '=', $sequence[0]->SEQUID)
-                    ->first()
-                    ->update([
-                        'SEINPR' => $productRank[0]->PORANK,
-                    ]);
-            }
-        }
 
         if ($workCenter->WCSHNA === 'EL01' && $sequence[0]->PRCODE !== 'dummy') {
             event(new NextProductEvent(
@@ -161,6 +142,26 @@ class SequenceFacade extends Facade
                     ->update([
                         'LSTIME' => (new \DateTime()),
                     ]);
+            }
+
+            $productRank = DB::select('
+                select ppd.PORANK
+                    from PRODUCT p
+                           join PRWFDATA pfd on p.PRCODE = pfd.PRCODE
+                           join PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = "' . $workCenter->WCSHNA . '"
+                           join PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
+                    where p.PRCODE = "' . $sequence[0]->PRCODE . '"
+                    and ppd.PORANK
+            ');
+
+            if (!empty($productRank[0])) {
+                foreach ($sequence as $item) {
+                    AWF_SEQUENCE::where('SEQUID', '=', $item->SEQUID)
+                        ->first()
+                        ->update([
+                            'SEINPR' => $productRank[0]->PORANK,
+                        ]);
+                }
             }
         }
 
