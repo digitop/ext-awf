@@ -66,7 +66,6 @@ class MoveSequenceFacade extends Facade
                        join PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = "' . $request->WCSHNA . '"
                        join PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
                 where p.PRCODE = "' . $sequence->PRCODE . '"
-                and ppd.PORANK
             )
             select ppd2.PFIDEN, ppd2.OPSHNA from PROPDATA ppd2
                 where ppd2.PORANK = (select porank.PORANK + 1 from porank where ppd2.PFIDEN = porank.PFIDEN)

@@ -150,9 +150,8 @@ class SequenceFacade extends Facade
                            join PRWFDATA pfd on p.PRCODE = pfd.PRCODE
                            join PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = "' . $workCenter->WCSHNA . '"
                            join PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
-                    where p.PRCODE = "' . $sequence[0]->PRCODE . '"
-                    and ppd.PORANK
-            ');
+                    where p.PRCODE = "' . $sequence[0]->PRCODE . '"'
+            );
 
             if (!empty($productRank[0])) {
                 foreach ($sequence as $item) {
