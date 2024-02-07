@@ -3,14 +3,12 @@
 namespace AWF\Extension\Responses;
 
 use AWF\Extension\Helpers\Models\SequenceResponseModel;
-use AWF\Extension\Helpers\ProductFeaturesImagesUrl;
 use AWF\Extension\Interfaces\ResponseInterface;
 use AWF\Extension\Models\AWF_SEQUENCE;
 use AWF\Extension\Models\AWF_SEQUENCE_WORKCENTER;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\PRODUCT;
-use App\Models\WORKCENTER;
 use App\Models\REPNO;
 
 class SequenceFacadeResponse  implements ResponseInterface
@@ -77,6 +75,14 @@ class SequenceFacadeResponse  implements ResponseInterface
 
         $product = PRODUCT::where('PRCODE', '=', $sequence->PRCODE)->with('features')->first();
 
+        $repno = $sequenceWorkCenter?->RNREPN;
+
+        if (empty($repno) && !empty($this->workCenter?->WCSHNA)) {
+            $repno = REPNO::where('ORCODE', '=', $sequence->ORCODE)
+                ->where('WCSHNA', '=', $this->workCenter?->WCSHNA)
+                ->first()?->RNREPN;
+        }
+
         return (new SequenceResponseModel())
             ->setSEQUID($sequence->SEQUID)
             ->setORCODE($sequence->ORCODE)
@@ -88,7 +94,7 @@ class SequenceFacadeResponse  implements ResponseInterface
                     $this->workCenter?->operatorPanels[0] :
                     null
             )
-            ->setRNREPN($sequenceWorkCenter?->RNREPN)
+            ->setRNREPN($repno)
             ->setPlc($product?->features()->where('FESHNA', '=', 'PLCCOLOR')->first()?->FEVALU ?? null)
             ->setPreviousRepnos(
                 REPNO::where('WCSHNA', '=', $this->workCenter?->WCSHNA)->where('RNOLAC', '=', 1)->get()
