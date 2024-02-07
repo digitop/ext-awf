@@ -45,11 +45,13 @@ class GenerateDataCommand extends Command
         $this->info(str_repeat("=", 10));
 
         $success = false;
+        $message = '';
 
         try {
             $response = (new GenerateDataFacade())->create();
 
             $success = $response?->success ?? false;
+            $message = $response?->message ?? '';
         }
         catch (\Exception $exception) {
             $endTime = microtime(true);
@@ -62,6 +64,10 @@ class GenerateDataCommand extends Command
                 'logs/awf_data_generation_' . Carbon::now()->format('Ymd') . '.log',
                 $dataToLog . "\n" . str_repeat("=", 20) . "\n\n"
             );
+        }
+
+        if ($success == false && !empty($message)) {
+            $this->error($message);
         }
 
         $this->info('End of downloading and processing data from a server');
