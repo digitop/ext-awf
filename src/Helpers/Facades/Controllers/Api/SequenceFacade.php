@@ -85,7 +85,8 @@ class SequenceFacade extends Facade
         $queryString = '
         select ase.PRCODE, ase.SEQUID, ase.ORCODE, ase.SESIDE, ase.SEPILL, ase.SEPONR from AWF_SEQUENCE_LOG asl
             join AWF_SEQUENCE ase on ase.SEQUID = asl.SEQUID
-            where asl.LSTIME is null and asl.LETIME is null and ase.SEINPR = 0 ' .
+            where asl.LSTIME is null and asl.LETIME is null and ase.SEINPR = 0 and asl.WCSHNA = "' .
+            $workCenter->WCSHNA . '"' .
             ($pillar !== null ? ' and ase.SEPILL = "' . $pillar .'"' : '') .
             ($request->has('side') ? ' and ase.SESIDE = "' . $request->side . '"' : '') .
             ($porscheProductNumber !== null ? ' and ase.SEPONR = "' . $porscheProductNumber . '"' : '') .
