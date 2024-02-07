@@ -29,11 +29,11 @@ return [
             'articleNumber' => 'Artikelnummer',
         ],
     ],
-    'side' => [
+    'sideCode' => [
         'R' => 'Rechts',
         'L' => 'Links',
     ],
-    'pillar' => [
+    'pillarCode' => [
         'A' => 'A - Säule',
         'B' => 'B - Säule',
         'C' => 'C - Säule',
@@ -44,4 +44,6 @@ return [
     'pillar' => 'Säule',
     'noSequence' => 'Es gibt keine Sequenz auf der Maschine',
     'noData' => 'Keine Daten verfügbar',
+    'serialNumber' => 'Seriennummer',
+    'alreadyHasSerial' => 'Es wurde bereits ein Barcode erfasst',
 ];

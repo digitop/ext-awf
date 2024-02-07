@@ -3,6 +3,7 @@
 namespace AWF\Extension\Helpers\Facades\Controllers\Web\ShiftManagement;
 
 use App\Http\Controllers\api\dashboard\operatorPanel\OperatorPanelController;
+use App\Models\REPNO;
 use AWF\Extension\Helpers\Facades\Controllers\Api\CheckProductFacade;
 use AWF\Extension\Helpers\Facades\Controllers\Web\Facade;
 use AWF\Extension\Requests\Api\CheckProductCheckRequest;
@@ -21,7 +22,7 @@ use App\Models\WORKCENTER;
 class ShiftManagementPanelManualDataRecordFacade extends Facade
 {
     public function create(Request|FormRequest|null $request = null,
-        Model|string|null        $model = null
+        Model|string|null $model = null
     ): Application|Factory|View|IlluminateView|ContractsApplication|null
     {
         return view(
@@ -42,11 +43,15 @@ class ShiftManagementPanelManualDataRecordFacade extends Facade
         Model|string|null ...$model
     ): Application|Factory|View|ContractsApplication|null
     {
+        $database = config('database.connections.mysql.database');
+
         $sequence = DB::connection('custom_mysql')->select('
-            select asw.WCSHNA, asw.RNREPN, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEPSEQ, a.PRCODE from AWF_SEQUENCE a
+            select asw.WCSHNA, asw.RNREPN, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEPSEQ, a.PRCODE, s.SNSERN from AWF_SEQUENCE a
                 join AWF_SEQUENCE_LOG asl on a.SEQUID = asl.SEQUID
                 join AWF_SEQUENCE_WORKCENTER asw on a.SEQUID = asw.SEQUID
-                where asw.WCSHNA = "' . $model[0]->WCSHNA . '" and asl.LSTIME is null and asl.LETIME is null
+                join ' . $database . '.SERIALNUMBER s on s.RNREPN = asw.RNREPN
+                where asw.WCSHNA = "' . $model[0]->WCSHNA . '" and asl.LSTIME is null
+                 and asl.LETIME is null and a.SEINPR = 1
         ');
 
         if (!empty($sequence[0])) {
@@ -66,45 +71,54 @@ class ShiftManagementPanelManualDataRecordFacade extends Facade
     ): Application|Factory|View|ContractsApplication|null
     {
         $workCenter = $model[0];
-
-        $check = (new CheckProductFacade())->check(
-            new CheckProductCheckRequest([
-                'serial' => $request->serial,
-                'dashboard' => $workCenter->operatorPanels[0]->dashboard->DHIDEN,
-            ])
-        );
+        $database = config('database.connections.mysql.database');
 
         $sequence = DB::connection('custom_mysql')->select('
-            select asw.WCSHNA, a.SEQUID, asw.RNREPN, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEPSEQ, a.PRCODE from AWF_SEQUENCE a
+            select asw.WCSHNA, asw.RNREPN, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEPSEQ, a.PRCODE, s.SNSERN from AWF_SEQUENCE a
                 join AWF_SEQUENCE_LOG asl on a.SEQUID = asl.SEQUID
                 join AWF_SEQUENCE_WORKCENTER asw on a.SEQUID = asw.SEQUID
-                where asw.WCSHNA = "' . $model[0]->WCSHNA . '" and asl.LSTIME is null and asl.LETIME is null
+                join ' . $database . '.SERIALNUMBER s on s.RNREPN = asw.RNREPN
+                where asw.WCSHNA = "' . $model[0]->WCSHNA . '" and asl.LSTIME is null
+                 and asl.LETIME is null and a.SEINPR = 1
         ');
 
         if (!empty($sequence[0])) {
             $sequence = $sequence[0];
         }
 
-//        if ($check->getData()?->success == false) {
-//            return view(
-//                'awf-extension::display.shift_management_panel.partials.manual_data_record_partials.workCenter',
-//                [
-//                    'sequence' => $sequence,
-//                    'error' => $check->getData()->message
-//                ]
-//            );
-//        }
-
         $checkSerial = (new OperatorPanelController())->checkAndSaveSerial(
             new Request([
-                'SNSERN' => $sequence[0]->SEQUID,
-                'RNREPN',
+                'SNSERN' => $request->serialNumber,
+                'RNREPN' => $sequence->RNREPN,
+                'SNCOUN' => 1,
+                'SNRDCN' => 1,
                 'subProduct' => false,
-                'PRCODE',
+                'parentSNSERN' => false,
+                'PRCODE' => $sequence->PRCODE,
             ]),
             $workCenter->operatorPanels[0]->dashboard->DHIDEN
         );
 
-        return null;
+        $error = '';
+
+        if ($checkSerial['success'] == false) {
+            if (array_key_exists('error', $checkSerial) && !empty($checkSerial['error'])) {
+                $error = $checkSerial['error'];
+            }
+            else {
+                $error = 'Hiba lépett fel az adatok mentése során!';
+            }
+        }
+        else {
+            $sequence->serial = $request->serialNumber;
+        }
+
+        return view(
+            'awf-extension::display.shift_management_panel.partials.manual_data_record_partials.workCenter',
+            [
+                'sequence' => $sequence,
+                'error' => $checkSerial['success'] == false && !empty($error) ? $error : ''
+            ]
+        );
     }
 }

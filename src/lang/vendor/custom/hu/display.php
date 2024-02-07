@@ -44,4 +44,6 @@ return [
     'pillar' => 'Oszlop',
     'noSequence' => 'Nincs a gépnél szekvencia',
     'noData' => 'Nem áll rendelkezésre adat',
+    'serialNumber' => 'Vonalkód',
+    'alreadyHasSerial' => 'Már lett vonalkód rögzítve',
 ];

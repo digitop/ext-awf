@@ -12,14 +12,26 @@
             <div class="alert warning">
                 <span class="alertClose">X</span>
                 <span class="alertText">
-                @if(is_array($error))
-                    @foreach($error as $message)
-                        {{ $message . '<br/>' }}
-                    @endforeach
-                @else
-                    {{ $error }}
-                @endif
-                <br class="clear"/></span>
+                    @if(is_array($error))
+                        @foreach($error as $message)
+                            {{ $message . '<br/>' }}
+                        @endforeach
+                    @else
+                        {{ $error }}
+                    @endif
+                    <br class="clear"/>
+                </span>
+            </div>
+        </label>
+    @elseif (isset($error) && empty($error))
+        <label>
+            <input type="checkbox" class="alertCheckbox" autocomplete="off" />
+            <div class="alert success">
+                <span class="alertClose">X</span>
+                <span class="alertText">
+                    Sikeres adatrögzítés!
+                    <br class="clear"/>
+                </span>
             </div>
         </label>
     @endif
@@ -63,18 +75,37 @@
                         <th>{{ __('display.data.shift-sequence.articleNumber') }}</th>
                         <td>{{ $sequence->PRCODE }}</td>
                     </tr>
+                    <tr>
+                        <th>{{ __('display.serialNumber') }}</th>
+                        <td>{{ $sequence->SNSERN }}</td>
+                    </tr>
                 </table>
 
                 <div style="margin-top: 5%;">
-                    <input name="serialnumber" type="text" class="awf-work-center"/>
-                    <button class="awf-work-center-button" type="submit">{{ __('display.button.submit') }}</button>
+                    <div>
+                        <input name="serialNumber"
+                               type="text"
+                               title="{{ !empty($sequence->SNSERN) ? __('display.alreadyHasSerial') : '' }}"
+                               class="awf-work-center"
+                                {{ !empty($sequence->SNSERN) ? 'disabled' : '' }}
+                        />
+                    </div>
+                    <div style="margin-top: 2%;">
+                        <button class="awf-work-center-button"
+                                type="submit"
+                                title="{{ !empty($sequence->SNSERN) ? __('display.alreadyHasSerial') : '' }}"
+                                {{ !empty($sequence->SNSERN) ? 'disabled' : '' }}
+                        >
+                            {{ __('display.button.submit') }}
+                        </button>
+                    </div>
                 </div>
             </form>
         @endif
     </div>
 
     <div class="footer">
-        <a href="{{ url()->previous() }}" class="back">
+        <a href="{{ route('awf-shift-management-panel.manual-data-record') }}" class="back">
             {{ __('display.button.back') }}
         </a>
     </div>

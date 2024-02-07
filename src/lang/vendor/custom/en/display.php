@@ -44,4 +44,6 @@ return [
     'pillar' => 'Pillar',
     'noSequence' => 'There is no sequence on the work center',
     'noData' => 'No data available',
+    'serialNumber' => 'Serial number',
+    'alreadyHasSerial' => 'A barcode has already been recorded',
 ];

@@ -18,11 +18,10 @@ form table td {
 
 .awf-work-center-button {
     align-items: center;
-    padding: 1% 5%;
+    padding: 1vh 5vh;
     font-family: -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
-    font-size: large;
+    font-size: x-large;
     cursor: pointer;
-    border-radius: 6px;
     border: none;
     color: #fff;
     background: linear-gradient(180deg, #2fc018 0%, #206c07 100%);
@@ -32,6 +31,12 @@ form table td {
 
 .awf-work-center-button:hover {
     background: linear-gradient(180deg, #178606 0%, #1d520b 100%);
+}
+
+.awf-work-center-button:disabled {
+    color: #6e776d;
+    background: linear-gradient(180deg, #686868 20%, #2a2929 80%);
+    cursor: not-allowed;
 }
 
 .alert {
