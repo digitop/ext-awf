@@ -64,7 +64,6 @@ class AWF_SEQUENCE extends Model
      * @var array
      */
     protected $casts = [
-        'SEINPR' => 'bool',
         'SESCRA' => 'bool',
     ];
 
