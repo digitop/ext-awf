@@ -1,0 +1,105 @@
+form {
+    margin-left: 30%;
+    margin-top: 16%;
+    font-size: 3vh;
+}
+
+form table th {
+    text-align: left;
+}
+
+form table td {
+    padding-left: 3%;
+}
+
+.awf-work-center {
+    font-size: 3.5vh;
+}
+
+.awf-work-center-button {
+    align-items: center;
+    padding: 1% 5%;
+    font-family: -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
+    font-size: large;
+    cursor: pointer;
+    border-radius: 6px;
+    border: none;
+    color: #fff;
+    background: linear-gradient(180deg, #2fc018 0%, #206c07 100%);
+    background-origin: border-box;
+    box-shadow: 0px 0.5px 1.5px rgba(80, 246, 54, 0.25), inset 0px 0.8px 0px -0.25px rgba(255, 255, 255, 0.2);
+}
+
+.awf-work-center-button:hover {
+    background: linear-gradient(180deg, #178606 0%, #1d520b 100%);
+}
+
+.alert {
+    position: absolute;
+    top: 20%;
+    left: 3%;
+    width: 90%;
+    height: auto;
+    padding: 10px;
+    margin: 10px;
+    line-height: 1.8;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: sans-serif;
+    font-weight: 400;
+}
+
+.alertCheckbox {
+    display: none;
+}
+
+:checked + .alert {
+    display: none;
+}
+
+.alertText {
+    display: table;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 3vh;
+}
+
+.alertClose {
+    float: right;
+    padding-top: 5px;
+    font-size: 10px;
+}
+
+.clear {
+    clear: both;
+}
+
+.info {
+    background-color: #EEE;
+    border: 1px solid #DDD;
+    color: #999;
+}
+
+.success {
+    background-color: #EFE;
+    border: 1px solid #DED;
+    color: #9A9;
+}
+
+.notice {
+    background-color: #EFF;
+    border: 1px solid #DEE;
+    color: #9AA;
+}
+
+.warning {
+    background-color: #FDF7DF;
+    border: 1px solid #FEEC6F;
+    color: #C9971C;
+}
+
+.error {
+    background-color: #FEE;
+    border: 1px solid #EDD;
+    color: #A66;
+}

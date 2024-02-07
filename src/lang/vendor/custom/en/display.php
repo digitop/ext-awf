@@ -19,6 +19,7 @@ return [
         'manualProductSave' => 'Manual data recording',
         'productLifecycle' => 'Query a product based on a barcode',
         'sequenceUpdate' => 'Update sequence',
+        'submit' => 'Submit',
     ],
     'data' => [
         'shift-sequence' => [
@@ -28,5 +29,19 @@ return [
             'articleNumber' => 'Article number',
         ],
     ],
+    'sideCode' => [
+        'R' => 'right',
+        'L' => 'left',
+    ],
+    'pillarCode' => [
+        'A' => 'A - Pillar',
+        'B' => 'B - Pillar',
+        'C' => 'C - Pillar',
+    ],
+    'workCenter' => 'Work center',
+    'orderCode' => 'Order number',
+    'side' => 'Side',
     'pillar' => 'Pillar',
+    'noSequence' => 'There is no sequence on the work center',
+    'noData' => 'No data available',
 ];

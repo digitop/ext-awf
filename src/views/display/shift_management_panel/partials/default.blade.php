@@ -55,7 +55,7 @@
                 </button>
             </td>
             <td style="width: 45%; padding-top: 5vh;">
-                <a class="button button-green" href="{{ route('awf-shift-management-panel.production') }}">
+                <a class="button button-green" href="{{ route('awf-shift-management-panel.manual-data-record') }}">
                     {{ __('display.button.manualProductSave') }}
                 </a>
             </td>

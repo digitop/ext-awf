@@ -19,6 +19,7 @@ return [
         'manualProductSave' => 'Manuelle Datenaufzeichnung',
         'productLifecycle' => 'Fragen Sie ein Produkt anhand eines Barcodes ab',
         'sequenceUpdate' => 'Aktualisierungssequenz',
+        'submit' => 'Einreichen',
     ],
     'data' => [
         'shift-sequence' => [
@@ -28,5 +29,19 @@ return [
             'articleNumber' => 'Artikelnummer',
         ],
     ],
+    'side' => [
+        'R' => 'Rechts',
+        'L' => 'Links',
+    ],
+    'pillar' => [
+        'A' => 'A - Säule',
+        'B' => 'B - Säule',
+        'C' => 'C - Säule',
+    ],
+    'workCenter' => 'Produktionsmaschine',
+    'orderCode' => 'Bestellnummer',
+    'side' => 'Seite',
     'pillar' => 'Säule',
+    'noSequence' => 'Es gibt keine Sequenz auf der Maschine',
+    'noData' => 'Keine Daten verfügbar',
 ];
