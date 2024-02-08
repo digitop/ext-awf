@@ -3,6 +3,7 @@
 namespace AWF\Extension\Helpers\Facades\Controllers\Api;
 
 use AWF\Extension\Events\NextProductEvent;
+use AWF\Extension\Helpers\Facades\Controllers\Web\PreparationStationPanelFacade;
 use AWF\Extension\Helpers\Responses\JsonResponseModel;
 use AWF\Extension\Helpers\Responses\ResponseData;
 use AWF\Extension\Models\AWF_SEQUENCE;
@@ -114,15 +115,6 @@ class SequenceFacade extends Facade
             ]);
         }
 
-        if ($workCenter->WCSHNA === 'EL01' && $sequence[0]->PRCODE !== 'dummy') {
-            //todo mindig a következőt mutassa, ne az aktuálisan lekértet. ha nincs következő SEPORN és SEPSEQ és SEARNU és SEPILL alapján, akkor mutassa a default üres oldalt
-
-            event(new NextProductEvent(
-                    (new NextProductEventResponse($sequence, null))->generate()
-                )
-            );
-        }
-
         $noChange = false;
 
         if (
@@ -133,6 +125,45 @@ class SequenceFacade extends Facade
             )
         ) {
             $noChange = true;
+        }
+
+        if ($workCenter->WCSHNA === 'EL01' && $sequence[0]->PRCODE !== 'dummy') {
+            if ($noChange) {
+                event(new NextProductEvent(
+                        (new NextProductEventResponse($sequence, null))->generate()
+                    )
+                );
+            }
+            else {
+                $side = $request->side == 'L' ? 'R' : 'L';
+
+                $queryString = '
+            select a.PRCODE, a.SEQUID, a.ORCODE,a.SESIDE,a.SEPILL, a.SEPONR, a.SEINPR from AWF_SEQUENCE_LOG asl
+                join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
+                join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
+                join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE
+                join ' . $database . '.PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = asl.WCSHNA
+                join ' . $database . '.PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
+            where asl.LSTIME is null and asl.LETIME is null and a.SEINPR = (ppd.PORANK - 1) and
+                asl.WCSHNA = "' . $workCenter->WCSHNA . '"' .
+                    ($pillar !== null ? ' and a.SEPILL = "' . $pillar .'"' : '') .
+                    ($request->has('side') ? ' and a.SESIDE = "' . $side . '"' : '') .
+                    ($porscheProductNumber !== null ? ' and a.SEPONR = "' . $porscheProductNumber . '"' : '') .
+                    ($request->has('limit') ? ' limit ' . $request->limit : '')
+                ;
+
+                $sequence2 = new Collection(DB::connection('custom_mysql')->select($queryString));
+
+                if (empty($sequence2)) {
+                    (new PreparationStationPanelFacade())->default();
+                }
+                else {
+                    event(new NextProductEvent(
+                            (new NextProductEventResponse($sequence2, null))->generate()
+                        )
+                    );
+                }
+            }
         }
 
         if (!$noChange && $sequence[0]->PRCODE !== 'dummy') {
