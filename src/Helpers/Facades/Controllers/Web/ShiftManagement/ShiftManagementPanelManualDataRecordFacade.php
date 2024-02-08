@@ -49,9 +49,14 @@ class ShiftManagementPanelManualDataRecordFacade extends Facade
             select asw.WCSHNA, asw.RNREPN, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEPSEQ, a.PRCODE, s.SNSERN from AWF_SEQUENCE a
                 join AWF_SEQUENCE_LOG asl on a.SEQUID = asl.SEQUID
                 join AWF_SEQUENCE_WORKCENTER asw on a.SEQUID = asw.SEQUID
-                join ' . $database . '.SERIALNUMBER s on s.RNREPN = asw.RNREPN
-                where asw.WCSHNA = "' . $model[0]->WCSHNA . '" and asl.LSTIME is null
-                 and asl.LETIME is null and a.SEINPR = 1
+                left join ' . $database . '.SERIALNUMBER s on s.RNREPN = asw.RNREPN
+            where asw.WCSHNA = "' . $model[0]->WCSHNA . '"
+                and asl.LETIME is null and a.SEINPR = (
+                    select PORANK from ' . $database . '.PROPDATA ppd
+                        join ' . $database . '.PRWCDATA pcd on pcd.WCSHNA = asw.WCSHNA and pcd.OPSHNA = ppd.OPSHNA and ppd.PFIDEN = pcd.PFIDEN
+                        join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE and pfd.PFIDEN = pcd.PFIDEN
+                )
+                and asl.LSTIME is not null and asl.LETIME is null
         ');
 
         if (!empty($sequence[0])) {
@@ -77,9 +82,14 @@ class ShiftManagementPanelManualDataRecordFacade extends Facade
             select asw.WCSHNA, asw.RNREPN, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEPSEQ, a.PRCODE, s.SNSERN from AWF_SEQUENCE a
                 join AWF_SEQUENCE_LOG asl on a.SEQUID = asl.SEQUID
                 join AWF_SEQUENCE_WORKCENTER asw on a.SEQUID = asw.SEQUID
-                join ' . $database . '.SERIALNUMBER s on s.RNREPN = asw.RNREPN
-                where asw.WCSHNA = "' . $model[0]->WCSHNA . '" and asl.LSTIME is null
-                 and asl.LETIME is null and a.SEINPR = 1
+                left join ' . $database . '.SERIALNUMBER s on s.RNREPN = asw.RNREPN
+            where asw.WCSHNA = "' . $model[0]->WCSHNA . '"
+                and asl.LETIME is null and a.SEINPR = (
+                    select PORANK from ' . $database . '.PROPDATA ppd
+                        join ' . $database . '.PRWCDATA pcd on pcd.WCSHNA = asw.WCSHNA and pcd.OPSHNA = ppd.OPSHNA and ppd.PFIDEN = pcd.PFIDEN
+                        join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE and pfd.PFIDEN = pcd.PFIDEN
+                )
+                and asl.LSTIME is not null and asl.LETIME is null
         ');
 
         if (!empty($sequence[0])) {
