@@ -21,6 +21,7 @@ class MakeOrderFacade extends Facade
     public function create(Request|FormRequest|null $request = null, Model|string|null $model = null): JsonResponse|null
     {
         $success = false;
+        $details = [];
 
         $sequences = AWF_SEQUENCE::where('SEINPR', '=', 0)
             ->orderBy('SEPILL', 'DESC')
@@ -44,11 +45,15 @@ class MakeOrderFacade extends Facade
                 'logs/awf_make_order_' . Carbon::now()->format('Ymd') . '.log',
                 $dataToLog . "\n" . str_repeat("=", 20) . "\n\n"
             );
+
+            $details = ['message' => $exception->getMessage(), 'trace' => $exception->getTraceAsString()];
         }
 
         return new CustomJsonResponse(new JsonResponseModel(
             new ResponseData(
-                $success
+                $success,
+                [],
+                json_encode($details)
             ),
             Response::HTTP_OK
         ));
