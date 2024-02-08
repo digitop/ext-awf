@@ -10,12 +10,12 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Broadcasting\Channel;
 
-class NextProductEvent implements ShouldBroadcastNow
+class WelderNextProductEvent implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     protected array $message;
-    
+
     public function __construct(array $message)
     {
         $this->message = $message;
@@ -23,12 +23,12 @@ class NextProductEvent implements ShouldBroadcastNow
 
     public function broadcastOn(): Channel
     {
-        return new Channel('next-product');
+        return new Channel('next-welder-product');
     }
 
     public function broadcastAs()
     {
-        return 'next-product-event';
+        return 'next-welder-product-event';
     }
 
     public function broadcastWith()
