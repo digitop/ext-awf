@@ -40,14 +40,21 @@ class ShiftManagementShiftStartPanelFacade extends Facade
             ->get();
 
         $data = [];
-        $data['A'] = [];
-        $data['B'] = [];
-        $data['C'] = [];
 
         foreach ($collection as $item) {
             if (!array_key_exists($item->SEPILL, $data)) {
                 $data[$item->SEPILL] = $item;
             }
+        }
+
+        if (!array_key_exists('A', $data)) {
+            $data['A'] = [];
+        }
+        if (!array_key_exists('B', $data)) {
+            $data['B'] = [];
+        }
+        if (!array_key_exists('C', $data)) {
+            $data['C'] = [];
         }
 
         return view('awf-extension::display/shift_management_panel.partials.shift_start', [
