@@ -2,29 +2,20 @@
 
 namespace AWF\Extension\Helpers\Facades\Controllers\Api;
 
-use AWF\Extension\Helpers\Checkers\SavedData;
 use AWF\Extension\Helpers\Responses\JsonResponseModel;
 use AWF\Extension\Helpers\Responses\ResponseData;
 use AWF\Extension\Models\AWF_SEQUENCE;
-use AWF\Extension\Models\AWF_SEQUENCE_LOG;
 use AWF\Extension\Models\AWF_SEQUENCE_WORKCENTER;
-use App\Models\ORDERHEAD;
 use AWF\Extension\Responses\CustomJsonResponse;
 use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\PRODUCT;
-use App\Models\OEE_REPNO;
-use App\Models\CACHE_LOG_ANALOG_REPNO;
-use App\Models\CACHE_LOG_CYCLE_REPNO;
-use App\Models\LOG_ANALOG_REPNO;
-use App\Models\LOG_CYCLE_REPNO;
-use App\Models\REPNO_ACTIVITY_LOG;
 use Illuminate\Support\Facades\File;
 
 class GenerateDataFacade extends Facade
@@ -97,57 +88,71 @@ class GenerateDataFacade extends Facade
     {
         $file = Storage::disk('awfSequenceFtp')->get($filePath);
 
-        $sequences = new Collection();
+        $insertQuery = 'insert into AWF_SEQUENCE (SEPONR, SEPSEQ, SEARNU, SEARDE, SESIDE, SEEXPI, SEPILL, PRCODE) values';
+        $rows = explode(PHP_EOL, $file);
+        $iMax = count($rows);
+        $i = 0;
 
-        foreach (explode(PHP_EOL, $file) as $row) {
+        foreach ($rows as $row) {
             $data = explode(';', $row);
 
             if (!empty($data) && !empty($data[0])) {
-                $year = substr($data[5], 0, 4);
-                $month = substr($data[5], 4, 2);
-                $day = substr($data[5], 6, 2);
-                $expiration = new \DateTime($year . '-' . $month . '-' . $day);
+                $hasProduct = false;
 
-                $sequence = AWF_SEQUENCE::where('SEPONR', '=', $data[0])
-                    ->where('SEPSEQ', '=', $data[1])
-                    ->where('SEARNU', '=', $data[2])
-                    ->where('SESIDE', '=', $data[4])
-                    ->where('SEPILL', '=', $data[3][6])
-                    ->where('SEINPR', '=', 1)
-                    ->first();
+                $expiration = (new \DateTime(
+                    substr($data[5], 0, 4) . '-' .
+                    substr($data[5], 4, 2) . '-' .
+                    substr($data[5], 6, 2)
+                ))->format('Y-m-d');
 
-                if (!empty($sequence)) {
-                    continue;
+                if (!empty(PRODUCT::where('PRCODE', '=', $data[2])->first())) {
+                    $hasProduct = true;
                 }
 
-                $sequenceData = AWF_SEQUENCE::create([
-                    'SEPONR' => $data[0],
-                    'SEPSEQ' => $data[1],
-                    'SEARNU' => $data[2],
-                    'SEARDE' => mb_convert_encoding($data[3], 'UTF-8'),
-                    'SESIDE' => $data[4],
-                    'SEEXPI' => $expiration,
-                    'SEPILL' => $data[3][6],
-                ]);
+                $insertQuery .= sprintf('("%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s")',
+                    $data[0],
+                    $data[1],
+                    $data[2],
+                    mb_convert_encoding($data[3], 'UTF-8'),
+                    $data[4],
+                    $expiration,
+                    $data[3][6],
+                    $hasProduct ? $data[2] : null,
+                );
 
-                AWF_SEQUENCE_LOG::create([
-                    'SEQUID' => $sequenceData->SEQUID,
-                    'WCSHNA' => 'EL01',
-                ]);
-
-                AWF_SEQUENCE_WORKCENTER::create([
-                    'SEQUID' => $sequenceData->SEQUID,
-                    'WCSHNA' => 'EL01',
-                ]);
-
-                if (!empty(PRODUCT::where('PRCODE', '=', $sequenceData->SEARNU)->first())) {
-                    $sequenceData->update([
-                        'PRCODE' => $sequenceData->SEARNU,
-                    ]);
+                if ($i < $iMax - 2) {
+                    $insertQuery .= ',';
                 }
 
-                $sequences->add($sequenceData);
+                $i++;
             }
+        }
+
+        DB::connection('custom_mysql')->insert($insertQuery);
+
+        $sequences = DB::connection('custom_mysql')->select('select SEQUID from AWF_SEQUENCE where SEINPR = 0');
+
+        if (!empty($sequences[0])) {
+            $insertLog = 'insert into AWF_SEQUENCE_LOG (SEQUID, WCSHNA) values';
+            $insertWorkCenter = 'insert into AWF_SEQUENCE_WORKCENTER (SEQUID, WCSHNA) values';
+            $iMax = count($sequences);
+            $i = 0;
+
+
+            foreach ($sequences as $sequence) {
+                $insertLog .= sprintf('("%s", "%s")', $sequence->SEQUID, 'EL01');
+                $insertWorkCenter .= sprintf('("%s", "%s")', $sequence->SEQUID, 'EL01');
+
+                if ($i < $iMax - 1) {
+                    $insertLog .= ',';
+                    $insertWorkCenter .= ',';
+                }
+
+                $i++;
+            }
+
+            DB::connection('custom_mysql')->insert($insertLog);
+            DB::connection('custom_mysql')->insert($insertWorkCenter);
         }
 
         $savePath = 'sequence-data' . DIRECTORY_SEPARATOR . (new \DateTime())->format(static::DATEFORMAT);
@@ -173,23 +178,53 @@ class GenerateDataFacade extends Facade
     {
         $sequences = AWF_SEQUENCE::where('SEINPR', '=', 0)->get();
 
+        $deleteRepno = '';
+        $deleteOrder = '';
+        $deleteSeq = '';
+
+        $iMax = count($sequences);
+        $i = 0;
+
         foreach ($sequences as $sequence) {
-            AWF_SEQUENCE_LOG::where('SEQUID', '=', $sequence->SEQUID)?->delete();
+            if (!empty($sequence->ORCODE)) {
+                $deleteOrder .= '"' . $sequence->ORCODE . '"';
+                if ($i < $iMax - 1) {
+                    $deleteOrder .= ',';
+                }
+            }
+
             $sequenceWorkCenter = AWF_SEQUENCE_WORKCENTER::where('SEQUID', '=', $sequence->SEQUID)->first();
 
-            $repno = $sequenceWorkCenter?->RNREPN;
-            $sequenceWorkCenter?->delete();
+            if (!empty($sequenceWorkCenter)) {
+                $deleteRepno .= '"' . $sequenceWorkCenter->RNREPN . '"';
+                if ($i < $iMax - 1) {
+                    $deleteRepno .= ',';
+                }
+            }
 
-            $orderCode = $sequence->ORCODE;
-            $sequence->delete();
+            $deleteSeq .= '"' . $sequence->SEQUID . '"';
 
-            CACHE_LOG_ANALOG_REPNO::where('ORCODE', '=', $orderCode)->first()?->delete();
-            CACHE_LOG_CYCLE_REPNO::where('RNREPN', '=', $repno)->first()?->delete();
-            LOG_ANALOG_REPNO::where('ORCODE', '=', $orderCode)->first()?->delete();
-            LOG_CYCLE_REPNO::where('RNREPN', '=', $repno)->first()?->delete();
-            REPNO_ACTIVITY_LOG::WHERE('RNREPN', '=', $repno)->first()?->delete();
-            OEE_REPNO::WHERE('RNREPN', '=', $repno)->first()?->delete();
-            ORDERHEAD::where('ORCODE', '=', $orderCode)?->delete();
+            if ($i < $iMax - 1) {
+                $deleteSeq .= ',';
+            }
+
+            $i++;
+        }
+
+        if (!empty($deleteSeq)) {
+            DB::connection('custom_mysql')->delete('delete from AWF_SEQUENCE_LOG where SEQUID in (' . $deleteSeq . ')');
+            DB::connection('custom_mysql')->delete('delete from AWF_SEQUENCE_WORKCENTER where SEQUID in (' . $deleteSeq . ')');
+            DB::connection('custom_mysql')->delete('delete from AWF_SEQUENCE where SEQUID in (' . $deleteSeq . ')');
+        }
+
+        if (!empty($deleteRepno) && !empty($deleteOrder)) {
+            DB::delete('delete from CACHE_LOG_ANALOG_REPNO where ORCODE in (' . $deleteOrder . ')');
+            DB::delete('delete from CACHE_LOG_CYCLE_REPNO where ORCODE in (' . $deleteRepno . ')');
+            DB::delete('delete from LOG_ANALOG_REPNO where ORCODE in (' . $deleteOrder . ')');
+            DB::delete('delete from LOG_CYCLE_REPNO where ORCODE in (' . $deleteRepno . ')');
+            DB::delete('delete from REPNO_ACTIVITY_LOG where ORCODE in (' . $deleteRepno . ')');
+            DB::delete('delete from OEE_REPNO where ORCODE in (' . $deleteRepno . ')');
+            DB::delete('delete from ORDERHEAD where ORCODE in (' . $deleteOrder . ')');
         }
     }
 }

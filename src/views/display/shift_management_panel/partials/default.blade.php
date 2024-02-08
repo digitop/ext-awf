@@ -79,8 +79,11 @@
             showLoading()
 
             $.get('{{ route('awf-generate-data.create') }}', function (createResponse) {
+                console.log('createResponse.success: ', createResponse.success)
                 if (createResponse.success === true) {
-                    $.get('{{ route('awf-generate-data.create') }}', function (orderResponse) {
+                    showLoading()
+
+                    $.get('{{ route('awf-generate-orders.create') }}', function (orderResponse) {
                         if (orderResponse.success === true) {
                             successModal.css('display', 'block')
                         }

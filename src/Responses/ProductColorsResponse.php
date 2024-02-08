@@ -29,7 +29,11 @@ class ProductColorsResponse implements ResponseInterface
                 'select pgc.PGIDEN from PRPG pgc
                     where pgc.PRCODE = "' .
                 $this->sequence->PRCODE . '"'
-            )[0];
+            );
+
+            if (!empty($sequenceProduct[0])) {
+                $sequenceProduct = $sequenceProduct[0];
+            }
         }
 
         foreach ($this->products as $product) {
