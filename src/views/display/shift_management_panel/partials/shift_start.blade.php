@@ -1,6 +1,9 @@
 @extends('awf-extension::display.shift_management_panel.shift_management_base')
 
 @section('awf-shift-content')
+    <div class="page-title" style="margin-top: 12%;">
+        {{ __('display.button.shiftStart') }}
+    </div>
     <table class="shift-management-table start-shift">
         <thead>
         <tr>

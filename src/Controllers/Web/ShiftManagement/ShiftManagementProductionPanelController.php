@@ -14,6 +14,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View as IlluminateView;
+use App\Models\WORKCENTER;
 
 class ShiftManagementProductionPanelController extends Controller
 {
@@ -28,8 +29,8 @@ class ShiftManagementProductionPanelController extends Controller
         return $this->facade->create($request);
     }
 
-    public function get(): JsonResponse
+    public function show(Request $request, string $WCSHNA): Application|Factory|View|ContractsApplication|null
     {
-        return $this->facade->get();
+        return $this->facade->show($request, WORKCENTER::where('WCSHNA', $WCSHNA)->first());
     }
 }

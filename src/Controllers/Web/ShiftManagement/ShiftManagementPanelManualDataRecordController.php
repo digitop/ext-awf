@@ -29,18 +29,12 @@ class ShiftManagementPanelManualDataRecordController
         return $this->facade->create($request);
     }
 
-    public function show(
-        Request $request,
-        string $WCSHNA
-    ): Application|Factory|View|ContractsApplication|null
+    public function show(Request $request, string $WCSHNA): Application|Factory|View|ContractsApplication|null
     {
         return $this->facade->show($request, WORKCENTER::where('WCSHNA', $WCSHNA)->first());
     }
 
-    public function update(
-        Request $request,
-        string $WCSHNA
-    ): Application|Factory|View|ContractsApplication|null
+    public function update(Request $request, string $WCSHNA): Application|Factory|View|ContractsApplication|null
     {
         return $this->facade->update($request, WORKCENTER::where('WCSHNA', $WCSHNA)->first());
     }

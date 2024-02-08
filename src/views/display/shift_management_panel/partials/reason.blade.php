@@ -3,8 +3,8 @@
 @section('awf-shift-content')
 
     <div style="margin-top: 20vh;">
-        <div class="reason-title">
-            Visszaállítás:
+        <div class="page-title">
+            {{ __('display.button.reason') }}
         </div>
         <div class="reason-content">
             @foreach($dashboards as $dashboard)

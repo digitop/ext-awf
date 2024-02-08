@@ -354,3 +354,10 @@ a.back:hover, a.button-blue:active {
         text-align: right;
     }
 }
+
+.page-title {
+    margin-left: 6%;
+    margin-top: -2%;
+    margin-bottom: 1%;
+    font-size: 4vh;
+}

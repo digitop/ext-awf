@@ -59,7 +59,7 @@ class ShiftManagementPanelManualDataRecordFacade extends Facade
         }
 
         return view(
-            'awf-extension::display.shift_management_panel.partials.manual_data_record_partials.workCenter',
+            'awf-extension::display.shift_management_panel.partials.manual_data_record_partials.work_center',
             [
                 'sequence' => $sequence
             ]
@@ -114,7 +114,7 @@ class ShiftManagementPanelManualDataRecordFacade extends Facade
         }
 
         return view(
-            'awf-extension::display.shift_management_panel.partials.manual_data_record_partials.workCenter',
+            'awf-extension::display.shift_management_panel.partials.manual_data_record_partials.work_center',
             [
                 'sequence' => $sequence,
                 'error' => $checkSerial['success'] == false && !empty($error) ? $error : ''

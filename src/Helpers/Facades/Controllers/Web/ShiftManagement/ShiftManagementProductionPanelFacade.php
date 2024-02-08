@@ -24,62 +24,82 @@ class ShiftManagementProductionPanelFacade extends Facade
                            Model|string|null        $model = null
     ): Application|Factory|View|IlluminateView|ContractsApplication|null
     {
-        return view('awf-extension::display.shift_management_panel.partials.production', ['data' => []]);
+        return view(
+            'awf-extension::display.shift_management_panel.partials.production',
+            [
+                'workCenters' => WORKCENTER::whereNotIn(
+                    'WCSHNA',
+                    ["EL01", "PSAPB01", "PSAPJ01", "PSZAPB01", "PSZAPJ01"]
+                )
+                    ->orderBy('WCSHNA')
+                    ->get()
+            ]
+        );
     }
 
-    public function get(): JsonResponse
+    public function show(
+        Request|FormRequest|null $request = null,
+        Model|string|null ...$model
+    ): Application|Factory|View|ContractsApplication|null
     {
-        $data = [];
-        $workCenters = WORKCENTER::whereNotIn('WCSHNA', ["EL01", "PSAPB01", "PSAPJ01", "PSZAPB01", "PSZAPJ01"])
-            ->orderBy('WCSHNA')
-            ->get();
-
+        $workCenter = $model[0];
+        $start = (new \DateTime())->format('Y-m-d') . ' 00:00:00';
         $database = config('database.connections.mysql.database');
+        $data = [];
+        $data['WCSHNA'] = $workCenter->WCSHNA;
 
-        $sequences = DB::connection('custom_mysql')->select('
-            select asw.WCSHNA, a.PRCODE, a.SEPILL, a.SESIDE, asl.LSTIME, asw.RNREPN, a.ORCODE, a.SEPONR, a.SEPSEQ, pf.FEVALU as color, pf2.FEVALU as material
-                from AWF_SEQUENCE a
-                join AWF_SEQUENCE_WORKCENTER asw on asw.SEQUID = a.SEQUID and asw.WCSHNA not in ("EL01", "PSAPB01", "PSAPJ01", "PSZAPB01", "PSZAPJ01")
-                left join AWF_SEQUENCE_LOG asl on asl.SEQUID = a.SEQUID and asl.WCSHNA = asw.WCSHNA
-                join ' . $database . '.PRODUCTFEATURE pf on pf.PRCODE = a.PRCODE and pf.FESHNA = "SZASZ"
-                join ' . $database . '.PRODUCTFEATURE pf2 on pf2.PRCODE = a.PRCODE and pf2.FESHNA = "SZAA"
-                where asl.LSTIME is null and asl.LETIME is null
-            order by asw.WCSHNA
+        $gotOver = DB::connection('custom_mysql')->select('
+            select asl.LSTIME, a.SEQUID, a.SEPONR, a.SEPSEQ, a.SESIDE, a.SEPILL, a.SEINPR, a.PRCODE, a.ORCODE, ppd.PFIDEN, ppd.PORANK, ppd.OPSHNA from AWF_SEQUENCE a
+                join AWF_SEQUENCE_LOG asl on a.SEQUID = asl.SEQUID and asl.WCSHNA = "' . $workCenter->WCSHNA . '"
+                join OEEM_AWF.PRWFDATA pfd on pfd.PRCODE = a.PRCODE
+                join OEEM_AWF.PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = asl.WCSHNA
+                join OEEM_AWF.PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
+            where a.SEINPR > ppd.PORANK
+                and (asl.LSTIME >= "' . $start . '" or asl.LSTIME is null)
+            order by asl.LSTIME DESC, a.SEQUID
         ');
 
-        foreach ($workCenters as $workCenter) {
-            $data['data'][$workCenter->WCSHNA] = [];
-            $monthly = DB::connection('custom_mysql')->select('
-            select count(a.SEQUID) as monthly from AWF_SEQUENCE a
-             join ' . $database . '.ORDERHEAD o on o.ORCODE = a.ORCODE
-             join ' . $database . '.REPNO r on o.ORCODE = r.ORCODE
-             where SEEXPI between now() and (now() + interval 30 day) and r.WCSHNA =
-            "' . $workCenter->WCSHNA . '"');
-
-            $monthlyInProd = DB::connection('custom_mysql')->select('
-            select count(a.SEQUID) as monthlyInProd from AWF_SEQUENCE a
-             join ' . $database . '.ORDERHEAD o on o.ORCODE = a.ORCODE
-             join ' . $database . '.REPNO r on o.ORCODE = r.ORCODE
-             where SEEXPI between now() and (now() + interval 30 day) and r.WCSHNA = "' .
-                $workCenter->WCSHNA . '" and a.SEINPR = 1
-            ');
-
-            $data['data'][$workCenter->WCSHNA]['monthly'] = $monthly[0]->monthly;
-            $data['data'][$workCenter->WCSHNA]['monthlyInProd'] = $monthlyInProd[0]->monthlyInProd;
+        if (!empty($gotOver[0])) {
+            $data['gotOver'] = $gotOver[0];
         }
 
-        foreach ($sequences as $sequence) {
-            $data['data'][$sequence->WCSHNA]['porscheProduct'] = $sequence->SEPONR;
-            $data['data'][$sequence->WCSHNA]['porscheSequence'] = $sequence->SEPSEQ;
-            $data['data'][$sequence->WCSHNA]['side'] = $sequence->SESIDE;
-            $data['data'][$sequence->WCSHNA]['pillar'] = $sequence->SEPILL;
-            $data['data'][$sequence->WCSHNA]['product'] = $sequence->PRCODE;
-            $data['data'][$sequence->WCSHNA]['productColor'] = $sequence->color;
-            $data['data'][$sequence->WCSHNA]['productMaterial'] = ucfirst($sequence->material);
+        $inPlace = DB::connection('custom_mysql')->select('
+            select asl.LSTIME, a.SEQUID, a.SEPONR, a.SEPSEQ, a.SESIDE, a.SEPILL, a.SEINPR, a.PRCODE, a.ORCODE, ppd.PFIDEN, ppd.PORANK, ppd.OPSHNA from AWF_SEQUENCE a
+                join AWF_SEQUENCE_LOG asl on a.SEQUID = asl.SEQUID and asl.WCSHNA = "' . $workCenter->WCSHNA . '"
+                join OEEM_AWF.PRWFDATA pfd on pfd.PRCODE = a.PRCODE
+                join OEEM_AWF.PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = asl.WCSHNA
+                join OEEM_AWF.PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
+            where a.SEINPR = ppd.PORANK
+                and (asl.LSTIME >= "' . $start . '" or asl.LSTIME is null)
+            order by asl.LSTIME DESC, a.SEQUID
+        ');
+
+        if (!empty($inPlace[0])) {
+            $data['inPlace'] = $inPlace[0];
         }
 
-        $data['timeout'] = 10000;
+        $waitings = DB::connection('custom_mysql')->select('
+            select asl.LSTIME, a.SEQUID, a.SEPONR, a.SEPSEQ, a.SESIDE, a.SEPILL, a.SEINPR, a.PRCODE, a.ORCODE, ppd.PFIDEN, ppd.PORANK, ppd.OPSHNA from AWF_SEQUENCE a
+                join OEEM_AWF.PRWFDATA pfd on pfd.PRCODE = a.PRCODE
+                join OEEM_AWF.PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = "' . $workCenter->WCSHNA . '"
+                join OEEM_AWF.PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
+                left join AWF_SEQUENCE_LOG asl on a.SEQUID = asl.SEQUID and asl.WCSHNA = pcd.WCSHNA
+            where a.SEINPR < ppd.PORANK
+                and (asl.LSTIME >= "' . $start . '" or asl.LSTIME is null)
+            order by asl.LSTIME DESC, a.SEQUID limit 5
+        ');
 
-        return new JsonResponse($data);
+        if (!empty($waitings[0])) {
+            foreach ($waitings as $waiting) {
+                $data['waitings'][] = $waiting;
+            }
+        }
+
+        return view(
+            'awf-extension::display.shift_management_panel.partials.production_partials.work_center',
+            [
+                'data' => $data
+            ]
+        );
     }
 }

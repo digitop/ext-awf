@@ -6,17 +6,18 @@
 
 @section('awf-shift-content')
     <div style="margin-top: 20vh;">
-    <div class="reason-content">
-        @foreach($workCenters as $workCenter)
-            <a
-                    href="{{ route('awf-shift-management-panel.manual-data-record.show', ['WCSHNA' => $workCenter->WCSHNA]) }}"
-                    class="oppanel-button"
-                    style="display: inline-block;"
-            >
-                {{ $workCenter->WCNAME }}
-            </a>
-        @endforeach
-    </div>
+        <div class="page-title">{{ __('display.button.manualProductSave') }}</div>
+        <div class="reason-content">
+            @foreach($workCenters as $workCenter)
+                <a
+                        href="{{ route('awf-shift-management-panel.manual-data-record.show', ['WCSHNA' => $workCenter->WCSHNA]) }}"
+                        class="oppanel-button"
+                        style="display: inline-block;"
+                >
+                    {{ $workCenter->WCNAME }}
+                </a>
+            @endforeach
+        </div>
     </div>
 
     <div class="footer">

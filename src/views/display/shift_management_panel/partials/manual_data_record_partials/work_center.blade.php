@@ -38,7 +38,15 @@
 
     <div style="margin-top: 20vh;">
         @if(empty($sequence))
-            <div>{{ __('display.noSequence') }}</div>
+            <label>
+                <input class="alertCheckbox" autocomplete="off" />
+                <div class="alert warning" style="cursor: default !important; margin-top: 10%;">
+                    <span class="alertText">
+                        {{ __('display.noSequence') }}
+                        <br class="clear"/>
+                    </span>
+                </div>
+            </label>
         @else
             <form method="post"
                   action="{{ route('awf-shift-management-panel.manual-data-record.update', ['WCSHNA' => $sequence->WCSHNA]) }}">
