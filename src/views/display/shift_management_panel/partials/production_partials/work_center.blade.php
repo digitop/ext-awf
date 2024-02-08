@@ -62,35 +62,45 @@
                     showLoading()
                 },
                 success: function (response) {
+                    let hasGotOver = false
+                    let hasInPlace = false
+                    let hasWaiting = false
 
                     hideLoading()
+
                     $.each(response.data, function (key, data) {
-                        if (typeof response.data?.gotOver == 'undefined') {
+                        if (typeof response.data?.gotOver == 'undefined' && !hasGotOver) {
                             html += '<tr class="awf-sequence-got-over"><td colspan="5">{{ __('display.noData') }}</td></tr>'
+                            hasGotOver = true
                         }
-                        else {
+                        else if (typeof response.data?.gotOver != 'undefined' && !hasGotOver) {
                             if (key == 'gotOver') {
                                 html += '<tr class="awf-sequence-got-over"><td>' + data.SEQUID + '</td><td>' + data.SEPONR + '</td><td>' + data.SEPSEQ + '</td><td>' + data.PRCODE + '</td><td>' + data.ORCODE + '</td></tr>'
+                                hasGotOver = true
                             }
                         }
 
-                        if (typeof response.data?.inPlace == 'undefined') {
+                        if (typeof response.data?.inPlace == 'undefined' && !hasInPlace) {
                             html += '<tr class="awf-sequence-in-place"><td colspan="5">{{ __('display.noData') }}</td></tr>'
+                            hasInPlace = true
                         }
-                        else {
+                        else if (typeof response.data?.inPlace != 'undefined' && !hasInPlace) {
                             if (key == 'inPlace') {
                                 html += '<tr class="awf-sequence-in-place"><td>' + data.SEQUID + '</td><td>' + data.SEPONR + '</td><td>' + data.SEPSEQ + '</td><td>' + data.PRCODE + '</td><td>' + data.ORCODE + '</td></tr>'
+                                hasInPlace = true
                             }
                         }
 
-                        if (typeof response.data?.waitings == 'undefined') {
+                        if (typeof response.data?.waitings == 'undefined' && !hasWaiting) {
                             html += '<tr class="awf-sequence-waitings"><td colspan="5">{{ __('display.noData') }}</td></tr>'
+                            hasWaiting = true
                         }
-                        else {
+                        else if (typeof response.data?.waitings != 'undefined' && !hasWaiting) {
                             if (key == 'waitings') {
                                 $.each(data, function (key, waiting) {
                                     html += '<tr class="awf-sequence-waiting"><td>' + waiting.SEQUID + '</td><td>' + waiting.SEPONR + '</td><td>' + waiting.SEPSEQ + '</td><td>' + waiting.PRCODE + '</td><td>' + waiting.ORCODE + '</td></tr>'
                                 })
+                                hasWaiting = true
                             }
                         }
                     })

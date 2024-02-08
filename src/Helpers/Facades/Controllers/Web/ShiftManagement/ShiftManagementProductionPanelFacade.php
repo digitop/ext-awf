@@ -49,14 +49,16 @@ class ShiftManagementProductionPanelFacade extends Facade
         $data['WCSHNA'] = $workCenter->WCSHNA;
 
         $gotOver = DB::connection('custom_mysql')->select('
-            select asl.LSTIME, a.SEQUID, a.SEPONR, a.SEPSEQ, a.SESIDE, a.SEPILL, a.SEINPR, a.PRCODE, a.ORCODE, ppd.PFIDEN, ppd.PORANK, ppd.OPSHNA from AWF_SEQUENCE a
-                join AWF_SEQUENCE_LOG asl on a.SEQUID = asl.SEQUID and asl.WCSHNA = "' . $workCenter->WCSHNA . '"
+            select asl.LSTIME, a.SEQUID, a.SEPONR, a.SEPSEQ, a.SESIDE, a.SEPILL, a.SEINPR, a.PRCODE, a.ORCODE, ppd.PFIDEN, ppd.PORANK, ppd.OPSHNA from AWF_SEQUENCE_LOG asl
+                join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
+                join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
                 join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE
-                join ' . $database . '.PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = asl.WCSHNA
+                join ' . $database . '.PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = "' . $workCenter->WCSHNA . '"
                 join ' . $database . '.PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
-            where a.SEINPR > ppd.PORANK
-                and (asl.LSTIME >= "' . $start . '" or asl.LSTIME is null)
-            order by asl.LSTIME DESC, a.SEQUID
+            where asl.LSTIME is not null and asl.LSTIME >= "' . $start . '" and asl.LSTIME = (
+                    select max(LSTIME) from AWF_SEQUENCE_LOG where LSTIME is not null and LETIME is not null and WCSHNA = asl.WCSHNA
+                )
+                and asl.LETIME is not null and a.SEINPR = ppd.PORANK and asl.WCSHNA = pcd.WCSHNA
         ');
 
         if (!empty($gotOver[0])) {
@@ -114,14 +116,16 @@ class ShiftManagementProductionPanelFacade extends Facade
         $data['data'] = [];
 
         $gotOver = DB::connection('custom_mysql')->select('
-            select asl.LSTIME, a.SEQUID, a.SEPONR, a.SEPSEQ, a.SESIDE, a.SEPILL, a.SEINPR, a.PRCODE, a.ORCODE, ppd.PFIDEN, ppd.PORANK, ppd.OPSHNA from AWF_SEQUENCE a
-                join AWF_SEQUENCE_LOG asl on a.SEQUID = asl.SEQUID and asl.WCSHNA = "' . $workCenter->WCSHNA . '"
+            select asl.LSTIME, a.SEQUID, a.SEPONR, a.SEPSEQ, a.SESIDE, a.SEPILL, a.SEINPR, a.PRCODE, a.ORCODE, ppd.PFIDEN, ppd.PORANK, ppd.OPSHNA from AWF_SEQUENCE_LOG asl
+                join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
+                join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
                 join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE
-                join ' . $database . '.PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = asl.WCSHNA
+                join ' . $database . '.PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = "' . $workCenter->WCSHNA . '"
                 join ' . $database . '.PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
-            where a.SEINPR > ppd.PORANK
-                and (asl.LSTIME >= "' . $start . '" or asl.LSTIME is null)
-            order by asl.LSTIME DESC, a.SEQUID
+            where asl.LSTIME is not null and asl.LSTIME >= "' . $start . '" and asl.LSTIME = (
+                    select max(LSTIME) from AWF_SEQUENCE_LOG where LSTIME is not null and LETIME is not null and WCSHNA = asl.WCSHNA
+                )
+                and asl.LETIME is not null and a.SEINPR = ppd.PORANK and asl.WCSHNA = pcd.WCSHNA
         ');
 
         if (!empty($gotOver[0])) {
@@ -135,7 +139,7 @@ class ShiftManagementProductionPanelFacade extends Facade
                 join ' . $database . '.PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = asl.WCSHNA
                 join ' . $database . '.PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
             where a.SEINPR = ppd.PORANK
-                and (asl.LSTIME >= "' . $start . '" or asl.LSTIME is null)
+                and (asl.LSTIME >= "' . $start . '" or asl.LSTIME is null) and asl.LETIME is null
             order by asl.LSTIME DESC, a.SEQUID
         ');
 
