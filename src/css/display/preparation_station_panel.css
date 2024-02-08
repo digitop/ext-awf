@@ -82,8 +82,8 @@ body {
 }
 
 .middle-image {
-    height: 28vh;
-    object-fit: cover;
+    height: 40vh;
+    margin-left: 13%;
 }
 
 .middle-circle {

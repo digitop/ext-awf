@@ -26,8 +26,7 @@
     </div>
     <div class="awf-container middle">
         <span class="half" style="padding-left: 7vh;">
-            <img class="middle-image" src="{{ url('vendor/oeem-extensions/awf/extension/images/default.png') }}"
-                 alt="Product picture">
+            @include('awf-extension::display.car.top', ['class' => 'middle-image'])
         </span>
         <span class="half half-right">
             <div id="product-color" class="middle-circle" style="background-color: #000;">
