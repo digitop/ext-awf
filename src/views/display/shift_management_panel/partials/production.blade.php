@@ -21,7 +21,7 @@
     </div>
 
     <div class="footer">
-        <a href="{{ route('awf-shift-management-panel.production') }}" class="back">
+        <a href="{{ route('awf-shift-management-panel.default') }}" class="back">
             {{ __('display.button.back') }}
         </a>
     </div>
