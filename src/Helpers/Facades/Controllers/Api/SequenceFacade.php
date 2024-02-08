@@ -115,7 +115,7 @@ class SequenceFacade extends Facade
         }
 
         if ($workCenter->WCSHNA === 'EL01' && $sequence[0]->PRCODE !== 'dummy') {
-
+            //todo mindig a következőt mutassa, ne az aktuálisan lekértet. ha nincs következő SEPORN és SEPSEQ és SEARNU és SEPILL alapján, akkor mutassa a default üres oldalt
 
             event(new NextProductEvent(
                     (new NextProductEventResponse($sequence, null))->generate()
