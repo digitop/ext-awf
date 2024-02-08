@@ -4,9 +4,7 @@ namespace AWF\Extension\Helpers\Facades\Controllers\Web\ShiftManagement;
 
 use App\Http\Controllers\api\dashboard\operatorPanel\OperatorPanelController;
 use App\Models\REPNO;
-use AWF\Extension\Helpers\Facades\Controllers\Api\CheckProductFacade;
 use AWF\Extension\Helpers\Facades\Controllers\Web\Facade;
-use AWF\Extension\Requests\Api\CheckProductCheckRequest;
 use Illuminate\Contracts\Foundation\Application as ContractsApplication;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;

@@ -75,30 +75,37 @@
             }
         })
 
-        $('#sequenceUpdate').bind('click', function () {
+        $('#sequenceUpdate').bind('click', async function () {
             showLoading()
+            let createSequenceSuccess = false
 
-            $.get('{{ route('awf-generate-data.create') }}', function (createResponse) {
-                console.log('createResponse.success: ', createResponse.success)
-                if (createResponse.success === true) {
-                    showLoading()
+            await $.get('{{ route('awf-generate-data.create') }}', function (createResponse) {
+                createSequenceSuccess = createResponse.success
 
-                    $.get('{{ route('awf-generate-orders.create') }}', function (orderResponse) {
-                        if (orderResponse.success === true) {
-                            successModal.css('display', 'block')
-                        }
-                        else if (orderResponse.success === false) {
-                            errorModal.css('display', 'block')
-                        }
-                    })
-                }
-                else if (createResponse.success === false) {
+                if (createResponse.success === false) {
                     errorModal.css('display', 'block')
                 }
             })
                 .always(function () {
                     hideLoading()
                 })
+
+            if (createSequenceSuccess === true) {
+                showLoading()
+
+                await $.get('{{ route('awf-generate-orders.create') }}', function (orderResponse) {
+                    if (orderResponse.success === true) {
+                        successModal.css('display', 'block')
+                    } else if (orderResponse.success === false) {
+                        errorModal.css('display', 'block')
+                    }
+                })
+                    .always(function () {
+                        hideLoading()
+                    })
+            }
+
+            return;
         })
 
         function showLoading() {

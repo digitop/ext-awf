@@ -31,7 +31,7 @@ class GenerateDataFacade extends Facade
             $this->generatePath();
             $this->deleteAllSequenceThatNotInProduction();
 
-            foreach (Storage::disk('awfSequenceFtp')->files() as $filePath) {
+            foreach (Storage::disk('local')->files() as $filePath) {
                 if (str_contains($filePath, 'P992')) {
                     $this->generateData($filePath);
                 }
@@ -86,7 +86,7 @@ class GenerateDataFacade extends Facade
 
     protected function generateData(string $filePath): void
     {
-        $file = Storage::disk('awfSequenceFtp')->get($filePath);
+        $file = Storage::disk('local')->get($filePath);
 
         $insertQuery = 'insert into AWF_SEQUENCE (SEPONR, SEPSEQ, SEARNU, SEARDE, SESIDE, SEEXPI, SEPILL, PRCODE) values';
         $rows = explode(PHP_EOL, $file);
@@ -217,13 +217,15 @@ class GenerateDataFacade extends Facade
             DB::connection('custom_mysql')->delete('delete from AWF_SEQUENCE where SEQUID in (' . $deleteSeq . ')');
         }
 
-        if (!empty($deleteRepno) && !empty($deleteOrder)) {
+        if (!empty($deleteRepno)) {
+            DB::delete('delete from CACHE_LOG_CYCLE_REPNO where RNREPN in (' . $deleteRepno . ')');
+            DB::delete('delete from LOG_CYCLE_REPNO where RNREPN in (' . $deleteRepno . ')');
+            DB::delete('delete from REPNO_ACTIVITY_LOG where RNREPN in (' . $deleteRepno . ')');
+            DB::delete('delete from OEE_REPNO where RNREPN in (' . $deleteRepno . ')');
+        }
+        if (!empty($deleteOrder)) {
             DB::delete('delete from CACHE_LOG_ANALOG_REPNO where ORCODE in (' . $deleteOrder . ')');
-            DB::delete('delete from CACHE_LOG_CYCLE_REPNO where ORCODE in (' . $deleteRepno . ')');
             DB::delete('delete from LOG_ANALOG_REPNO where ORCODE in (' . $deleteOrder . ')');
-            DB::delete('delete from LOG_CYCLE_REPNO where ORCODE in (' . $deleteRepno . ')');
-            DB::delete('delete from REPNO_ACTIVITY_LOG where ORCODE in (' . $deleteRepno . ')');
-            DB::delete('delete from OEE_REPNO where ORCODE in (' . $deleteRepno . ')');
             DB::delete('delete from ORDERHEAD where ORCODE in (' . $deleteOrder . ')');
         }
     }

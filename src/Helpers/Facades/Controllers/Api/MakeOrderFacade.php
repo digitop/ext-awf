@@ -28,9 +28,7 @@ class MakeOrderFacade extends Facade
             ->get();
 
         try {
-            foreach ($sequences as $sequence) {
-                MakeOrder::makeOrder($sequence);
-            }
+            MakeOrder::makeOrder($sequences);
 
             $success = true;
         }
