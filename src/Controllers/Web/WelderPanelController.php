@@ -3,6 +3,7 @@
 namespace AWF\Extension\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use AWF\Extension\Helpers\Facades\Controllers\Web\WelderPanelFacade;
 use AWF\Extension\Interfaces\WebControllerFacadeInterface;
 use Illuminate\Contracts\Foundation\Application as ContractsApplication;
 use Illuminate\Contracts\View\Factory;
