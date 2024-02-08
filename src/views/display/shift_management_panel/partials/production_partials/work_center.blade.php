@@ -3,39 +3,14 @@
 @section('awf-css')
     <link rel="stylesheet"
           href="{{ url('vendor/oeem-extensions/awf/extension/css/display/production_workcenter.css') }}">
+    <link rel="stylesheet"
+          href="{{ url('vendor/oeem-extensions/awf/extension/css/display/loading.css') }}">
 @endsection
 
 @section('awf-shift-content')
-    @if (!empty($error))
-        <label>
-            <input type="checkbox" class="alertCheckbox" autocomplete="off"/>
-            <div class="alert warning">
-                <span class="alertClose">X</span>
-                <span class="alertText">
-                    @if(is_array($error))
-                        @foreach($error as $message)
-                            {{ $message . '<br/>' }}
-                        @endforeach
-                    @else
-                        {{ $error }}
-                    @endif
-                    <br class="clear"/>
-                </span>
-            </div>
-        </label>
-    @elseif (isset($error) && empty($error))
-        <label>
-            <input type="checkbox" class="alertCheckbox" autocomplete="off"/>
-            <div class="alert success">
-                <span class="alertClose">X</span>
-                <span class="alertText">
-                    Sikeres adatrögzítés!
-                    <br class="clear"/>
-                </span>
-            </div>
-        </label>
-    @endif
-
+    <section id="loading">
+        <div id="loading-content"></div>
+    </section>
     <div style="margin-top: 16%;">
         @if(empty($data))
             <label>
@@ -49,7 +24,7 @@
             </label>
         @else
             <div  class="production-content">
-                <table class="shift-management-table production-table">
+                <table id="production-table" class="shift-management-table production-table">
                     <thead>
                     <tr>
                         <th>{{ __('display.data.shift-sequence.sequenceId') }}</th>
@@ -60,47 +35,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @if(array_key_exists('gotOver', $data))
-                        <tr class="awf-sequence-got-over">
-                            <td>{{ $data['gotOver']->SEQUID }}</td>
-                            <td>{{ $data['gotOver']->SEPONR }}</td>
-                            <td>{{ $data['gotOver']->SEPSEQ }}</td>
-                            <td>{{ $data['gotOver']->PRCODE }}</td>
-                            <td>{{ $data['gotOver']->ORCODE }}</td>
-                        </tr>
-                    @else
-                        <tr class="awf-sequence-got-over">
-                            <td colspan="5">{{ __('display.noData') }}</td>
-                        </tr>
-                    @endif
-                    @if(array_key_exists('inPlace', $data))
-                        <tr class="awf-sequence-in-place">
-                            <td>{{ $data['inPlace']->SEQUID }}</td>
-                            <td>{{ $data['inPlace']->SEPONR }}</td>
-                            <td>{{ $data['inPlace']->SEPSEQ }}</td>
-                            <td>{{ $data['inPlace']->PRCODE }}</td>
-                            <td>{{ $data['inPlace']->ORCODE }}</td>
-                        </tr>
-                    @else
-                        <tr class="awf-sequence-in-place">
-                            <td colspan="5">{{ __('display.noData') }}</td>
-                        </tr>
-                    @endif
-                    @if(array_key_exists('waitings', $data))
-                        @foreach($data['waitings'] as $waiting)
-                            <tr class="awf-sequence-waiting">
-                                <td>{{ $waiting->SEQUID }}</td>
-                                <td>{{ $waiting->SEPONR }}</td>
-                                <td>{{ $waiting->SEPSEQ }}</td>
-                                <td>{{ $waiting->PRCODE }}</td>
-                                <td>{{ $waiting->ORCODE }}</td>
-                            </tr>
-                        @endforeach
-                    @else
-                        <tr class="awf-sequence-waiting">
-                            <td colspan="5">{{ __('display.noData') }}</td>
-                        </tr>
-                    @endif
+
                     </tbody>
                 </table>
             </div>
@@ -112,4 +47,73 @@
             {{ __('display.button.back') }}
         </a>
     </div>
+
+    <script>
+        function refreshData() {
+            const timeout = 15000
+            let html = ''
+
+            $.ajax({
+                url: '{{ route('awf-shift-management-panel.production.data', ['WCSHNA' => $data['WCSHNA']]) }}',
+                dataType: 'json',
+                method: 'get',
+                timeout: timeout,
+                beforeSend: function () {
+                    showLoading()
+                },
+                success: function (response) {
+
+                    hideLoading()
+                    $.each(response.data, function (key, data) {
+                        if (typeof response.data?.gotOver == 'undefined') {
+                            html += '<tr class="awf-sequence-got-over"><td colspan="5">{{ __('display.noData') }}</td></tr>'
+                        }
+                        else {
+                            if (key == 'gotOver') {
+                                html += '<tr class="awf-sequence-got-over"><td>' + data.SEQUID + '</td><td>' + data.SEPONR + '</td><td>' + data.SEPSEQ + '</td><td>' + data.PRCODE + '</td><td>' + data.ORCODE + '</td></tr>'
+                            }
+                        }
+
+                        if (typeof response.data?.inPlace == 'undefined') {
+                            html += '<tr class="awf-sequence-in-place"><td colspan="5">{{ __('display.noData') }}</td></tr>'
+                        }
+                        else {
+                            if (key == 'inPlace') {
+                                html += '<tr class="awf-sequence-in-place"><td>' + data.SEQUID + '</td><td>' + data.SEPONR + '</td><td>' + data.SEPSEQ + '</td><td>' + data.PRCODE + '</td><td>' + data.ORCODE + '</td></tr>'
+                            }
+                        }
+
+                        if (typeof response.data?.waitings == 'undefined') {
+                            html += '<tr class="awf-sequence-waitings"><td colspan="5">{{ __('display.noData') }}</td></tr>'
+                        }
+                        else {
+                            if (key == 'waitings') {
+                                $.each(data, function (key, waiting) {
+                                    html += '<tr class="awf-sequence-waiting"><td>' + waiting.SEQUID + '</td><td>' + waiting.SEPONR + '</td><td>' + waiting.SEPSEQ + '</td><td>' + waiting.PRCODE + '</td><td>' + waiting.ORCODE + '</td></tr>'
+                                })
+                            }
+                        }
+                    })
+
+                    $('#production-table tbody').html(html)
+
+                    setTimeout(function () {
+                        refreshData()
+                    }, response.timeout)
+                }
+            })
+        }
+
+        function showLoading() {
+            document.querySelector('#loading').classList.add('loading');
+            document.querySelector('#loading-content').classList.add('loading-content');
+        }
+
+        function hideLoading() {
+            document.querySelector('#loading').classList.remove('loading');
+            document.querySelector('#loading-content').classList.remove('loading-content');
+        }
+
+        refreshData()
+    </script>
 @endsection

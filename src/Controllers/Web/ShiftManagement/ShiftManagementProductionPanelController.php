@@ -33,4 +33,9 @@ class ShiftManagementProductionPanelController extends Controller
     {
         return $this->facade->show($request, WORKCENTER::where('WCSHNA', $WCSHNA)->first());
     }
+
+    public function data(string $WCSHNA): array
+    {
+        return $this->facade->data(WORKCENTER::where('WCSHNA', $WCSHNA)->first());
+    }
 }

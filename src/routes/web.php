@@ -32,6 +32,8 @@ Route::group(
             ->name('awf-shift-management-panel.production');
         Route::get('shift-management/production/{WCSHNA}', ['uses' => 'ShiftManagementProductionPanelController@show'])
             ->name('awf-shift-management-panel.production.show');
+        Route::get('shift-management/production/{WCSHNA}/data', ['uses' => 'ShiftManagementProductionPanelController@data'])
+            ->name('awf-shift-management-panel.production.data');
         Route::get('shift-management/reason', ['uses' => 'ShiftManagementReasonPanelController@create'])
             ->name('awf-shift-management-panel.reason');
         Route::get(
