@@ -55,7 +55,7 @@ class ShiftManagementProductionPanelFacade extends Facade
                 join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE
                 join ' . $database . '.PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = "' . $workCenter->WCSHNA . '"
                 join ' . $database . '.PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
-            where asl.LSTIME is not null and asl.LSTIME >= "' . $start . '" and asl.LSTIME = (
+            where asl.LSTIME is not null and asl.LSTIME >= "' . $start . '" and asl.LSTIME >= (
                     select max(LSTIME) from AWF_SEQUENCE_LOG where LSTIME is not null and LETIME is not null and WCSHNA = asl.WCSHNA
                 )
                 and asl.LETIME is not null and a.SEINPR = ppd.PORANK and asl.WCSHNA = pcd.WCSHNA
