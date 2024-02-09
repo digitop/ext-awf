@@ -26,20 +26,36 @@
     </div>
     <div class="awf-container middle">
         <span class="half" style="padding-left: 7vh;">
-            @include('awf-extension::display.car.top', ['class' => 'middle-image'])
+            <div id="pulse-line" class="pulse-line"></div>
+            @include('awf-extension::display.car.top', ['class' => 'middle-image', 'fill' => '#000', 'id' => 'product-color'])
         </span>
         <span class="half half-right">
-            <div id="product-color" class="middle-circle" style="background-color: #000;">
-            </div>
+            <div class="datas">
+                <div id="product-designation" class="piece">
+                </div>
+                <div id="product-material" class="piece" style="margin-top: 2%;">
+                </div>
+
+                <div id="porsche-data" class="porsche-data">
+                    <table>
+                        <tr>
+                            <th>{{ __('display.data.shift-sequence.porscheOrderNumber') }}</th>
+                            <td id="porsche-order-number"></td>
+                        </tr>
+                        <tr>
+                            <th>{{ __('display.data.shift-sequence.porscheSequenceNumber') }}</th>
+                            <td id="porsche-sequence-number"></td>
+                        </tr>
+                        <tr>
+                            <th>{{ __('display.data.shift-sequence.articleNumber') }}</th>
+                            <td id="porsche-article-number"></td>
+                        </tr>
+                    </table>
+                </div>
+        </div>
         </span>
     </div>
     <div class="awf-container bottom">
-        <div class="datas">
-            <span id="product-designation" class="half half-left piece">
-            </span>
-            <span id="product-material"  class="half half-right piece">
-            </span>
-        </div>
         <div class="timer">
             <span id="time"></span>
         </div>

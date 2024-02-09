@@ -86,7 +86,7 @@ class SequenceFacade extends Facade
         $database = config('database.connections.mysql.database');
 
         $queryString = '
-            select a.PRCODE, a.SEQUID, a.ORCODE,a.SESIDE,a.SEPILL, a.SEPONR, a.SEINPR from AWF_SEQUENCE_LOG asl
+            select a.PRCODE, a.SEQUID, a.SEPSEQ, a.SEARNU, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEINPR from AWF_SEQUENCE_LOG asl
                 join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
                 join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
                 join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE
@@ -138,7 +138,7 @@ class SequenceFacade extends Facade
                 $side = $request->side == 'L' ? 'R' : 'L';
 
                 $queryString = '
-            select a.PRCODE, a.SEQUID, a.ORCODE,a.SESIDE,a.SEPILL, a.SEPONR, a.SEINPR from AWF_SEQUENCE_LOG asl
+            select a.PRCODE, a.SEQUID, a.SEPSEQ, a.SEARNU, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEINPR from AWF_SEQUENCE_LOG asl
                 join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
                 join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
                 join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE

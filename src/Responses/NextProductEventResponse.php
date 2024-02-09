@@ -30,7 +30,13 @@ class NextProductEventResponse  implements ResponseInterface
                 $product->PRNAME,
                 $product->features()->where('FESHNA', '=', 'SZASZ')->first()?->FEVALU,
                 $product->features()->where('FESHNA', '=', 'TESZNE')->first()?->FEVALU,
-            ))->get();
+            ))
+                ->setSide($item->SESIDE)
+                ->setPillar($item->SEPILL)
+                ->setPorscheOrderNumber($item->SEPONR)
+                ->setPorscheSequenceNumber($item->SEPSEQ)
+                ->setArticleNumber($item->SEARNU)
+                ->get();
 
             $data['sequenceId'] = $item->SEQUID;
         }

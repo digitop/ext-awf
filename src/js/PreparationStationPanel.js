@@ -15,10 +15,14 @@ const app = new Vue({
                     $('#product-designation').html('')
                     $('#product-material').html('')
 
+                    $('#porsche-order-number').html('')
+                    $('#porsche-sequence-number').html('')
+                    $('#porsche-article-number').html('')
+
                     $('#hide-app').css('display', 'none')
                     $('#vue-app').css('display', 'block')
 
-                    $('#product-color').css('background-color', '#' + data.color)
+                    $('#product-color').css('fill', '#' + data.color)
                     $('#product-designation').append(data.designation)
 
                     if (data.designation.length > 20) {
@@ -29,14 +33,100 @@ const app = new Vue({
                     }
 
                     $('#product-material').append(data.materialAndColor)
+
+                    if (data.materialAndColor.length > 20) {
+                        $('#product-material').css('font-size', '7vh')
+
+                        if (data.materialAndColor.length >= 25) {
+                            $('#product-material').css('font-size', '6.5vh')
+                        }
+                    }
+                    else {
+                        $('#product-material').css('font-size', '8vh')
+                    }
+
+                    if (
+                        typeof data.side !== 'undefined' && data.side !== null &&
+                        typeof data.pillar !== 'undefined' && data.pillar !== null
+                    ) {
+
+                        if (data.pillar === 'A') {
+                            if (data.side === 'L') {
+                                $('#pulse-line').css('top', '38%')
+                                $('#pulse-line').css('left', '17.5%')
+                                $('#pulse-line').css('transform', 'rotate(-18deg)')
+                            }
+                            if (data.side === 'R') {
+                                $('#pulse-line').css('top', '38%')
+                                $('#pulse-line').css('left', '32.5%')
+                                $('#pulse-line').css('transform', 'rotate(18deg)')
+                            }
+                        }
+                        if (data.pillar === 'B') {
+                            if (data.side === 'L') {
+                                $('#pulse-line').css('top', '59.5%')
+                                $('#pulse-line').css('left', '17.5%')
+                                $('#pulse-line').css('height', '10%')
+                                $('#pulse-line').css('transform', 'rotate(-83deg)')
+                            }
+                            if (data.side === 'R') {
+                                $('#pulse-line').css('top', '59.5%')
+                                $('#pulse-line').css('left', '32.5%')
+                                $('#pulse-line').css('height', '10%')
+                                $('#pulse-line').css('transform', 'rotate(83deg)')
+                            }
+                        }
+                        if (data.pillar === 'C') {
+                            if (data.side === 'L') {
+                                $('#pulse-line').css('top', '79%')
+                                $('#pulse-line').css('left', '17.3%')
+                                $('#pulse-line').css('height', '10%')
+                                $('#pulse-line').css('width', '2.5%')
+                                $('#pulse-line').css('border-radius', '3vh')
+                                $('#pulse-line').css('transform', 'rotate(-136deg)')
+                            }
+                            if (data.side === 'R') {
+                                $('#pulse-line').css('top', '79%')
+                                $('#pulse-line').css('left', '32.5%')
+                                $('#pulse-line').css('height', '10%')
+                                $('#pulse-line').css('width', '2.5%')
+                                $('#pulse-line').css('border-radius', '3vh')
+                                $('#pulse-line').css('transform', 'rotate(136deg)')
+                            }
+                        }
+                    }
+
+                    if (
+                        typeof data.porscheOrderNumber !== 'undefined' && data.porscheOrderNumber !== null
+                    ) {
+                        $('#porsche-order-number').append(data.porscheOrderNumber)
+                    }
+
+                    if (
+                        typeof data.porscheSequenceNumber !== 'undefined' && data.porscheSequenceNumber !== null
+                    ) {
+                        $('#porsche-sequence-number').append(data.porscheSequenceNumber)
+                    }
+
+                    if (
+                        typeof data.articleNumber !== 'undefined' && data.articleNumber !== null
+                    ) {
+                        $('#porsche-article-number').append(data.articleNumber)
+                    }
                 }
                 else {
                     $('#hide-app').css('display', 'block')
                     $('#vue-app').css('display', 'none')
 
-                    $('#product-color').css('background-color', '#000')
+                    $('#product-color').css('fill', '#000')
                     $('#product-designation').html('')
                     $('#product-material').html('')
+
+                    $('#pulse-line').css('display', 'none')
+
+                    $('#porsche-order-number').html('')
+                    $('#porsche-sequence-number').html('')
+                    $('#porsche-article-number').html('')
                 }
             });
     },

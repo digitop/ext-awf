@@ -37,7 +37,7 @@ body {
 
 .bottom {
     height: 38%;
-    margin-top: 0 !important;
+    margin-top: 7% !important;
 }
 
 .button {
@@ -82,8 +82,7 @@ body {
 }
 
 .middle-image {
-    height: 40vh;
-    margin-left: 13%;
+    height: 80vh;
 }
 
 .middle-circle {
@@ -133,7 +132,7 @@ body {
 .timer {
     margin-right: 8vh;
     font-size: 13vh;
-    margin-top: 11vh;
+    margin-top: 10vh;
     float: right;
     text-align: right;
     width: 100%;
@@ -157,4 +156,45 @@ body {
     top: auto;
     bottom: 3vh;
     width: 100%;
+}
+
+.pulse-line {
+    position:absolute;
+    top: 0;
+    left: 0;
+    width: 2%;
+    height: 15%;
+    transform: rotate(0deg);
+    background-color: #fcf803;
+    animation: pulse 2s infinite;
+    border-radius: 2vh
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(252,248,3,0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 15px rgba(252,248,3,0);
+    }
+}
+
+.porsche-data {
+    padding: 0;
+    margin-top: 9vh;
+    font-size: 3vh;
+    margin-left: 35%;
+}
+
+.porsche-data table {
+    margin: 0;
+    padding: 0;
+}
+
+.porsche-data table tr th {
+    text-align: left;
+}
+
+.porsche-data table tr td {
+    text-align: right;
 }

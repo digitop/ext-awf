@@ -1,3 +1,10 @@
+### generate sequence
 GET localhost:8000/api/ext/awf-extension/generate-data
+Accept: application/json
+Content-Type: application/json
+
+
+### generate orders
+GET localhost:8000/api/ext/awf-extension/generate-orders
 Accept: application/json
 Content-Type: application/json

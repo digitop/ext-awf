@@ -21,7 +21,7 @@ class CheckProductCheckRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'serial' => ['required', 'string', 'max:64', 'min:1'],
+            'serial' => ['nullable', 'string', 'max:64', 'min:1'],
             'dashboard' => ['required', 'string', 'min:1', 'max:32', 'exists:DASHBOARD,DHIDEN'],
         ];
     }
@@ -34,7 +34,6 @@ class CheckProductCheckRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'serial.required' => __('validation.required', ['attribute' => 'serial']),
             'serial.string' => __('validation.integer', ['attribute' => 'serial']),
             'serial.max' => __('validation.max.string', ['attribute' => 'serial', 'max' => 64]),
             'serial.min' => __('validation.min.string', ['attribute' => 'serial', 'min' => 1]),
