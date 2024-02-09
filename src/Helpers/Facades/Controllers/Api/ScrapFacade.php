@@ -26,7 +26,7 @@ class ScrapFacade extends Facade
         if ($event->scrapReport !== false) {
             $qualification = QUALREPHEAD::where('QRIDEN', '=', $event->scrapReport)->first();
 
-            $sequence = AWF_SEQUENCE::where('ORCODE', '=', $qualification->ORCODE)->where('SEINPR', '=', 1)->first();
+            $sequence = AWF_SEQUENCE::where('ORCODE', '=', $qualification->ORCODE)->where('SEINPR', '>', 0)->first();
             $repnos = REPNO::where('ORCODE', '=', $qualification->ORCODE)->get();
 
             foreach ($repnos as $repno) {
