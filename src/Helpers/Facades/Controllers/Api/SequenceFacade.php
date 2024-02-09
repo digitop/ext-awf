@@ -227,7 +227,7 @@ class SequenceFacade extends Facade
             ->where('SEQUID', '<', $sequenceId)
             ->where('SEINPR', '=', 0)
             ->update([
-                'SEINPR' => 1,
+                'SEINPR' => 99,
             ]);
 
         return back()->with('notification-success', __('responses.update'));
