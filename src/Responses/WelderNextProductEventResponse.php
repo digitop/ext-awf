@@ -7,6 +7,7 @@ use AWF\Extension\Interfaces\ResponseInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\PRODUCT;
+use Illuminate\Support\Facades\Storage;
 
 class WelderNextProductEventResponse  implements ResponseInterface
 {
@@ -40,13 +41,19 @@ class WelderNextProductEventResponse  implements ResponseInterface
         foreach ($this->next as $item) {
             $product = PRODUCT::where('PRCODE', '=', $item->PRCODE)->first();
 
+            $imagePath = $product->features()->where('FESHNA', '=', 'TEKEHE')->first()?->FEVALU;
+
+            if (!empty($imagePath)) {
+                $imagePath = Storage::disk('products')->url($imagePath);
+            }
+
             $data['next'] = (new NextProductEventModel(
                 $product->PRNAME,
                 $product->features()->where('FESHNA', '=', 'SZASZ')->first()?->FEVALU,
                 $product->features()->where('FESHNA', '=', 'TESZNE')->first()?->FEVALU,
             ))
                 ->setImage(
-                    $product->features()->where('FESHNA', '=', 'TEKEHE')->first()?->FEVALU,
+                    $imagePath,
                 )
                 ->get();
         }

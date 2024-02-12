@@ -99,8 +99,8 @@ class SequenceFacade extends Facade
                 ($pillar !== null ? ' and a.SEPILL = "' . $pillar .'"' : '') .
                 ($request->has('side') ? ' and a.SESIDE = "' . $request->side . '"' : '') .
                 ($porscheProductNumber !== null ? ' and a.SEPONR = "' . $porscheProductNumber . '"' : '') .
-                ($request->has('limit') ? ' limit ' . $request->limit : '') .
-            ' order by a.SEQUID'
+                ' order by a.SEQUID' .
+                ($request->has('limit') ? ' limit ' . $request->limit : '')
         ;
 
         $sequence = new Collection(DB::connection('custom_mysql')->select($queryString));
@@ -152,8 +152,8 @@ class SequenceFacade extends Facade
                     ($pillar !== null ? ' and a.SEPILL = "' . $pillar .'"' : '') .
                     ($request->has('side') ? ' and a.SESIDE = "' . $side . '"' : '') .
                     ($porscheProductNumber !== null ? ' and a.SEPONR = "' . $porscheProductNumber . '"' : '') .
-                    ($request->has('limit') ? ' limit ' . $request->limit : '') .
-                    ' order by a.SEQUID'
+                    ' order by a.SEQUID' .
+                    ($request->has('limit') ? ' limit ' . $request->limit : '')
                 ;
 
                 $sequence2 = new Collection(DB::connection('custom_mysql')->select($queryString));
@@ -187,8 +187,8 @@ class SequenceFacade extends Facade
                 ($pillar !== null ? ' and a.SEPILL = "' . $pillar .'"' : '') .
                 ($request->has('side') ? ' and a.SESIDE = "' . $request->side . '"' : '') .
                 ($porscheProductNumber !== null ? ' and a.SEPONR = "' . $porscheProductNumber . '"' : '') .
-                ($request->has('limit') ? ' limit ' . $request->limit : '') .
-                ' order by a.SEQUID'
+                ' order by a.SEQUID' .
+                ($request->has('limit') ? ' limit ' . $request->limit : '')
             ;
 
             $sequence2 = new Collection(DB::connection('custom_mysql')->select($queryString));

@@ -8,6 +8,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <link rel="stylesheet"
           href="{{ url('vendor/oeem-extensions/awf/extension/css/display/preparation_station_panel.css') }}">
+    <link rel="stylesheet"
+          href="{{ url('vendor/oeem-extensions/awf/extension/css/display/welder_panel.css') }}">
     <title></title>
 
     @if(env('APP_ENV') === 'production')
@@ -26,7 +28,7 @@
     </div>
     <div class="awf-container middle">
         <span class="half" style="padding-left: 7vh;">
-            <img class="middle-image" src=""
+            <img class="image" id="product-image" src=""
                  alt="Product picture">
         </span>
         <span class="half half-right">
@@ -36,20 +38,16 @@
     </div>
     <div class="awf-container bottom">
         <span class="half" style="padding-left: 7vh;">
-            <div class="datas">
-            <span id="product-designation" class="half half-left piece">
-            </span>
-            <span id="product-material"  class="half half-right piece">
-            </span>
-        </div>
+            <div id="current-product-designation">
+            </div>
+            <div id="current-product-material">
+            </div>
         </span>
         <span class="half half-right">
-            <div class="datas">
-            <span id="product-designation" class="half half-left piece">
-            </span>
-            <span id="product-material"  class="half half-right piece">
-            </span>
-        </div>
+            <div id="next-product-designation">
+            </div>
+            <div id="next-product-material">
+            </div>
         </span>
         <div class="timer">
             <span id="time"></span>
