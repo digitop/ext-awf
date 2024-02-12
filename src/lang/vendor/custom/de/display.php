@@ -12,6 +12,7 @@ return [
     'change' => 'Bearbeiten',
     'button' => [
         'shiftStart' => 'Schicht beginnen',
+        'startOfShift' => 'Beginn der Schicht',
         'production' => 'Produktionsdetails',
         'reason' => 'Verwaltung des Bedienfelds',
         'back' => 'Zurück',

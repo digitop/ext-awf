@@ -12,6 +12,7 @@ return [
     'change' => 'Módosítás',
     'button' => [
         'shiftStart' => 'Műszak kezdés',
+        'startOfShift' => 'Műszak megkezdése',
         'production' => 'Termelési adatok',
         'reason' => 'Operátor panel kezelés',
         'back' => 'Vissza',

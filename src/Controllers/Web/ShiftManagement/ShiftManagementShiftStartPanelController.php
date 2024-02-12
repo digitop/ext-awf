@@ -38,4 +38,9 @@ class ShiftManagementShiftStartPanelController extends Controller
     {
         return $this->facade->create($request, $model);
     }
+
+    public function default(): void
+    {
+        $this->facade->default();
+    }
 }

@@ -30,6 +30,8 @@ Route::group(
             ['uses' => 'ShiftManagementShiftStartPanelController@index']
         )
             ->name('awf-shift-management-panel.shift-start.index');
+        Route::get('shift-management/shift-start/default', ['uses' => 'ShiftManagementShiftStartPanelController@default'])
+            ->name('awf-shift-management-panel.shift-start.default');
         Route::get('shift-management/production', ['uses' => 'ShiftManagementProductionPanelController@create'])
             ->name('awf-shift-management-panel.production');
         Route::get('shift-management/production/{WCSHNA}', ['uses' => 'ShiftManagementProductionPanelController@show'])

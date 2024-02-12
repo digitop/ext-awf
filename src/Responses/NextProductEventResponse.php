@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\PRODUCT;
 
-class NextProductEventResponse  implements ResponseInterface
+class NextProductEventResponse implements ResponseInterface
 {
     protected Collection|Model $collection;
     protected Model|null $model;

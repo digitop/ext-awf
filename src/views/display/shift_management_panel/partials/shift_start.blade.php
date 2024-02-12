@@ -63,6 +63,22 @@
         </tbody>
     </table>
 
+    <div style="margin-top: 20%; margin-left: 12%;">
+{{--        <button--}}
+{{--            id="reset-default"--}}
+{{--            class="button button-green"--}}
+{{--            style="width: 80%;"--}}
+{{--        >--}}
+{{--            {{ __('display.button.startOfShift') }}--}}
+{{--        </button>--}}
+
+        <script>
+            $('#reset-default').bind('click', function () {
+                $.get('{{ route('awf-shift-management-panel.shift-start.default') }}')
+            })
+        </script>
+    </div>
+
     <div class="footer">
         <a href="{{ route('awf-shift-management-panel.default') }}" class="back">
             {{ __('display.button.back') }}

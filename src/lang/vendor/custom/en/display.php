@@ -12,6 +12,7 @@ return [
     'change' => 'Edit',
     'button' => [
         'shiftStart' => 'Start shift',
+        'startOfShift' => 'Start of shift',
         'production' => 'Production details',
         'reason' => 'Operator panel management',
         'back' => 'Back',
