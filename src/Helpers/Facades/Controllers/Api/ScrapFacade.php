@@ -18,6 +18,8 @@ use App\Events\Dashboard\ProductQualified;
 use App\Models\QUALREPHEAD;
 use App\Models\SERIALNUMBER;
 use App\Models\REPNO;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Collection;
 
 class ScrapFacade extends Facade
 {
@@ -26,26 +28,48 @@ class ScrapFacade extends Facade
         if ($event->scrapReport !== false) {
             $qualification = QUALREPHEAD::where('QRIDEN', '=', $event->scrapReport)->first();
 
-            $sequence = AWF_SEQUENCE::where('ORCODE', '=', $qualification->ORCODE)->where('SEINPR', '>', 0)->first();
+            $workCenter = WORKCENTER::where(
+                'WCSHNA',
+                '=',
+                DASHBOARD::where('DHIDEN', '=', $event->DHIDEN)->first()->operatorPanels[0]->WCSHNA
+            )->first();
+
             $repnos = REPNO::where('ORCODE', '=', $qualification->ORCODE)->get();
 
             foreach ($repnos as $repno) {
                 SERIALNUMBER::where('RNREPN', '=', $repno->RNREPN)->delete();
             }
 
-            $sequence?->update([
-                'SEINPR' => 0,
-                'SESCRA' => true,
-            ]);
+            $sequence = DB::connection('custom_mysql')->select('
+                select a.* from AWF_SEQUENCE a
+                    join AWF_SEQUENCE_WORKCENTER asw on a.SEQUID = asw.SEQUID and asw.WCSHNA = "' . $workCenter->WCSHNA . '"
+                    join AWF_SEQUENCE_LOG asl on a.SEQUID = asl.SEQUID and asw.WCSHNA = asl.WCSHNA
+                where asl.LSTIME is not null and asl.LETIME is null and a.SEINPR > 0
+            ');
+
+            if (array_key_exists(0, $sequence)) {
+                $sequence = $sequence[0];
+            }
+
+            AWF_SEQUENCE::where('SEQUID', '=', $sequence->SEQUID)
+                ->where('SEINPR', '=', $sequence->SEINPR)
+                ->first()
+                ?->update([
+                    'SEINPR' => 0,
+                    'SESCRA' => true,
+                ]);
 
             AWF_SEQUENCE_LOG::create([
                 'SEQUID' => $sequence->SEQUID,
                 'WCSHNA' => 'EL01',
             ]);
 
-            MakeOrder::makeOrder($sequence);
+            MakeOrder::makeOrder(new Collection($sequence));
 
-            $sequence->refresh();
+            $sequence = AWF_SEQUENCE::where('SEQUID', $sequence->SEQUID)
+                ->where('SEINPR', '=', 0)
+                ->where('SESCRA', 'is', true)
+                ->first();
 
             AWF_SEQUENCE_WORKCENTER::create([
                 'SEQUID' => $sequence->SEQUID,
