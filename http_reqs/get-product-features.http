@@ -4,7 +4,7 @@ Accept: application/json
 Content-Type: application/json
 
 ### get features of all product - colors
-GET https://oeem.awf.hu/api/ext/awf-extension/product-feature/get/colors
+GET localhost:8003/api/ext/awf-extension/product-feature/get/colors
 Accept: application/json
 Content-Type: application/json
 

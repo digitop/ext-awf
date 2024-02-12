@@ -63,11 +63,17 @@ class ProductFeaturesFacade extends Facade
         )->first();
 
         $queryString = '
-        select PRCODE from AWF_SEQUENCE a
+        select PRCODE, ORCODE from AWF_SEQUENCE a
             join AWF_SEQUENCE_WORKCENTER asw on asw.SEQUID = a.SEQUID
             join AWF_SEQUENCE_LOG asl on asl.SEQUID = a.SEQUID
             where a.SEINPR = 1 and asl.LSTIME is null and asl.LETIME is null and asw.WCSHNA = "' .
             $workCenter->WCSHNA . '"';
+
+        $sequence = DB::connection('custom_mysql')->select($queryString);
+
+        if (array_key_exists(0, $sequence)) {
+            $sequence = $sequence[0];
+        }
 
         return new CustomJsonResponse(new JsonResponseModel(
             new ResponseData(
@@ -76,8 +82,9 @@ class ProductFeaturesFacade extends Facade
                     'data' => (new ProductColorsResponse(
                         PRODUCT::whereNull('DELDAT')->where('PRACTV', '=', 1)->get(),
                         $workCenter
-                    ))->setSequence(DB::connection('custom_mysql')->select($queryString))->generate(),
+                    ))->setSequence($sequence)->generate(),
                     'status' => $workCenter?->features()->where('WFSHNA', '=', 'OPSTATUS')->first()->WFVALU ?? 'default',
+                    'orderCode' => $sequence->ORCODE,
                 ]
             ),
             Response::HTTP_OK

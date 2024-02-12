@@ -93,8 +93,11 @@ class ProductColorsResponse implements ResponseInterface
 
     public function setSequence(\stdClass|array|null $sequence): ProductColorsResponse
     {
-        if (array_key_exists(0, $sequence)) {
+        if (is_array($sequence) && array_key_exists(0, $sequence)) {
             $this->sequence = $sequence[0];
+        }
+        elseif (property_exists($sequence, 'ORCODE') || property_exists($sequence, 'PRCODE')) {
+            $this->sequence = $sequence;
         }
 
         return $this;
