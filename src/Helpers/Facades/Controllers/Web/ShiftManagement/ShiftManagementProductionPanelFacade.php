@@ -49,7 +49,8 @@ class ShiftManagementProductionPanelFacade extends Facade
         $data['WCSHNA'] = $workCenter->WCSHNA;
 
         $gotOver = DB::connection('custom_mysql')->select('
-            select asl.LSTIME, a.SEQUID, a.SEPONR, a.SEPSEQ, a.SESIDE, a.SEPILL, a.SEINPR, a.PRCODE, a.ORCODE, ppd.PFIDEN, ppd.PORANK, ppd.OPSHNA from AWF_SEQUENCE_LOG asl
+            select asl.LSTIME, a.SEQUID, a.SEPONR, a.SEPSEQ, a.SESIDE, a.SEPILL, a.SEINPR, a.PRCODE, a.ORCODE, ppd.PFIDEN, ppd.PORANK, ppd.OPSHNA
+            from AWF_SEQUENCE_LOG asl
                 join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
                 join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
                 join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE
@@ -66,7 +67,8 @@ class ShiftManagementProductionPanelFacade extends Facade
         }
 
         $inPlace = DB::connection('custom_mysql')->select('
-            select asl.LSTIME, a.SEQUID, a.SEPONR, a.SEPSEQ, a.SESIDE, a.SEPILL, a.SEINPR, a.PRCODE, a.ORCODE, ppd.PFIDEN, ppd.PORANK, ppd.OPSHNA from AWF_SEQUENCE a
+            select asl.LSTIME, a.SEQUID, a.SEPONR, a.SEPSEQ, a.SESIDE, a.SEPILL, a.SEINPR, a.PRCODE, a.ORCODE, ppd.PFIDEN, ppd.PORANK, ppd.OPSHNA
+            from AWF_SEQUENCE a
                 join AWF_SEQUENCE_LOG asl on a.SEQUID = asl.SEQUID and asl.WCSHNA = "' . $workCenter->WCSHNA . '"
                 join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE
                 join ' . $database . '.PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = asl.WCSHNA
@@ -81,7 +83,8 @@ class ShiftManagementProductionPanelFacade extends Facade
         }
 
         $waitings = DB::connection('custom_mysql')->select('
-            select asl.LSTIME, a.SEQUID, a.SEPONR, a.SEPSEQ, a.SESIDE, a.SEPILL, a.SEINPR, a.PRCODE, a.ORCODE, ppd.PFIDEN, ppd.PORANK, ppd.OPSHNA from AWF_SEQUENCE a
+            select asl.LSTIME, a.SEQUID, a.SEPONR, a.SEPSEQ, a.SESIDE, a.SEPILL, a.SEINPR, a.PRCODE, a.ORCODE, ppd.PFIDEN, ppd.PORANK, ppd.OPSHNA
+            from AWF_SEQUENCE a
                 join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE
                 join ' . $database . '.PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = "' . $workCenter->WCSHNA . '"
                 join ' . $database . '.PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
@@ -117,7 +120,8 @@ class ShiftManagementProductionPanelFacade extends Facade
         $data['data'] = [];
 
         $gotOver = DB::connection('custom_mysql')->select('
-            select asl.LSTIME, a.SEQUID, a.SEPONR, a.SEPSEQ, a.SESIDE, a.SEPILL, a.SEINPR, a.PRCODE, a.ORCODE, ppd.PFIDEN, ppd.PORANK, ppd.OPSHNA from AWF_SEQUENCE_LOG asl
+            select asl.LSTIME, a.SEQUID, a.SEPONR, a.SEPSEQ, a.SESIDE, a.SEPILL, a.SEINPR, a.PRCODE, a.ORCODE, ppd.PFIDEN, ppd.PORANK, ppd.OPSHNA
+            from AWF_SEQUENCE_LOG asl
                 join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
                 join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
                 join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE
@@ -134,7 +138,8 @@ class ShiftManagementProductionPanelFacade extends Facade
         }
 
         $inPlace = DB::connection('custom_mysql')->select('
-            select asl.LSTIME, a.SEQUID, a.SEPONR, a.SEPSEQ, a.SESIDE, a.SEPILL, a.SEINPR, a.PRCODE, a.ORCODE, ppd.PFIDEN, ppd.PORANK, ppd.OPSHNA from AWF_SEQUENCE a
+            select asl.LSTIME, a.SEQUID, a.SEPONR, a.SEPSEQ, a.SESIDE, a.SEPILL, a.SEINPR, a.PRCODE, a.ORCODE, ppd.PFIDEN, ppd.PORANK, ppd.OPSHNA
+            from AWF_SEQUENCE a
                 join AWF_SEQUENCE_LOG asl on a.SEQUID = asl.SEQUID and asl.WCSHNA = "' . $workCenter->WCSHNA . '"
                 join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE
                 join ' . $database . '.PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = asl.WCSHNA
@@ -149,7 +154,8 @@ class ShiftManagementProductionPanelFacade extends Facade
         }
 
         $waitings = DB::connection('custom_mysql')->select('
-            select asl.LSTIME, a.SEQUID, a.SEPONR, a.SEPSEQ, a.SESIDE, a.SEPILL, a.SEINPR, a.PRCODE, a.ORCODE, ppd.PFIDEN, ppd.PORANK, ppd.OPSHNA from AWF_SEQUENCE a
+            select asl.LSTIME, a.SEQUID, a.SEPONR, a.SEPSEQ, a.SESIDE, a.SEPILL, a.SEINPR, a.PRCODE, a.ORCODE, ppd.PFIDEN, ppd.PORANK, ppd.OPSHNA
+            from AWF_SEQUENCE a
                 join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE
                 join ' . $database . '.PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = "' . $workCenter->WCSHNA . '"
                 join ' . $database . '.PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
