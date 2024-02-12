@@ -11,6 +11,7 @@ use App\Models\PRODUCT;
 class WelderNextProductEventResponse  implements ResponseInterface
 {
     protected Collection|Model $collection;
+    protected Collection|Model|null $next;
     protected Model|null $model;
 
     public function __construct(Model|Collection $collection, Model|null $model)
@@ -26,13 +27,28 @@ class WelderNextProductEventResponse  implements ResponseInterface
         foreach ($this->collection as $item) {
             $product = PRODUCT::where('PRCODE', '=', $item->PRCODE)->first();
 
-            $data[] = (new NextProductEventModel(
+            $data['current'] = (new NextProductEventModel(
                 $product->PRNAME,
                 $product->features()->where('FESHNA', '=', 'SZASZ')->first()?->FEVALU,
                 $product->features()->where('FESHNA', '=', 'TESZNE')->first()?->FEVALU,
-            ))->get();
+            ))
+                ->get();
 
             $data['sequenceId'] = $item->SEQUID;
+        }
+
+        foreach ($this->next as $item) {
+            $product = PRODUCT::where('PRCODE', '=', $item->PRCODE)->first();
+
+            $data['next'] = (new NextProductEventModel(
+                $product->PRNAME,
+                $product->features()->where('FESHNA', '=', 'SZASZ')->first()?->FEVALU,
+                $product->features()->where('FESHNA', '=', 'TESZNE')->first()?->FEVALU,
+            ))
+                ->setImage(
+                    $product->features()->where('FESHNA', '=', 'TEKEHE')->first()?->FEVALU,
+                )
+                ->get();
         }
 
         return $data;
@@ -57,6 +73,17 @@ class WelderNextProductEventResponse  implements ResponseInterface
     public function setModel(Model|null $model): ResponseInterface
     {
         $this->model = $model;
+        return $this;
+    }
+
+    public function getNext(): Model|Collection|null
+    {
+        return $this->next;
+    }
+
+    public function setNext(Model|Collection|null $next): WelderNextProductEventResponse
+    {
+        $this->next = $next;
         return $this;
     }
 }

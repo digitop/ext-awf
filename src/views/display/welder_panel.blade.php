@@ -26,7 +26,7 @@
     </div>
     <div class="awf-container middle">
         <span class="half" style="padding-left: 7vh;">
-            <img class="middle-image" src="{{ url('vendor/oeem-extensions/awf/extension/images/default.png') }}"
+            <img class="middle-image" src=""
                  alt="Product picture">
         </span>
         <span class="half half-right">
@@ -35,12 +35,22 @@
         </span>
     </div>
     <div class="awf-container bottom">
-        <div class="datas">
+        <span class="half" style="padding-left: 7vh;">
+            <div class="datas">
             <span id="product-designation" class="half half-left piece">
             </span>
             <span id="product-material"  class="half half-right piece">
             </span>
         </div>
+        </span>
+        <span class="half half-right">
+            <div class="datas">
+            <span id="product-designation" class="half half-left piece">
+            </span>
+            <span id="product-material"  class="half half-right piece">
+            </span>
+        </div>
+        </span>
         <div class="timer">
             <span id="time"></span>
         </div>

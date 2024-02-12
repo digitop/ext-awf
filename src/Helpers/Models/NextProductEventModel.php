@@ -12,6 +12,7 @@ class NextProductEventModel extends ObjectToArray
     protected string|null $porscheOrderNumber = null;
     protected string|null $porscheSequenceNumber = null;
     protected string|null $articleNumber = null;
+    protected string|null $image = null;
 
     public function __construct(
         string|null $designation = null,
@@ -57,58 +58,69 @@ class NextProductEventModel extends ObjectToArray
         return $this;
     }
 
-    public function getPillar(): ?string
+    public function getPillar(): string|null
     {
         return $this->pillar;
     }
 
-    public function setPillar(?string $pillar): NextProductEventModel
+    public function setPillar(string|null $pillar): NextProductEventModel
     {
         $this->pillar = $pillar;
         return $this;
     }
 
-    public function getSide(): ?string
+    public function getSide(): string|null
     {
         return $this->side;
     }
 
-    public function setSide(?string $side): NextProductEventModel
+    public function setSide(string|null $side): NextProductEventModel
     {
         $this->side = $side;
         return $this;
     }
 
-    public function getPorscheOrderNumber(): ?string
+    public function getPorscheOrderNumber(): string|null
     {
         return $this->porscheOrderNumber;
     }
 
-    public function setPorscheOrderNumber(?string $porscheOrderNumber): NextProductEventModel
+    public function setPorscheOrderNumber(string|null $porscheOrderNumber): NextProductEventModel
     {
         $this->porscheOrderNumber = $porscheOrderNumber;
         return $this;
     }
 
-    public function getPorscheSequenceNumber(): ?string
+    public function getPorscheSequenceNumber(): string|null
     {
         return $this->porscheSequenceNumber;
     }
 
-    public function setPorscheSequenceNumber(?string $porscheSequenceNumber): NextProductEventModel
+    public function setPorscheSequenceNumber(string|null $porscheSequenceNumber): NextProductEventModel
     {
         $this->porscheSequenceNumber = $porscheSequenceNumber;
         return $this;
     }
 
-    public function getArticleNumber(): ?string
+    public function getArticleNumber(): string|null
     {
         return $this->articleNumber;
     }
 
-    public function setArticleNumber(?string $articleNumber): NextProductEventModel
+    public function setArticleNumber(string|null $articleNumber): NextProductEventModel
     {
         $this->articleNumber = $articleNumber;
+        return $this;
+    }
+
+    public function getImage(): string|null
+    {
+        return $this->image;
+    }
+
+    public function setImage(string|null $image): NextProductEventModel
+    {
+        $this->image = $image;
         return $this;
     }
 }

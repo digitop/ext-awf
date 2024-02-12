@@ -3,6 +3,7 @@
 namespace AWF\Extension\Helpers\Facades\Controllers\Api;
 
 use AWF\Extension\Events\NextProductEvent;
+use AWF\Extension\Events\WelderNextProductEvent;
 use AWF\Extension\Helpers\Facades\Controllers\Web\PreparationStationPanelFacade;
 use AWF\Extension\Helpers\Responses\JsonResponseModel;
 use AWF\Extension\Helpers\Responses\ResponseData;
@@ -11,6 +12,7 @@ use AWF\Extension\Models\AWF_SEQUENCE_LOG;
 use AWF\Extension\Responses\CustomJsonResponse;
 use AWF\Extension\Responses\NextProductEventResponse;
 use AWF\Extension\Responses\SequenceFacadeResponse;
+use AWF\Extension\Responses\WelderNextProductEventResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -164,6 +166,38 @@ class SequenceFacade extends Facade
                     );
                 }
             }
+        }
+
+        if (
+            in_array($sequence[0]->SEPILL, ['B', 'C'], true) &&
+            in_array($workCenter->WCSHNA, ['KBB01', 'KCB01'], true) &&
+            $sequence[0]->PRCODE !== 'dummy'
+        ) {
+            $queryString = '
+            select a.PRCODE, a.SEQUID, a.SEPSEQ, a.SEARNU, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEINPR from AWF_SEQUENCE_LOG asl
+                join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
+                join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
+                join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE
+                join ' . $database . '.PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = asl.WCSHNA
+                join ' . $database . '.PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
+            where asl.LSTIME is null and asl.LETIME is null and a.SEINPR = (ppd.PORANK - 1) and
+                asl.WCSHNA = "' . $workCenter->WCSHNA . '"' .
+                ($pillar !== null ? ' and a.SEPILL = "' . $pillar .'"' : '') .
+                ($request->has('side') ? ' and a.SESIDE = "' . $request->side . '"' : '') .
+                ($porscheProductNumber !== null ? ' and a.SEPONR = "' . $porscheProductNumber . '"' : '') .
+                ($request->has('limit') ? ' limit ' . $request->limit : '')
+            ;
+
+            $sequence2 = new Collection(DB::connection('custom_mysql')->select($queryString));
+
+            event(new WelderNextProductEvent(
+                (new WelderNextProductEventResponse(
+                    $sequence,
+                    null
+                ))
+                ->setNext($sequence2)
+                ->generate()
+            ));
         }
 
         if (!$noChange && $sequence[0]->PRCODE !== 'dummy') {
