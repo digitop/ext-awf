@@ -31,7 +31,7 @@ class GenerateDataFacade extends Facade
             $this->generatePath();
             $this->deleteAllSequenceThatNotInProduction();
 
-            foreach (Storage::disk('local')->files() as $filePath) {
+            foreach (Storage::disk('awfSequenceFtp')->files() as $filePath) {
                 if (str_contains($filePath, 'P992')) {
                     $this->generateData($filePath);
                 }
@@ -86,17 +86,23 @@ class GenerateDataFacade extends Facade
 
     protected function generateData(string $filePath): void
     {
-        $file = Storage::disk('local')->get($filePath);
+        $file = Storage::disk('awfSequenceFtp')->get($filePath);
 
         $insertQuery = 'insert into AWF_SEQUENCE (SEPONR, SEPSEQ, SEARNU, SEARDE, SESIDE, SEEXPI, SEPILL, PRCODE) values';
         $rows = explode(PHP_EOL, $file);
         $iMax = count($rows);
         $i = 0;
+        $pillar = '';
 
         foreach ($rows as $row) {
             $data = explode(';', $row);
 
             if (!empty($data) && !empty($data[0])) {
+
+                if (empty($pillar)) {
+                    $pillar = $data[3][6];
+                }
+
                 $hasProduct = false;
 
                 $expiration = (new \DateTime(
@@ -130,25 +136,21 @@ class GenerateDataFacade extends Facade
 
         DB::connection('custom_mysql')->insert($insertQuery);
 
-        $sequences = DB::connection('custom_mysql')->select('select SEQUID from AWF_SEQUENCE where SEINPR = 0');
+        $sequences = DB::connection('custom_mysql')->select('select SEQUID from AWF_SEQUENCE where SEINPR = 0 and SEPILL = "' . $pillar . '"');
 
         if (!empty($sequences[0])) {
             $insertLog = 'insert into AWF_SEQUENCE_LOG (SEQUID, WCSHNA) values';
             $insertWorkCenter = 'insert into AWF_SEQUENCE_WORKCENTER (SEQUID, WCSHNA) values';
-            $iMax = count($sequences);
-            $i = 0;
 
 
-            foreach ($sequences as $sequence) {
-                $insertLog .= sprintf('("%s", "%s")', $sequence->SEQUID, 'EL01');
-                $insertWorkCenter .= sprintf('("%s", "%s")', $sequence->SEQUID, 'EL01');
+            for ($i = 0, $iMax = count($sequences); $i < $iMax; $i++) {
+                $insertLog .= sprintf('("%s", "%s")', $sequences[$i]->SEQUID, 'EL01');
+                $insertWorkCenter .= sprintf('("%s", "%s")', $sequences[$i]->SEQUID, 'EL01');
 
                 if ($i < $iMax - 1) {
                     $insertLog .= ',';
                     $insertWorkCenter .= ',';
                 }
-
-                $i++;
             }
 
             DB::connection('custom_mysql')->insert($insertLog);
