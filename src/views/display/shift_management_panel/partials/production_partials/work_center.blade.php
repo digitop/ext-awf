@@ -8,10 +8,14 @@
 @endsection
 
 @section('awf-shift-content')
+    <div class="page-title" style="margin-top: 10%;">
+        {{ $workCenter->WCNAME }}
+    </div>
+
     <section id="loading">
         <div id="loading-content"></div>
     </section>
-    <div style="margin-top: 16%;">
+    <div style="margin-top: 5%;">
         @if(empty($data))
             <label>
                 <input class="alertCheckbox" autocomplete="off" />

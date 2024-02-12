@@ -100,7 +100,8 @@ class ShiftManagementProductionPanelFacade extends Facade
         return view(
             'awf-extension::display.shift_management_panel.partials.production_partials.work_center',
             [
-                'data' => $data
+                'data' => $data,
+                'workCenter' => $workCenter,
             ]
         );
     }
