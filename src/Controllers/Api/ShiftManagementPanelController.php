@@ -17,8 +17,8 @@ class ShiftManagementPanelController extends Controller
         $this->facade = new ShiftManagementPanelFacade();
     }
 
-    public function default(string $dashboardId)
+    public function default(string $dashboardId): JsonResponse
     {
-        $this->facade->default($dashboardId);
+        return $this->facade->default($dashboardId);
     }
 }

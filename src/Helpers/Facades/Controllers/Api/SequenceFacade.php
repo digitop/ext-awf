@@ -240,15 +240,6 @@ class SequenceFacade extends Facade
             ]);
         }
 
-        publishMqtt(env('DEPLOYMENT_SUBDOMAIN') . '/api/SEQUENCE_CHANGE/', [
-            [
-                "to" => 'dh:' . $workCenter->operatorPanels[0]->dashboard->DHIDEN,
-                "payload" => [
-                    "status" => "default",
-                ],
-            ]
-        ]);
-
         return new CustomJsonResponse(new JsonResponseModel(
             new ResponseData(
                 true,

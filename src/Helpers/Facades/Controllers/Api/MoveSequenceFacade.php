@@ -43,13 +43,50 @@ class MoveSequenceFacade extends Facade
 
         $this->move($request, $sequence, $nextProductWorkCenterData);
 
+        if ($nextProductWorkCenterData !== null) {
+            $status = 'default';
+            $database = config('database.connections.mysql.database');
+            $workCenter = WORKCENTER::where('WCSHNA', '=', $nextProductWorkCenterData->WCSHNA)->first();
+
+            $queryString = '
+            select a.PRCODE, a.SEQUID, a.SEPSEQ, a.SEARNU, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEINPR from AWF_SEQUENCE_LOG asl
+                join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
+                join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
+                join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE
+                join ' . $database . '.PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = asl.WCSHNA
+                join ' . $database . '.PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
+            where asl.LSTIME is null and asl.LETIME is null and a.SEINPR = (ppd.PORANK - 1) and
+                asl.WCSHNA = "' . $workCenter->WCSHNA . '" order by a.SEQUID limit 1'
+            ;
+
+            $sequence2 = DB::connection('custom_mysql')->select($queryString);
+
+            if (array_key_exists(0, $sequence2)) {
+                $sequence2 = $sequence2[0];
+            }
+
+            if (empty($sequence2)) {
+                $status = 'waiting';
+            }
+
+            publishMqtt(env('DEPLOYMENT_SUBDOMAIN') . '/api/SEQUENCE_CHANGE/', [
+                [
+                    "to" => 'dh:' . $workCenter->operatorPanels[0]->dashboard->DHIDEN,
+                    "payload" => [
+                        "status" => $status,
+                        'orderCode' => $sequence2?->ORCODE ?? null
+                    ],
+                ]
+            ]);
+        }
+
         return new CustomJsonResponse(new JsonResponseModel(
             new ResponseData(
                 true,
                 (new SequenceFacadeResponse(
                     $sequence,
-                    $nextProductWorkCenterData !== null ?
-                        WORKCENTER::where('WCSHNA', '=', $nextProductWorkCenterData->WCSHNA)->first() :
+                    $nextProductWorkCenterData !== null && isset($workCenter) ?
+                        $workCenter :
                         null
                 ))->generate()
             ),
