@@ -98,7 +98,6 @@ class SequenceFacade extends Facade
                 asl.WCSHNA = "' . $workCenter->WCSHNA . '"' .
                 ($pillar !== null ? ' and a.SEPILL = "' . $pillar .'"' : '') .
                 ($request->has('side') ? ' and a.SESIDE = "' . $request->side . '"' : '') .
-                ($porscheProductNumber !== null ? ' and a.SEPONR = "' . $porscheProductNumber . '"' : '') .
                 ' order by a.SEQUID' .
                 ($request->has('limit') ? ' limit ' . $request->limit : '')
         ;
@@ -151,7 +150,6 @@ class SequenceFacade extends Facade
                 asl.WCSHNA = "' . $workCenter->WCSHNA . '"' .
                     ($pillar !== null ? ' and a.SEPILL = "' . $pillar .'"' : '') .
                     ($request->has('side') ? ' and a.SESIDE = "' . $side . '"' : '') .
-                    ($porscheProductNumber !== null ? ' and a.SEPONR = "' . $porscheProductNumber . '"' : '') .
                     ' order by a.SEQUID' .
                     ($request->has('limit') ? ' limit ' . $request->limit : '')
                 ;
@@ -186,7 +184,6 @@ class SequenceFacade extends Facade
                 asl.WCSHNA = "' . $workCenter->WCSHNA . '"' .
                 ($pillar !== null ? ' and a.SEPILL = "' . $pillar .'"' : '') .
                 ($request->has('side') ? ' and a.SESIDE = "' . $request->side . '"' : '') .
-                ($porscheProductNumber !== null ? ' and a.SEPONR = "' . $porscheProductNumber . '"' : '') .
                 ' order by a.SEQUID' .
                 ($request->has('limit') ? ' limit ' . $request->limit : '')
             ;
