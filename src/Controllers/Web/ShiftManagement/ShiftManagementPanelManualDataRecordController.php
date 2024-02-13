@@ -15,6 +15,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View as IlluminateView;
+use Illuminate\Http\RedirectResponse;
 
 class ShiftManagementPanelManualDataRecordController
 {
@@ -34,7 +35,7 @@ class ShiftManagementPanelManualDataRecordController
         return $this->facade->show($request, WORKCENTER::where('WCSHNA', $WCSHNA)->first());
     }
 
-    public function update(Request $request, string $WCSHNA): Application|Factory|View|ContractsApplication|null
+    public function update(Request $request, string $WCSHNA): Application|Factory|View|ContractsApplication|RedirectResponse|null
     {
         return $this->facade->update($request, WORKCENTER::where('WCSHNA', $WCSHNA)->first());
     }

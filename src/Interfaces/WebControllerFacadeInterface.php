@@ -11,6 +11,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 
 interface WebControllerFacadeInterface
 {
@@ -24,7 +25,7 @@ interface WebControllerFacadeInterface
 
     public function store(Request|FormRequest $request, Model|string|null ...$model): Application|Factory|View|ContractsApplication|null;
 
-    public function update(Request|FormRequest $request, Model|string ...$model): Application|Factory|View|ContractsApplication|null;
+    public function update(Request|FormRequest $request, Model|string ...$model): Application|Factory|View|ContractsApplication|RedirectResponse|null;
 
     public function destroy(Request|FormRequest $request, Model|string ...$model): Application|Factory|View|ContractsApplication|null;
 }

@@ -12,6 +12,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 
 class Facade implements WebControllerFacadeInterface
 {
@@ -37,7 +38,7 @@ class Facade implements WebControllerFacadeInterface
         return null;
     }
 
-    public function update(Request|FormRequest $request, Model|string ...$model): Application|Factory|View|ContractsApplication|null
+    public function update(Request|FormRequest $request, Model|string ...$model): Application|Factory|View|ContractsApplication|RedirectResponse|null
     {
         return null;
     }

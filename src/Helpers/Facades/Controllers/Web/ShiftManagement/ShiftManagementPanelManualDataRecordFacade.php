@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\View\View as IlluminateView;
 use Illuminate\Support\Facades\DB;
 use App\Models\WORKCENTER;
+use Illuminate\Http\RedirectResponse;
 
 class ShiftManagementPanelManualDataRecordFacade extends Facade
 {
@@ -71,7 +72,7 @@ class ShiftManagementPanelManualDataRecordFacade extends Facade
 
     public function update(
         Request|FormRequest $request, Model|string ...$model
-    ): Application|Factory|View|ContractsApplication|null
+    ): Application|Factory|View|ContractsApplication|RedirectResponse|null
     {
         $workCenter = $model[0];
         $database = config('database.connections.mysql.database');
@@ -120,6 +121,10 @@ class ShiftManagementPanelManualDataRecordFacade extends Facade
         else {
             $sequence->serial = $request->serialNumber;
         }
+
+        return redirect()
+            ->route('awf-shift-management-panel.manual-data-record.show', ['WCSHNA' => $workCenter->WCSHNA])
+            ->with('error', $error);
 
         return view(
             'awf-extension::display.shift_management_panel.partials.manual_data_record_partials.work_center',

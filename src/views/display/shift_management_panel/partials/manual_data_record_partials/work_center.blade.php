@@ -6,7 +6,7 @@
 @endsection
 
 @section('awf-shift-content')
-    @if (!empty($error))
+    @if (session('error'))
         <label>
             <input type="checkbox" class="alertCheckbox" autocomplete="off"/>
             <div class="alert warning">
@@ -23,9 +23,9 @@
                 </span>
             </div>
         </label>
-    @elseif (isset($error) && empty($error))
+    @elseif (session('error') !== null && empty(session('error')))
         <label>
-            <input type="checkbox" class="alertCheckbox" autocomplete="off" />
+            <input type="checkbox" class="alertCheckbox" autocomplete="off"/>
             <div class="alert success">
                 <span class="alertClose">X</span>
                 <span class="alertText">
@@ -39,7 +39,7 @@
     <div style="margin-top: 20vh;">
         @if(empty($sequence))
             <label>
-                <input class="alertCheckbox" autocomplete="off" />
+                <input class="alertCheckbox" autocomplete="off"/>
                 <div class="alert warning" style="cursor: default !important; margin-top: 10%;">
                     <span class="alertText">
                         {{ __('display.noSequence') }}
