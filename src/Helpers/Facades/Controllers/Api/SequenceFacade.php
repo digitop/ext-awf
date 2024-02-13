@@ -250,7 +250,7 @@ class SequenceFacade extends Facade
     {
         AWF_SEQUENCE::where('SEPILL', '=', $pillar)
             ->where('SEQUID', '<', $sequenceId)
-            ->where('SEINRP', '<', 5)
+            ->where('SEINPR', '<', 5)
             ->update([
                 'SEINPR' => 99,
             ]);

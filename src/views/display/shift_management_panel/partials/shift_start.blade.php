@@ -1,6 +1,17 @@
 @extends('awf-extension::display.shift_management_panel.shift_management_base')
 
+@section('awf-css')
+    <link rel="stylesheet"
+          href="{{ url('vendor/oeem-extensions/awf/extension/css/display/loading.css') }}">
+    <link rel="stylesheet"
+          href="{{ url('vendor/oeem-extensions/awf/extension/css/display/modal.css') }}">
+@endsection
+
 @section('awf-shift-content')
+    <section id="loading">
+        <div id="loading-content"></div>
+    </section>
+
     <div class="page-title" style="margin-top: 12%;">
         {{ __('display.button.shiftStart') }}
     </div>
@@ -64,18 +75,33 @@
     </table>
 
     <div style="margin-top: 20%; margin-left: 12%;">
-{{--        <button--}}
-{{--            id="reset-default"--}}
-{{--            class="button button-green"--}}
-{{--            style="width: 80%;"--}}
-{{--        >--}}
-{{--            {{ __('display.button.startOfShift') }}--}}
-{{--        </button>--}}
+        <button
+            id="reset-default"
+            class="button button-green"
+            style="width: 80%;"
+        >
+            {{ __('display.button.startOfShift') }}
+        </button>
 
         <script>
             $('#reset-default').bind('click', function () {
+                showLoading()
+
                 $.get('{{ route('awf-shift-management-panel.shift-start.default') }}')
+                    .always(function () {
+                        hideLoading()
+                    })
             })
+
+            function showLoading() {
+                document.querySelector('#loading').classList.add('loading')
+                document.querySelector('#loading-content').classList.add('loading-content')
+            }
+
+            function hideLoading() {
+                document.querySelector('#loading').classList.remove('loading')
+                document.querySelector('#loading-content').classList.remove('loading-content')
+            }
         </script>
     </div>
 

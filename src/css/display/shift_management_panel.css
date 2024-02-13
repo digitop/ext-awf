@@ -103,6 +103,7 @@ button.button {
     font-size: 4.5vh;
     border: none;
     border-radius: 0;
+    cursor: pointer;
 }
 
 button.button-light-green, button.button-light-green {
@@ -215,6 +216,11 @@ a.back:hover, a.button-blue:active {
 {
     font-size: x-large;
     margin: 1vh;
+}
+
+.dataTables_processing {
+    left: 0 !important;
+    width: 99% !important;
 }
 
 .dataTables_length select {
