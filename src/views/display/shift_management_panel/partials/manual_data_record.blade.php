@@ -12,7 +12,7 @@
                 <a
                         href="{{ route('awf-shift-management-panel.manual-data-record.show', ['WCSHNA' => $workCenter->WCSHNA]) }}"
                         class="oppanel-button"
-                        style="display: inline-block;"
+                        style="display: inline-block; text-align: center;"
                 >
                     {{ $workCenter->WCNAME }}
                 </a>
