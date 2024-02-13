@@ -377,3 +377,53 @@ a.back:hover, a.button-blue:active {
     margin-bottom: 1%;
     font-size: 4vh;
 }
+
+.languages-dropdown {
+    float: right;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    background-color: #343f51;
+    padding: 8px;
+    display: none;
+    z-index: 10;
+}
+.languages-dropdown ul {
+    margin: 0px;
+    padding: 0px;
+}
+.languages-dropdown ul li {
+    display: inline-block;
+    margin: 0px 10px 0px 10px;
+}
+.languages-dropdown ul li a:active,
+.languages-dropdown ul li a:link,
+.languages-dropdown ul li a:visited {
+    color: #dcdee3;
+    text-decoration: none;
+}
+.languages-dropdown ul li a:hover {
+    color: white;
+}
+
+.menu-icon {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    -moz-align-items: center;
+    align-items: center;
+    width: 24px;
+    height: 100%;
+    text-align: center;
+    font-size: 18px;
+    color: white;
+    cursor: pointer;
+}
+.menu-icon:hover {
+    color: #e9ebee;
+}

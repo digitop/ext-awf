@@ -13,6 +13,8 @@
     <link rel="stylesheet"
           href="{{ url('vendor/oeem-extensions/awf/extension/css/display/shift_management_panel.css') }}">
 
+{{--    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">--}}
+
     @yield('awf-css')
     <title></title>
 </head>
@@ -30,6 +32,18 @@
 @yield('awf-shift-content')
 
 <div class="timer">
+{{--    <div class="languages menu-icon" onclick="$('.languages-dropdown').slideToggle()">--}}
+{{--        <i class="fas fa-globe-americas" style="color: black; font-size: 5vh;"></i>--}}
+{{--    </div>--}}
+
+{{--    <div class="languages-dropdown">--}}
+{{--        <ul>--}}
+{{--            <li><a href="{{ url('lang/hu_HU') }}">Magyar</a></li>--}}
+{{--            <li><a href="{{ url('lang/en_US') }}">English</a></li>--}}
+{{--            <li><a href="{{ url('lang/de_DE') }}">Deutsch</a></li>--}}
+{{--        </ul>--}}
+{{--    </div>--}}
+
     <span>{{ __('display.systemTime') }}:</span>
     <span id="time"></span>
 </div>
