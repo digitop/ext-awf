@@ -25,6 +25,16 @@ body {
     bottom: 0;
 }
 
+.timer-center {
+    margin-bottom: 1%;
+    margin-left: 5%;
+    font-size: xx-large;
+    float: right;
+    position: fixed;
+    left: 30%;
+    bottom: 0;
+}
+
 .title {
     position: absolute;
     top: 0;
@@ -60,9 +70,9 @@ body {
 }
 
 .default {
-    width: 100% !important;
+    width: 99% !important;
     margin-left: 0 !important;
-    left: -2% !important;
+    /*left: -2% !important;*/
 }
 
 .shift-management-table td {
@@ -381,8 +391,8 @@ a.back:hover, a.button-blue:active {
 .languages-dropdown {
     float: right;
     position: fixed;
-    left: 0;
-    bottom: 0;
+    left: 25%;
+    bottom: 1.95%;
     background-color: #343f51;
     padding: 8px;
     display: none;
