@@ -231,12 +231,6 @@ class SequenceFacade extends Facade
             }
         }
 
-        if ($workCenter->features()->where('WFSHNA', '=', 'OPSTATUS')->first()?->WFVALU == 'success') {
-            $workCenter->features()->where('WFSHNA', '=', 'OPSTATUS')->first()?->update([
-                'WFVALU' => 'default',
-            ]);
-        }
-
         return new CustomJsonResponse(new JsonResponseModel(
             new ResponseData(
                 true,

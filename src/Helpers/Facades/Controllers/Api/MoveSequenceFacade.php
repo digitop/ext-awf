@@ -69,6 +69,10 @@ class MoveSequenceFacade extends Facade
                 $status = 'waiting';
             }
 
+            $workCenter->features()->where('WFSHNA', '=', 'OPSTATUS')->first()?->update([
+                'WFVALU' => $status,
+            ]);
+
             publishMqtt(env('DEPLOYMENT_SUBDOMAIN') . '/api/SEQUENCE_CHANGE/', [
                 [
                     "to" => 'dh:' . $workCenter->operatorPanels[0]->dashboard->DHIDEN,
