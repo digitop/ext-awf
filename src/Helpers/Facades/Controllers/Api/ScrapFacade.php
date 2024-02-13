@@ -2,6 +2,7 @@
 
 namespace AWF\Extension\Helpers\Facades\Controllers\Api;
 
+use App\Models\DASHBOARD_MODULE_SETTINGS;
 use AWF\Extension\Helpers\MakeOrder;
 use AWF\Extension\Helpers\Responses\JsonResponseModel;
 use AWF\Extension\Helpers\Responses\ResponseData;
@@ -30,11 +31,27 @@ class ScrapFacade extends Facade
         if ($event->scrapReport !== false) {
             $qualification = QUALREPHEAD::where('QRIDEN', '=', $event->scrapReport)->first();
 
-            $workCenter = WORKCENTER::where(
-                'WCSHNA',
-                '=',
-                DASHBOARD::where('DHIDEN', '=', $event->DHIDEN)->with('operatorPanels')->first()->operatorPanels[0]->WCSHNA
-            )->first();
+            $moduleSetting = DASHBOARD_MODULE_SETTINGS::where([
+                ['DHIDEN', $event->DHIDEN],
+                ['DMSKEY', 'scrapStationFilter']
+            ])
+                ->first();
+
+            if ($moduleSetting) {
+                $scrapStationFilter = $moduleSetting->DMSVAL;
+                // Ha van beallitva ertek a szuroben
+                $workCenter = WORKCENTER::find($scrapStationFilter); // Selejt állomás megkeresese
+            }
+
+            if (empty($workCenter)) {
+                return new CustomJsonResponse(new JsonResponseModel(
+                    new ResponseData(
+                        false,
+
+                    ),
+                    Response::HTTP_OK
+                ));
+            }
 
             $repnos = REPNO::where('ORCODE', '=', $qualification->ORCODE)->get();
 
