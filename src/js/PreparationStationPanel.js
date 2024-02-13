@@ -53,33 +53,35 @@ const app = new Vue({
                         if (data.pillar === 'A') {
                             if (data.side === 'L') {
                                 $('#pulse-line').css('top', '38%')
-                                $('#pulse-line').css('left', '17.5%')
+                                $('#pulse-line').css('left', '19.5%')
+                                $('#pulse-line').css('height', '15%')
                                 $('#pulse-line').css('transform', 'rotate(-18deg)')
                             }
                             if (data.side === 'R') {
                                 $('#pulse-line').css('top', '38%')
-                                $('#pulse-line').css('left', '32.5%')
+                                $('#pulse-line').css('left', '36.5%')
+                                $('#pulse-line').css('height', '15%')
                                 $('#pulse-line').css('transform', 'rotate(18deg)')
                             }
                         }
                         if (data.pillar === 'B') {
                             if (data.side === 'L') {
                                 $('#pulse-line').css('top', '59.5%')
-                                $('#pulse-line').css('left', '17.5%')
+                                $('#pulse-line').css('left', '19.2%')
                                 $('#pulse-line').css('height', '10%')
                                 $('#pulse-line').css('transform', 'rotate(-83deg)')
                             }
                             if (data.side === 'R') {
                                 $('#pulse-line').css('top', '59.5%')
-                                $('#pulse-line').css('left', '32.5%')
+                                $('#pulse-line').css('left', '37%')
                                 $('#pulse-line').css('height', '10%')
                                 $('#pulse-line').css('transform', 'rotate(83deg)')
                             }
                         }
                         if (data.pillar === 'C') {
                             if (data.side === 'L') {
-                                $('#pulse-line').css('top', '79%')
-                                $('#pulse-line').css('left', '17.3%')
+                                $('#pulse-line').css('top', '79.5%')
+                                $('#pulse-line').css('left', '19.2%')
                                 $('#pulse-line').css('height', '10%')
                                 $('#pulse-line').css('width', '2.5%')
                                 $('#pulse-line').css('border-radius', '3vh')
@@ -87,7 +89,7 @@ const app = new Vue({
                             }
                             if (data.side === 'R') {
                                 $('#pulse-line').css('top', '79%')
-                                $('#pulse-line').css('left', '32.5%')
+                                $('#pulse-line').css('left', '36.5%')
                                 $('#pulse-line').css('height', '10%')
                                 $('#pulse-line').css('width', '2.5%')
                                 $('#pulse-line').css('border-radius', '3vh')
