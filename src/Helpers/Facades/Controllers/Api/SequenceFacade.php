@@ -248,11 +248,25 @@ class SequenceFacade extends Facade
 
     public function set(string $pillar, string $sequenceId): RedirectResponse
     {
+        $now = (new \DateTime())->format('Y-m-d H:i:s');
+
         AWF_SEQUENCE::where('SEPILL', '=', $pillar)
             ->where('SEQUID', '<', $sequenceId)
             ->where('SEINPR', '<', 5)
             ->update([
                 'SEINPR' => 99,
+            ]);
+
+        AWF_SEQUENCE_LOG::where('SEQUID', '<', $sequenceId)
+            ->whereNull('LSTIME')
+            ->update([
+                'LSTIME' => $now,
+            ]);
+
+        AWF_SEQUENCE_LOG::where('SEQUID', '<', $sequenceId)
+            ->whereNull('LETIME')
+            ->update([
+                'LETIME' => $now,
             ]);
 
         return back()->with('notification-success', __('responses.update'));
