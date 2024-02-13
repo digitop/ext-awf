@@ -18,6 +18,7 @@ use App\Events\Dashboard\ProductQualified;
 use App\Models\QUALREPHEAD;
 use App\Models\SERIALNUMBER;
 use App\Models\WORKCENTER;
+use App\Models\DASHBOARD;
 use App\Models\REPNO;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Collection;
