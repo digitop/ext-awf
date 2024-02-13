@@ -3,19 +3,20 @@
 namespace AWF\Extension\Responses;
 
 use AWF\Extension\Helpers\Models\NextProductEventModel;
+use AWF\Extension\Interfaces\NullableResponseInterface;
 use AWF\Extension\Interfaces\ResponseInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\PRODUCT;
 use Illuminate\Support\Facades\Storage;
 
-class WelderNextProductEventResponse  implements ResponseInterface
+class WelderNextProductEventResponse  implements NullableResponseInterface
 {
     protected Collection|Model $collection;
     protected Collection|Model|null $next;
     protected Model|null $model;
 
-    public function __construct(Model|Collection $collection, Model|null $model)
+    public function __construct(Model|Collection|null $collection = null, Model|null $model = null)
     {
         $this->collection = $collection;
         $this->model = $model;
@@ -24,6 +25,10 @@ class WelderNextProductEventResponse  implements ResponseInterface
     public function generate(): array
     {
         $data = [];
+
+        if (empty($this->collection)) {
+            return $data;
+        }
 
         foreach ($this->collection as $item) {
             $product = PRODUCT::where('PRCODE', '=', $item->PRCODE)->first();
@@ -58,6 +63,22 @@ class WelderNextProductEventResponse  implements ResponseInterface
                 ->get();
         }
 
+        $workCenter = null;
+
+        if ($this->collection[0]->SEPILL === 'A') {
+            $workCenter = 'HA01';
+        }
+
+        if ($this->collection[0]->SEPILL === 'B') {
+            $workCenter = 'HB01';
+        }
+
+        if ($this->collection[0]->SEPILL === 'C') {
+            $workCenter = 'HC01';
+        }
+
+        $data['workCenter'] = $workCenter;
+
         return $data;
     }
 
@@ -66,7 +87,7 @@ class WelderNextProductEventResponse  implements ResponseInterface
         return $this->collection;
     }
 
-    public function setCollection(Model|Collection $collection): ResponseInterface
+    public function setCollection(Model|Collection|null $collection = null): NullableResponseInterface
     {
         $this->collection = $collection;
         return $this;
@@ -77,7 +98,7 @@ class WelderNextProductEventResponse  implements ResponseInterface
         return $this->model;
     }
 
-    public function setModel(Model|null $model): ResponseInterface
+    public function setModel(Model|null $model = null): NullableResponseInterface
     {
         $this->model = $model;
         return $this;

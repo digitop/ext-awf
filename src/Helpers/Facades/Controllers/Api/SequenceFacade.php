@@ -170,7 +170,7 @@ class SequenceFacade extends Facade
 
         if (
             in_array($sequence[0]->SEPILL, ['B', 'C'], true) &&
-            in_array($workCenter->WCSHNA, ['KBB01', 'KBJ01', 'KCB01', 'KCJ01'], true) &&
+            in_array($workCenter->WCSHNA, ['KAB02', 'KAJ02', 'KBB01', 'KBJ01', 'KCB01', 'KCJ01'], true) &&
             $sequence[0]->PRCODE !== 'dummy'
         ) {
             $queryString = '
@@ -210,7 +210,7 @@ class SequenceFacade extends Facade
             event(new WelderNextProductEvent(
                 (new WelderNextProductEventResponse(
                     $sequence2,
-                    null
+                    $workCenter
                 ))
                 ->setNext($sequence3)
                 ->generate()

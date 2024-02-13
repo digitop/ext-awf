@@ -5,6 +5,7 @@ namespace AWF\Extension\Helpers\Facades\Controllers\Web;
 use AWF\Extension\Events\NextProductEvent;
 use AWF\Extension\Events\WelderNextProductEvent;
 use AWF\Extension\Helpers\Models\NextProductEventModel;
+use AWF\Extension\Responses\WelderNextProductEventResponse;
 use Illuminate\Contracts\Foundation\Application as ContractsApplication;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -26,16 +27,17 @@ class WelderPanelFacade extends Facade
         if ($request?->has('default')) {
             $default = $request?->default === 'true';
         }
+
         return view('awf-extension::display/welder_panel', [
             'default' => $default,
-            'welderNextSequence' => new NextProductEventModel(),
+            'welderNextSequence' => (new NextProductEventModel()),
         ]);
     }
 
-    public function default(): void
+    public function default(Model|string|null $model = null): void
     {
         event(new WelderNextProductEvent(
-                (new NextProductEventModel())->get()
+                (new WelderNextProductEventResponse(null, $model))->generate()
             )
         );
     }

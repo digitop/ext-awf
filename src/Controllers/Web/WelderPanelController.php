@@ -14,6 +14,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use App\Models\WORKCENTER;
 
 class WelderPanelController extends Controller
 {
@@ -23,8 +24,8 @@ class WelderPanelController extends Controller
     {
         $this->facade = new WelderPanelFacade();
     }
-    public function create(Request $request): Application|Factory|View|IlluminateView|ContractsApplication|null
+    public function create(Request $request, string $WCSHNA): Application|Factory|View|IlluminateView|ContractsApplication|null
     {
-        return $this->facade->create($request);
+        return $this->facade->create($request, WORKCENTER::where('WCSHNA', '=', $WCSHNA)->first());
     }
 }

@@ -10,7 +10,7 @@ Route::group(
     function () {
         Route::get('preparation-panel', ['uses' => 'PreparationStationPanelController@create'])
             ->name('awf-preparation-panel');
-        Route::get('welder-panel', ['uses' => 'WelderPanelController@create'])
+        Route::get('welder-panel/{WCSHNA}', ['uses' => 'WelderPanelController@create'])
             ->name('awf-welder-panel');
 });
 
