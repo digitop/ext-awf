@@ -17,7 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\View\View as IlluminateView;
 use Illuminate\Http\RedirectResponse;
 
-class ShiftManagementPanelManualDataRecordController
+class ShiftManagementPanelManualDataRecordController extends Controller
 {
     protected WebControllerFacadeInterface $facade;
 
