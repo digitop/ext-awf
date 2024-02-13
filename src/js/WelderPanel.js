@@ -27,23 +27,23 @@ const app = new Vue({
 
 
                             if (data.designation.length > 20) {
-                                $('#current-product-designation').css('font-size', '7vh')
+                                $('#current-product-designation').css('font-size', '5vh')
                             }
                             else {
-                                $('#current-product-designation').css('font-size', '8vh')
+                                $('#current-product-designation').css('font-size', '6vh')
                             }
 
                             $('#current-product-material').append(data.materialAndColor)
 
                             if (data.materialAndColor.length > 20) {
-                                $('#current-product-material').css('font-size', '7vh')
+                                $('#current-product-material').css('font-size', '5vh')
 
                                 if (data.materialAndColor.length >= 25) {
-                                    $('#current-product-material').css('font-size', '6.5vh')
+                                    $('#current-product-material').css('font-size', '4.5vh')
                                 }
                             }
                             else {
-                                $('#current-product-material').css('font-size', '8vh')
+                                $('#current-product-material').css('font-size', '6vh')
                             }
                         }
                         else {
@@ -69,23 +69,23 @@ const app = new Vue({
                             }
 
                             if (data.designation.length > 20) {
-                                $('#next-product-designation').css('font-size', '7vh')
+                                $('#next-product-designation').css('font-size', '5vh')
                             }
                             else {
-                                $('#next-product-designation').css('font-size', '8vh')
+                                $('#next-product-designation').css('font-size', '6vh')
                             }
 
                             $('#next-product-material').append(data.materialAndColor)
 
                             if (data.materialAndColor.length > 20) {
-                                $('#next-product-material').css('font-size', '7vh')
+                                $('#next-product-material').css('font-size', '5vh')
 
                                 if (data.materialAndColor.length >= 25) {
-                                    $('#next-product-material').css('font-size', '6.5vh')
+                                    $('#next-product-material').css('font-size', '4.5vh')
                                 }
                             }
                             else {
-                                $('#next-product-material').css('font-size', '8vh')
+                                $('#next-product-material').css('font-size', '6vh')
                             }
                         }
                         else {

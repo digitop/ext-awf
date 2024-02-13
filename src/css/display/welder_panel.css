@@ -1,4 +1,17 @@
 .image {
     height: 55vh;
     margin-left: 13%;
+    margin-top: -5%;
+}
+
+.bottom-closer {
+    margin-top: 4% !important;
+}
+
+.timer-closer {
+    margin-top: 5vh !important;
+}
+
+.centered {
+    text-align: center;
 }

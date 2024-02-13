@@ -36,20 +36,20 @@
             </div>
         </span>
     </div>
-    <div class="awf-container bottom">
-        <span class="half" style="padding-left: 7vh;">
-            <div id="current-product-designation">
-            </div>
-            <div id="current-product-material">
-            </div>
-        </span>
-        <span class="half half-right">
+    <div class="awf-container bottom bottom-closer">
+        <span class="half half-left centered">
             <div id="next-product-designation">
             </div>
             <div id="next-product-material">
             </div>
         </span>
-        <div class="timer">
+        <span class="half half-right centered">
+            <div id="current-product-designation">
+            </div>
+            <div id="current-product-material">
+            </div>
+        </span>
+        <div class="timer timer-closer">
             <span id="time"></span>
         </div>
     </div>
