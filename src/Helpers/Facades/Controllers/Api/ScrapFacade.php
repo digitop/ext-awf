@@ -3,34 +3,24 @@
 namespace AWF\Extension\Helpers\Facades\Controllers\Api;
 
 use App\Models\DASHBOARD_MODULE_SETTINGS;
-use AWF\Extension\Helpers\MakeOrder;
 use AWF\Extension\Helpers\Responses\JsonResponseModel;
 use AWF\Extension\Helpers\Responses\ResponseData;
 use AWF\Extension\Models\AWF_SEQUENCE;
 use AWF\Extension\Models\AWF_SEQUENCE_LOG;
 use AWF\Extension\Models\AWF_SEQUENCE_WORKCENTER;
 use AWF\Extension\Responses\CustomJsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Foundation\Http\FormRequest;
 use App\Events\Dashboard\ProductQualified;
-use App\Models\QUALREPHEAD;
-use App\Models\SERIALNUMBER;
 use App\Models\WORKCENTER;
-use App\Models\DASHBOARD;
 use App\Models\REPNO;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\Collection;
 
 class ScrapFacade extends Facade
 {
     public function index(ProductQualified $event): JsonResponse
     {
         if ($event->scrapReport !== false) {
-            $qualification = QUALREPHEAD::where('QRIDEN', '=', $event->scrapReport)->first();
-
             $moduleSetting = DASHBOARD_MODULE_SETTINGS::where([
                 ['DHIDEN', $event->DHIDEN],
                 ['DMSKEY', 'scrapStationFilter']
@@ -51,12 +41,6 @@ class ScrapFacade extends Facade
                     ),
                     Response::HTTP_OK
                 ));
-            }
-
-            $repnos = REPNO::where('ORCODE', '=', $qualification->ORCODE)->get();
-
-            foreach ($repnos as $repno) {
-                SERIALNUMBER::where('RNREPN', '=', $repno->RNREPN)->delete();
             }
 
             $sequence = DB::connection('custom_mysql')->select('
@@ -92,8 +76,6 @@ class ScrapFacade extends Facade
                 'SEQUID' => $sequence->SEQUID,
                 'WCSHNA' => 'EL01',
             ]);
-
-            MakeOrder::makeOrder(new Collection($sequence));
 
             $sequence = AWF_SEQUENCE::where('SEQUID', $sequence->SEQUID)
                 ->where('SEINPR', '=', 0)
