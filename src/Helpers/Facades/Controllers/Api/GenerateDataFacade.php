@@ -5,6 +5,7 @@ namespace AWF\Extension\Helpers\Facades\Controllers\Api;
 use AWF\Extension\Helpers\Responses\JsonResponseModel;
 use AWF\Extension\Helpers\Responses\ResponseData;
 use AWF\Extension\Models\AWF_SEQUENCE;
+use AWF\Extension\Models\AWF_SEQUENCE_LOG;
 use AWF\Extension\Models\AWF_SEQUENCE_WORKCENTER;
 use AWF\Extension\Responses\CustomJsonResponse;
 use Carbon\Carbon;
@@ -179,6 +180,7 @@ class GenerateDataFacade extends Facade
     protected function deleteAllSequenceThatNotInProduction(): void
     {
         $sequences = AWF_SEQUENCE::where('SEINPR', '=', 0)->get();
+        $now = (new \DateTime())->format('Y-m-d H:i:s');
 
         $deleteRepno = '';
         $deleteOrder = '';
@@ -230,5 +232,13 @@ class GenerateDataFacade extends Facade
             DB::delete('delete from LOG_ANALOG_REPNO where ORCODE in (' . $deleteOrder . ')');
             DB::delete('delete from ORDERHEAD where ORCODE in (' . $deleteOrder . ')');
         }
+
+        AWF_SEQUENCE_LOG::whereNull('LSTIME')->update([
+            'LSTIME' => $now,
+        ]);
+
+        AWF_SEQUENCE_LOG::whereNull('LETIME')->update([
+            'LETIME' => $now,
+        ]);
     }
 }
