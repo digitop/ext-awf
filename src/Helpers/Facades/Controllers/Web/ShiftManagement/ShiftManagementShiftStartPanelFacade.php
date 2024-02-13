@@ -39,7 +39,7 @@ class ShiftManagementShiftStartPanelFacade extends Facade
                            Model|string|null        $model = null
     ): Application|Factory|View|IlluminateView|ContractsApplication|null
     {
-        $collection = AWF_SEQUENCE::where('SEINPR', 'in', [0, 1])
+        $collection = AWF_SEQUENCE::whereIn('SEINPR', [0, 1])
             ->orderBy('SEQUID', 'ASC')
             ->get();
 
