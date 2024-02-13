@@ -248,9 +248,9 @@ class SequenceFacade extends Facade
 
     public function set(string $pillar, string $sequenceId): RedirectResponse
     {
-        $sequences = AWF_SEQUENCE::where('SEPILL', '=', $pillar)
+        AWF_SEQUENCE::where('SEPILL', '=', $pillar)
             ->where('SEQUID', '<', $sequenceId)
-            ->where('SEINPR', '=', 0)
+            ->where('SEINRP', '<', 5)
             ->update([
                 'SEINPR' => 99,
             ]);
