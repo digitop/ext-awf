@@ -96,7 +96,10 @@ class ProductColorsResponse implements ResponseInterface
         if (is_array($sequence) && array_key_exists(0, $sequence)) {
             $this->sequence = $sequence[0];
         }
-        elseif (property_exists($sequence, 'ORCODE') || property_exists($sequence, 'PRCODE')) {
+        elseif (
+            is_object($sequence) &&
+            (property_exists($sequence, 'ORCODE') || property_exists($sequence, 'PRCODE'))
+        ) {
             $this->sequence = $sequence;
         }
 
