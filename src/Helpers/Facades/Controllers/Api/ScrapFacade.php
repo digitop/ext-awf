@@ -33,7 +33,7 @@ class ScrapFacade extends Facade
             $workCenter = WORKCENTER::where(
                 'WCSHNA',
                 '=',
-                DASHBOARD::where('DHIDEN', '=', $event->DHIDEN)->first()->operatorPanels[0]->WCSHNA
+                DASHBOARD::where('DHIDEN', '=', $event->DHIDEN)->with('operatorPanels')->first()->operatorPanels[0]->WCSHNA
             )->first();
 
             $repnos = REPNO::where('ORCODE', '=', $qualification->ORCODE)->get();
@@ -49,8 +49,18 @@ class ScrapFacade extends Facade
                 where asl.LSTIME is not null and asl.LETIME is null and a.SEINPR > 0
             ');
 
-            if (array_key_exists(0, $sequence)) {
+            if (array_key_exists(0, $sequence) && !empty($sequence[0])) {
                 $sequence = $sequence[0];
+            }
+
+            if (empty($sequence)) {
+                return new CustomJsonResponse(new JsonResponseModel(
+                    new ResponseData(
+                        false,
+
+                    ),
+                    Response::HTTP_OK
+                ));
             }
 
             AWF_SEQUENCE::where('SEQUID', '=', $sequence->SEQUID)
