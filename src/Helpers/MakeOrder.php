@@ -120,7 +120,7 @@ class MakeOrder
                 }
 
                 $insertRepnoQuery .= sprintf(
-                    '("%s","%s","%s","%s","%s","%s",0,0,0,0,"%s",0,"%s","%s","%s","%s","%s","%s","%s",1,0,0,1,0,0,-1,"%s",%s,"%s","%s","%s",%s,%s,%s,%s,%s,"%s","%s",%s,%s,"%s","%s",%s)',
+                    '("%s","%s","%s","%s","%s","%s",0,0,0,0,"%s",0,"%s","%s","%s","%s","%s","%s","%s",1,1,0,1,0,0,-1,"%s",%s,"%s","%s","%s",%s,%s,%s,%s,%s,"%s","%s",%s,%s,"%s","%s",%s)',
                     $repno,
                     $prWcData[$i]->WCSHNA,
                     $orderCode->ORCODE,
