@@ -24,6 +24,8 @@ class MoveSequenceFacade extends Facade
 {
     public function store(FormRequest|Request $request, Model|string|null ...$model): JsonResponse|null
     {
+        $database = config('database.connections.mysql.database');
+
         $sequence = AWF_SEQUENCE::where('SEQUID', '=', $request->SEQUID)
             ->where('SEEXPI', '>=', (new \DateTime())->format('Y-m-d'))
             ->first();
@@ -45,7 +47,6 @@ class MoveSequenceFacade extends Facade
 
         if ($nextProductWorkCenterData !== null) {
             $status = 'default';
-            $database = config('database.connections.mysql.database');
             $workCenter = WORKCENTER::where('WCSHNA', '=', $nextProductWorkCenterData->WCSHNA)->first();
 
             $queryString = '

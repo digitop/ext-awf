@@ -101,8 +101,17 @@
                         }
                         else if (typeof response.data?.waitings != 'undefined' && !hasWaiting) {
                             if (key == 'waitings') {
+                                let i = 0
+
                                 $.each(data, function (key, waiting) {
-                                    html += '<tr class="awf-sequence-waiting"><td>' + waiting.SEQUID + '</td><td>' + waiting.SEPONR + '</td><td>' + waiting.SEPSEQ + '</td><td>' + waiting.PRCODE + '</td><td>' + waiting.ORCODE + '</td></tr>'
+                                    if (i === 0) {
+                                        html += '<tr class="awf-sequence-waiting" style="background-color: #3030bd;"><td>' + waiting.SEQUID + '</td><td>' + waiting.SEPONR + '</td><td>' + waiting.SEPSEQ + '</td><td>' + waiting.PRCODE + '</td><td>' + waiting.ORCODE + '</td></tr>'
+                                    }
+                                    else {
+                                        html += '<tr class="awf-sequence-waiting"><td>' + waiting.SEQUID + '</td><td>' + waiting.SEPONR + '</td><td>' + waiting.SEPSEQ + '</td><td>' + waiting.PRCODE + '</td><td>' + waiting.ORCODE + '</td></tr>'
+                                    }
+
+                                    i++
                                 })
                                 hasWaiting = true
                             }
