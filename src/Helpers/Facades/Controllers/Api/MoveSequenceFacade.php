@@ -84,6 +84,47 @@ class MoveSequenceFacade extends Facade
             ]);
         }
 
+        if (in_array($request->WCSHNA, ['KAB01', 'KAJ01', 'KAB02', 'KAJ02', 'KBB01', 'KBJ01', 'KCB01', 'KCJ01'], true)) {
+            $status = 'default';
+            $workCenter2 = WORKCENTER::where('WCSHNA', '=', $request->WCSHNA)->first();
+
+            $queryString = '
+            select a.PRCODE, a.SEQUID, a.SEPSEQ, a.SEARNU, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEINPR from AWF_SEQUENCE_LOG asl
+                join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
+                join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
+                join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE
+                join ' . $database . '.PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = asl.WCSHNA
+                join ' . $database . '.PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
+            where asl.LSTIME is null and asl.LETIME is null and a.SEINPR = (ppd.PORANK - 1) and
+                asl.WCSHNA = "' . $workCenter2->WCSHNA . '" order by a.SEQUID limit 1'
+            ;
+
+            $sequence3 = DB::connection('custom_mysql')->select($queryString);
+
+            if (array_key_exists(0, $sequence3)) {
+                $sequence3 = $sequence3[0];
+            }
+
+            if (empty($sequence3)) {
+                $status = 'waiting';
+            }
+
+
+            $workCenter2->features()->where('WFSHNA', '=', 'OPSTATUS')->first()?->update([
+                'WFVALU' => $status,
+            ]);
+
+            publishMqtt(env('DEPLOYMENT_SUBDOMAIN') . '/api/SEQUENCE_CHANGE/', [
+                [
+                    "to" => 'dh:' . $workCenter2->operatorPanels[0]->dashboard->DHIDEN,
+                    "payload" => [
+                        "status" => $status,
+                        'orderCode' => $sequence3?->ORCODE ?? null
+                    ],
+                ]
+            ]);
+        }
+
         return new CustomJsonResponse(new JsonResponseModel(
             new ResponseData(
                 true,

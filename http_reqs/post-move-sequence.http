@@ -1,8 +1,8 @@
-POST localhost:8003/api/ext/awf-extension/move-sequence
+POST oeem.awf.hu/api/ext/awf-extension/move-sequence
 Accept: application/json
 Content-Type: application/json
 
 {
   "WCSHNA": "EL01",
-  "SEQUID": 109216
+  "SEQUID": 106897
 }
