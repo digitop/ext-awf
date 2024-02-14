@@ -30,6 +30,12 @@ return [
             'articleNumber' => 'Article number',
         ],
     ],
+    'production-details' => [
+        'got-over' => 'Last finished piece that has not yet been included in the next machine',
+        'in-place' => 'The piece currently in the machine',
+        'waiting-first' => 'Next piece',
+        'waitings' => 'Waiting pieces',
+    ],
     'sideCode' => [
         'R' => 'right',
         'L' => 'left',

@@ -3,6 +3,6 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "WCSHNA": "KAB01",
-  "SEQUID": 106944
+  "WCSHNA": "EL01",
+  "SEQUID": 107009
 }

@@ -30,6 +30,12 @@ return [
             'articleNumber' => 'Artikelnummer',
         ],
     ],
+    'production-details' => [
+        'got-over' => 'Letztes fertiges Stück, das noch nicht in die nächste Maschine aufgenommen wurde',
+        'in-place' => 'Das Stück, das sich derzeit in der Maschine befindet',
+        'waiting-first' => 'Nächstes Stück',
+        'waitings' => 'Wartestücke',
+    ],
     'sideCode' => [
         'R' => 'Rechts',
         'L' => 'Links',

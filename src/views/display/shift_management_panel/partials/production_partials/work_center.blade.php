@@ -27,6 +27,42 @@
                 </div>
             </label>
         @else
+            <div style="position: absolute; top: 10%; font-size: 3vh; left: 35%; width: 40%">
+                <table>
+                    <tr>
+                        <td>
+                            <div style="width: 4vh; height: 4vh; border-radius: 50%; background-color: #474755;"></div>
+                        </td>
+                        <td style="padding-left: 2vh;">
+                            {{ __('display.production-details.got-over') }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div style="width: 4vh; height: 4vh; border-radius: 50%; background-color: #5e953c;"></div>
+                        </td>
+                        <td style="padding-left: 2vh;">
+                            {{ __('display.production-details.in-place') }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div style="width: 4vh; height: 4vh; border-radius: 50%; background-color: #3030bd;"></div>
+                        </td>
+                        <td style="padding-left: 2vh;">
+                            {{ __('display.production-details.waiting-first') }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div style="width: 4vh; height: 4vh; border-radius: 50%; background-color: #a9adad;"></div>
+                        </td>
+                        <td style="padding-left: 2vh;">
+                            {{ __('display.production-details.waitings') }}
+                        </td>
+                    </tr>
+                </table>
+            </div>
             <div  class="production-content">
                 <table id="production-table" class="shift-management-table production-table">
                     <thead>
