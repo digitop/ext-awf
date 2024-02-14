@@ -174,18 +174,18 @@ class SequenceFacade extends Facade
             $sequence[0]->PRCODE !== 'dummy'
         ) {
             $queryString = '
-                    select a.PRCODE, a.SEQUID, a.SEPSEQ, a.SEARNU, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEINPR from AWF_SEQUENCE_LOG asl
-                        join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
-                        join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
-                        join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE
-                        join ' . $database . '.PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = asl.WCSHNA
-                        join ' . $database . '.PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
-                    where asl.LSTIME is null and asl.LETIME is null and a.SEINPR = (ppd.PORANK - 1) and
-                        asl.WCSHNA = "' . $workCenter->WCSHNA . '"' .
-                ($pillar !== null ? ' and a.SEPILL = "' . $pillar .'"' : '') .
-                ($request->has('side') ? ' and a.SESIDE = "' . $request->side . '"' : '') .
-                ' order by a.SEQUID' .
-                ($request->has('limit') ? ' limit ' . $request->limit : '')
+                select a.PRCODE, a.SEQUID, a.SEPSEQ, a.SEARNU, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEINPR from AWF_SEQUENCE_LOG asl
+                    join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
+                    join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
+                    join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE
+                    join ' . $database . '.PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = asl.WCSHNA
+                    join ' . $database . '.PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
+                where asl.LSTIME is null and asl.LETIME is null and a.SEINPR = (ppd.PORANK - 1) and
+                    asl.WCSHNA = "' . $workCenter->WCSHNA . '"' .
+                    ($pillar !== null ? ' and a.SEPILL = "' . $pillar .'"' : '') .
+                    ($request->has('side') ? ' and a.SESIDE = "' . $request->side . '"' : '') .
+                    ' order by a.SEQUID' .
+                    ($request->has('limit') ? ' limit ' . $request->limit : '')
             ;
 
             $sequence2 = new Collection(DB::connection('custom_mysql')->select($queryString));
