@@ -256,17 +256,27 @@ class SequenceFacade extends Facade
                 'SEINPR' => 99,
             ]);
 
-        AWF_SEQUENCE_LOG::where('SEQUID', '<', $sequenceId)
-            ->whereNull('LSTIME')
-            ->update([
-                'LSTIME' => $now,
-            ]);
+        $logs = DB::connection('custom_mysql')->select('
+            select a.SEQUID from AWF_SEQUENCE a
+                join AWF_SEQUENCE_LOG asl on a.SEQUID = asl.SEQUID
+            where a.SEINPR > 0 and (asl.LSTIME is null or asl.LETIME is null) and a.SEQUID < 111479
+        ');
 
-        AWF_SEQUENCE_LOG::where('SEQUID', '<', $sequenceId)
-            ->whereNull('LETIME')
-            ->update([
-                'LETIME' => $now,
-            ]);
+        if (array_key_exists(0, $logs) && !empty($logs[0])) {
+            foreach ($logs as $log) {
+                AWF_SEQUENCE_LOG::where('SEQUID', '=', $log->SEQUID)
+                    ->whereNull('LSTIME')
+                    ->update([
+                        'LSTIME' => $now,
+                    ]);
+
+                AWF_SEQUENCE_LOG::where('SEQUID', '=', $log->SEQUID)
+                    ->whereNull('LETIME')
+                    ->update([
+                        'LETIME' => $now,
+                    ]);
+            }
+        }
 
         return back()->with('notification-success', __('responses.update'));
     }
