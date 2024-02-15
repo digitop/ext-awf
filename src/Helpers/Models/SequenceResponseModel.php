@@ -15,6 +15,7 @@ class SequenceResponseModel extends ObjectToArray
     protected string|null $RNREPN = null;
     protected string|null $DHIDEN = null;
     protected string|null $plc = null;
+    protected string|null $pruftisch = null;
     protected array $previousRepnos = [];
 
     public function getSEQUID(): int
@@ -107,6 +108,17 @@ class SequenceResponseModel extends ObjectToArray
     public function setPlc(string|null $plc): SequenceResponseModel
     {
         $this->plc = $plc;
+        return $this;
+    }
+
+    public function getPruftisch(): ?string
+    {
+        return $this->pruftisch;
+    }
+
+    public function setPruftisch(?string $pruftisch): SequenceResponseModel
+    {
+        $this->pruftisch = $pruftisch;
         return $this;
     }
 
