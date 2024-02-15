@@ -1,0 +1,4 @@
+### get order code by dashboard
+GET localhost:8000/api/ext/awf-extension/order/get-code/14
+Accept: application/json
+Content-Type: application/json

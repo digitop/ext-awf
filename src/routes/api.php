@@ -42,5 +42,8 @@ Route::group(
 
         Route::get('/shift-management/set-default/{dashboardId}', ['uses' => 'ShiftManagementPanelController@default'])
             ->name('shift-management.dashboard.default');
+
+        Route::get('/order/get-code/{dashboardId}', ['uses' => 'OrderController@create'])
+            ->name('order.get-code');
     }
 );
