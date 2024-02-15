@@ -57,5 +57,4 @@ class MakeOrderFacade extends Facade
             Response::HTTP_OK
         ));
     }
-
 }

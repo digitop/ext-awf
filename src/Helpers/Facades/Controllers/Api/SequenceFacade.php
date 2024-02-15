@@ -5,6 +5,7 @@ namespace AWF\Extension\Helpers\Facades\Controllers\Api;
 use AWF\Extension\Events\NextProductEvent;
 use AWF\Extension\Events\WelderNextProductEvent;
 use AWF\Extension\Helpers\Facades\Controllers\Web\PreparationStationPanelFacade;
+use AWF\Extension\Helpers\Facades\Controllers\Web\WelderPanelFacade;
 use AWF\Extension\Helpers\Responses\JsonResponseModel;
 use AWF\Extension\Helpers\Responses\ResponseData;
 use AWF\Extension\Models\AWF_SEQUENCE;
@@ -197,43 +198,6 @@ class SequenceFacade extends Facade
                         ]);
                 }
             }
-
-            if (
-                in_array($sequence[0]->SEPILL, ['B', 'C'], true) &&
-                in_array($workCenter->WCSHNA, ['KAB02', 'KAJ02', 'KBB01', 'KBJ01', 'KCB01', 'KCJ01'], true) &&
-                $sequence[0]->PRCODE !== 'dummy'
-            ) {
-                $start = (new \DateTime())->format('Y-m-d') . ' 00:00:00';
-
-                $waitings = DB::connection('custom_mysql')->select('
-                select asl.LSTIME, a.SEQUID, a.SEPONR, a.SEPSEQ, a.SESIDE, a.SEPILL, a.SEINPR, a.PRCODE, a.ORCODE, ppd.PFIDEN, ppd.PORANK, ppd.OPSHNA
-                from AWF_SEQUENCE a
-                    join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE
-                    join ' . $database . '.PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = "' . $workCenter->WCSHNA . '"
-                    join ' . $database . '.PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
-                    left join AWF_SEQUENCE_LOG asl on a.SEQUID = asl.SEQUID and asl.WCSHNA = pcd.WCSHNA
-                where a.SEINPR < ppd.PORANK
-                    and (asl.LSTIME >= "' . $start . '" or asl.LSTIME is null)
-                order by asl.LSTIME DESC, a.SEQUID limit 2
-            ');
-
-                if (array_key_exists(0, $waitings) && !empty($waitings[0])) {
-                    $sequence2 = new Collection([$waitings[0]]);
-                }
-
-                if (array_key_exists(1, $waitings) && !empty($waitings[1])) {
-                    $sequence3 = new Collection([$waitings[1]]);
-                }
-
-                event(new WelderNextProductEvent(
-                    (new WelderNextProductEventResponse(
-                        $sequence2 ?? null,
-                        $workCenter
-                    ))
-                        ->setNext($sequence3 ?? null)
-                        ->generate()
-                ));
-            }
         }
 
         return new CustomJsonResponse(new JsonResponseModel(
@@ -279,5 +243,65 @@ class SequenceFacade extends Facade
         }
 
         return back()->with('notification-success', __('responses.update'));
+    }
+
+    public function welder(Request|null $request = null, Model|string|null ...$model): JsonResponse
+    {
+        list($pillar, $workCenter) = $model;
+
+        if (is_string($pillar) && $pillar === 'null') {
+            $pillar = null;
+        }
+
+        $database = config('database.connections.mysql.database');
+
+        $start = (new \DateTime())->format('Y-m-d') . ' 00:00:00';
+
+        $waitings = DB::connection('custom_mysql')->select('
+            select asl.LSTIME, a.SEQUID, a.SEPONR, a.SEPSEQ, a.SESIDE, a.SEPILL, a.SEINPR, a.PRCODE, a.ORCODE, ppd.PFIDEN, ppd.PORANK, ppd.OPSHNA
+            from AWF_SEQUENCE a
+                join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE
+                join ' . $database . '.PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = "' . $workCenter->WCSHNA . '"
+                join ' . $database . '.PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
+                left join AWF_SEQUENCE_LOG asl on a.SEQUID = asl.SEQUID and asl.WCSHNA = pcd.WCSHNA
+            where a.SEINPR < ppd.PORANK and a.SESIDE = "L"
+                and (asl.LSTIME >= "' . $start . '" or asl.LSTIME is null)
+            order by asl.LSTIME DESC, a.SEQUID limit 2
+        ');
+
+        if (array_key_exists(0, $waitings) && !empty($waitings[0])) {
+            $sequence2 = new Collection([$waitings[0]]);
+        }
+
+        if (array_key_exists(1, $waitings) && !empty($waitings[1])) {
+            $sequence3 = new Collection([$waitings[1]]);
+        }
+
+        if (!empty($sequence2) && !empty($sequence3)) {
+            event(new WelderNextProductEvent(
+                (new WelderNextProductEventResponse(
+                    $sequence2 ?? null,
+                    $workCenter
+                ))
+                    ->setNext($sequence3 ?? null)
+                    ->generate()
+            ));
+
+            return new CustomJsonResponse(new JsonResponseModel(
+                new ResponseData(
+                    true
+                ),
+                Response::HTTP_OK
+            ));
+        }
+
+        (new WelderPanelFacade())->default($workCenter);
+
+        return new CustomJsonResponse(new JsonResponseModel(
+            new ResponseData(
+                false
+            ),
+            Response::HTTP_OK
+        ));
     }
 }

@@ -4,5 +4,26 @@ Content-Type: application/json
 
 {
   "WCSHNA": "EL01",
-  "SEQUID": 122951
+  "SEQUID": 122195
+}
+
+### order change
+POST http://localhost:8000/api/dashboard/2/order/saveOrderChange
+Accept: application/json
+Content-Type: application/json
+
+{
+  "unassignedOrders": {},
+  "assignedOrders": [
+    {
+      "ORCODE": "2745165_458710_F46B16101_2",
+      "RNREPN": "2745165_458710_F46B16101_2-KAB01-PRB",
+      "RNOLMU": 1,
+      "type": "assigned"
+    }
+  ],
+  "isChecklist": false,
+  "users": [
+    1
+  ]
 }

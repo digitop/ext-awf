@@ -4,6 +4,7 @@ namespace AWF\Extension\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use AWF\Extension\Requests\Api\SequenceShowRequest;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -33,5 +34,10 @@ class SequenceController extends Controller
     public function set(string $pillar, string $sequenceId): RedirectResponse
     {
         return $this->facade->set($pillar, $sequenceId);
+    }
+
+    public function welder(Request|null $request = null, string $pillar, WORKCENTER $WCSHNA): JsonResponse
+    {
+        return $this->facade->welder($request, $pillar, $WCSHNA);
     }
 }

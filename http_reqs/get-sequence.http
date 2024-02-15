@@ -4,7 +4,7 @@ Accept: application/json
 Content-Type: application/json
 
 ### get data by WC
-GET http://localhost:8000/api/ext/awf-extension/get-sequence/KBB01/B
+GET http://localhost:8000/api/ext/awf-extension/get-sequence/EL01/A
 Accept: application/json
 Content-Type: application/json
 
@@ -16,5 +16,10 @@ Content-Type: application/json
 
 ### get default preparation panel
 GET http://localhost:8003/api/ext/awf-extension/preparation-panel/default
+Accept: application/json
+Content-Type: application/json
+
+### get welder data
+GET http://localhost:8000/api/ext/awf-extension/sequence/welder/B/HB01
 Accept: application/json
 Content-Type: application/json
