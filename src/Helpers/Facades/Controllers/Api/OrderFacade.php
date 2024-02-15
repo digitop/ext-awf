@@ -32,7 +32,6 @@ class OrderFacade extends Facade
         }
 
         $database = config('database.connections.mysql.database');
-        $start = (new \DateTime())->format('Y-m-d') . ' 00:00:00';
         $sequence = null;
 
         $waitings = DB::connection('custom_mysql')->select('
@@ -43,7 +42,7 @@ class OrderFacade extends Facade
                 join ' . $database . '.PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
                 left join AWF_SEQUENCE_LOG asl on a.SEQUID = asl.SEQUID and asl.WCSHNA = pcd.WCSHNA
             where a.SEINPR < ppd.PORANK
-                and (asl.LSTIME >= "' . $start . '" or asl.LSTIME is null)
+                and (asl.LSTIME is null and asl.LSTIME is null)
             order by asl.LSTIME DESC, a.SEQUID limit 1
         ');
 
