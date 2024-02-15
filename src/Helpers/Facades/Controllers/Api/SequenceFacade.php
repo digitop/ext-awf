@@ -168,55 +168,6 @@ class SequenceFacade extends Facade
             }
         }
 
-        if (
-            in_array($sequence[0]->SEPILL, ['B', 'C'], true) &&
-            in_array($workCenter->WCSHNA, ['KAB02', 'KAJ02', 'KBB01', 'KBJ01', 'KCB01', 'KCJ01'], true) &&
-            $sequence[0]->PRCODE !== 'dummy'
-        ) {
-            $queryString = '
-                select a.PRCODE, a.SEQUID, a.SEPSEQ, a.SEARNU, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEINPR from AWF_SEQUENCE_LOG asl
-                    join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
-                    join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
-                    join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE
-                    join ' . $database . '.PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = asl.WCSHNA
-                    join ' . $database . '.PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
-                where asl.LSTIME is null and asl.LETIME is null and a.SEINPR = (ppd.PORANK - 1) and
-                    asl.WCSHNA = "' . $workCenter->WCSHNA . '"' .
-                    ($pillar !== null ? ' and a.SEPILL = "' . $pillar .'"' : '') .
-                    ($request->has('side') ? ' and a.SESIDE = "' . $request->side . '"' : '') .
-                    ' order by a.SEQUID' .
-                    ($request->has('limit') ? ' limit ' . $request->limit : '')
-            ;
-
-            $sequence2 = new Collection(DB::connection('custom_mysql')->select($queryString));
-
-            $queryString = '
-            select a.PRCODE, a.SEQUID, a.SEPSEQ, a.SEARNU, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEINPR from AWF_SEQUENCE_LOG asl
-                join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
-                join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
-                join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE
-                join ' . $database . '.PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = asl.WCSHNA
-                join ' . $database . '.PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
-            where asl.LSTIME is null and asl.LETIME is null and a.SEINPR = (ppd.PORANK - 1) and
-                asl.WCSHNA = "' . $workCenter->WCSHNA . '" and a.SEQUID > ' . $sequence2[0]->SEQUID .
-                ($pillar !== null ? ' and a.SEPILL = "' . $pillar .'"' : '') .
-                ($request->has('side') ? ' and a.SESIDE = "' . $request->side . '"' : '') .
-                ' order by a.SEQUID' .
-                ($request->has('limit') ? ' limit ' . $request->limit : 2)
-            ;
-
-            $sequence3 = new Collection(DB::connection('custom_mysql')->select($queryString));
-
-            event(new WelderNextProductEvent(
-                (new WelderNextProductEventResponse(
-                    $sequence2,
-                    $workCenter
-                ))
-                ->setNext($sequence3)
-                ->generate()
-            ));
-        }
-
         if (!$noChange && $sequence[0]->PRCODE !== 'dummy') {
             foreach ($sequence as $item) {
                 AWF_SEQUENCE_LOG::where('WCSHNA', '=', $workCenter->WCSHNA)
@@ -245,6 +196,43 @@ class SequenceFacade extends Facade
                             'SEINPR' => $productRank[0]->PORANK,
                         ]);
                 }
+            }
+
+            if (
+                in_array($sequence[0]->SEPILL, ['B', 'C'], true) &&
+                in_array($workCenter->WCSHNA, ['KAB02', 'KAJ02', 'KBB01', 'KBJ01', 'KCB01', 'KCJ01'], true) &&
+                $sequence[0]->PRCODE !== 'dummy'
+            ) {
+                $start = (new \DateTime())->format('Y-m-d') . ' 00:00:00';
+
+                $waitings = DB::connection('custom_mysql')->select('
+                select asl.LSTIME, a.SEQUID, a.SEPONR, a.SEPSEQ, a.SESIDE, a.SEPILL, a.SEINPR, a.PRCODE, a.ORCODE, ppd.PFIDEN, ppd.PORANK, ppd.OPSHNA
+                from AWF_SEQUENCE a
+                    join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE
+                    join ' . $database . '.PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = "' . $workCenter->WCSHNA . '"
+                    join ' . $database . '.PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
+                    left join AWF_SEQUENCE_LOG asl on a.SEQUID = asl.SEQUID and asl.WCSHNA = pcd.WCSHNA
+                where a.SEINPR < ppd.PORANK
+                    and (asl.LSTIME >= "' . $start . '" or asl.LSTIME is null)
+                order by asl.LSTIME DESC, a.SEQUID limit 2
+            ');
+
+                if (array_key_exists(0, $waitings) && !empty($waitings[0])) {
+                    $sequence2 = new Collection([$waitings[0]]);
+                }
+
+                if (array_key_exists(1, $waitings) && !empty($waitings[1])) {
+                    $sequence3 = new Collection([$waitings[1]]);
+                }
+
+                event(new WelderNextProductEvent(
+                    (new WelderNextProductEventResponse(
+                        $sequence2 ?? null,
+                        $workCenter
+                    ))
+                        ->setNext($sequence3 ?? null)
+                        ->generate()
+                ));
             }
         }
 
