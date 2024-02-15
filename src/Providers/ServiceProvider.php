@@ -61,9 +61,9 @@ class ServiceProvider extends IlluminateServiceProvider
             'host' => '',
             'username' => '',
             'password' => '',
-            'port' => , //
-            'root' => '/tmp//',
-            'ssl' => true,
+            'port' => '21', //
+            'root' => '/',
+            'ssl' => false,
             'timeout' => 30
         ];
 
