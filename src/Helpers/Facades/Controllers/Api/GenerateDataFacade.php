@@ -179,7 +179,7 @@ class GenerateDataFacade extends Facade
 
     protected function deleteAllSequenceThatNotInProduction(): void
     {
-        $sequences = AWF_SEQUENCE::where('SEINPR', '=', 0)->get();
+        $sequences = AWF_SEQUENCE::whereIn('SEINPR', [0, 1])->get();
         $now = (new \DateTime())->format('Y-m-d H:i:s');
 
         $deleteRepno = '';
