@@ -47,5 +47,8 @@ Route::group(
 
         Route::get('/order/get-code/{dashboardId}', ['uses' => 'OrderController@create'])
             ->name('order.get-code');
+
+        Route::post('/order/check-serial/{dashboardId}', ['uses' => 'OrderController@store'])
+            ->name('order.check-serial');
     }
 );
