@@ -82,7 +82,21 @@ class OrderFacade extends Facade
                         'orderCode' => null,
                         'side' => null,
                     ],
-                    $success ? '' : 'Nem található serial number'
+                    $success ? '' : 'Nem érkezett serial number'
+                ),
+                Response::HTTP_OK
+            ));
+        }
+
+        if (empty($request->serial)) {
+            return new CustomJsonResponse(new JsonResponseModel(
+                new ResponseData(
+                    $success,
+                    [
+                        'orderCode' => null,
+                        'side' => null,
+                    ],
+                    $success ? '' : 'Nem érkezett serial number'
                 ),
                 Response::HTTP_OK
             ));
