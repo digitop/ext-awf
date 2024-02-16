@@ -158,7 +158,7 @@ class OrderFacade extends Facade
             new ResponseData(
                 $success,
                 [
-                    'orderCode' => $repno?->ORCODE ?? null,
+                    'orderCode' => $waiting->ORCODE ?? null,
                     'side' => $waiting->SESIDE,
                 ],
                 $success ? '' : 'Hiba az adatok mentése során'

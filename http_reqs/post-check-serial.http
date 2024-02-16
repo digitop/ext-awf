@@ -1,7 +1,7 @@
-POST http://localhost:8000/api/ext/awf-extension/order/check-serial/11
+POST http://localhost:8000/api/ext/awf-extension/order/check-serial/12
 Accept: application/json
 Content-Type: application/json
 
 {
-  "serial": "810065682673"
+  "serial": "HF5"
 }
