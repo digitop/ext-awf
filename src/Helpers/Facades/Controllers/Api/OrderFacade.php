@@ -156,12 +156,11 @@ class OrderFacade extends Facade
 
         return new CustomJsonResponse(new JsonResponseModel(
             new ResponseData(
-                $success,
+                true,
                 [
                     'orderCode' => $waiting->ORCODE ?? null,
                     'side' => $waiting->SESIDE,
-                ],
-                $success ? '' : 'Hiba az adatok mentése során'
+                ]
             ),
             Response::HTTP_OK
         ));
