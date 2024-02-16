@@ -103,8 +103,9 @@ class OrderFacade extends Facade
         }
 
         $workCenter = WORKCENTER::where('WCSHNA', '=', $model[0]->operatorPanels[0]->WCSHNA)->first();
+        $isWelder = in_array($workCenter->WCSHNA, ['HA01', 'HB01', 'HC01'], true);
 
-        $waiting = DB::connection('custom_mysql')->select('
+        $queryString = '
             select a.SEQUID, a.SESIDE, a.SEPILL, a.SEINPR, a.PRCODE, a.ORCODE, ppd.PFIDEN, ppd.PORANK, ppd.OPSHNA, asw.RNREPN
             from AWF_SEQUENCE a
                 join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE
@@ -114,13 +115,11 @@ class OrderFacade extends Facade
                 left join AWF_SEQUENCE_WORKCENTER asw on asw.SEQUID = a.SEQUID and asw.WCSHNA = pcd.WCSHNA
             where a.SEINPR < ppd.PORANK
                 and (asl.LSTIME >= "' . $start . '" or asl.LSTIME is null)
-            order by asl.LSTIME DESC, a.SEQUID limit 1
-        ');
+            order by asl.LSTIME DESC, a.SEQUID limit ' . ($isWelder ? 2 : 1);
 
-        if (!empty($waiting[0])) {
-            $waiting = $waiting[0];
-        }
-        else {
+        $waitings = DB::connection('custom_mysql')->select($queryString);
+
+        if (!array_key_exists(0, $waitings) || empty($waitings[0])) {
             return new CustomJsonResponse(new JsonResponseModel(
                 new ResponseData(
                     $success,
@@ -134,38 +133,50 @@ class OrderFacade extends Facade
             ));
         }
 
-        $checkSerial = (new OperatorPanelController())->checkAndSaveSerial(
-            new Request([
-                'SNSERN' => $request->serial,
-                'RNREPN' => $waiting->RNREPN,
-                'SNCOUN' => 1,
-                'SNRDCN' => 1,
-                'subProduct' => false,
-                'parentSNSERN' => false,
-                'PRCODE' => $waiting->PRCODE,
-            ]),
-            $workCenter->operatorPanels[0]->dashboard->DHIDEN
-        );
+        $i = 0;
 
-        if ($checkSerial['success'] == false) {
-            if (array_key_exists('error', $checkSerial) && !empty($checkSerial['error'])) {
-                $error = $checkSerial['error'];
-            }
-            else {
-                $error = 'Hiba lépett fel az adatok mentése során!';
+        foreach ($waitings as $waiting) {
+            $checkSerial = (new OperatorPanelController())->checkAndSaveSerial(
+                new Request([
+                    'SNSERN' => $request->serial,
+                    'RNREPN' => $waiting->RNREPN,
+                    'SNCOUN' => 1,
+                    'SNRDCN' => 1,
+                    'subProduct' => false,
+                    'parentSNSERN' => false,
+                    'PRCODE' => $waiting->PRCODE,
+                ]),
+                $workCenter->operatorPanels[0]->dashboard->DHIDEN
+            );
+
+            if ($checkSerial['success'] == true) {
+                break;
             }
 
-            return new CustomJsonResponse(new JsonResponseModel(
-                new ResponseData(
-                    $success,
-                    [
-                        'orderCode' => null,
-                        'side' => null,
-                    ],
-                    $success ? '' : $error
-                ),
-                Response::HTTP_OK
-            ));
+            if ($checkSerial['success'] == false) {
+                if (array_key_exists('error', $checkSerial) && !empty($checkSerial['error'])) {
+                    $error = $checkSerial['error'];
+                }
+                else {
+                    $error = 'Hiba lépett fel az adatok mentése során!';
+                }
+
+                if (count($waitings) - 1 == $i) {
+                    return new CustomJsonResponse(new JsonResponseModel(
+                        new ResponseData(
+                            $success,
+                            [
+                                'orderCode' => null,
+                                'side' => null,
+                            ],
+                            $success ? '' : $error
+                        ),
+                        Response::HTTP_OK
+                    ));
+                }
+            }
+
+            $i++;
         }
 
         return new CustomJsonResponse(new JsonResponseModel(

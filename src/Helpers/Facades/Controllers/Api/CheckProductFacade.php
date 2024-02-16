@@ -39,10 +39,7 @@ class CheckProductFacade extends Facade
         $start = (new \DateTime())->format('Y-m-d') . ' 00:00:00';
         $database = config('database.connections.mysql.database');
 
-        $sequenceLog = AWF_SEQUENCE_LOG::where('WCSHNA', '=', $workCenter->WCSHNA)
-            ->whereNull('LSTIME')
-            ->whereNull('LETIME')
-            ->first();
+        $isWelder = in_array($workCenter->WCSHNA, ['HA01', 'HB01', 'HC01'], true);
 
         $waitings = DB::connection('custom_mysql')->select('
             select asl.LSTIME, a.SEQUID, a.SEPONR, a.SEPSEQ, a.SESIDE, a.SEPILL, a.SEINPR, a.PRCODE, a.ORCODE, ppd.PFIDEN, ppd.PORANK, ppd.OPSHNA

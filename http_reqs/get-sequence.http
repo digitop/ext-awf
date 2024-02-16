@@ -4,7 +4,7 @@ Accept: application/json
 Content-Type: application/json
 
 ### get data by WC
-GET https://oeem.awf.hu/api/ext/awf-extension/get-sequence/VAB01/A
+GET https://oeem.awf.hu/api/ext/awf-extension/get-sequence/KBB01/B
 Accept: application/json
 Content-Type: application/json
 

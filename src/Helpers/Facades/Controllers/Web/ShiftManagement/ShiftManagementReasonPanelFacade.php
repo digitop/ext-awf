@@ -23,9 +23,6 @@ class ShiftManagementReasonPanelFacade extends Facade
         $dashboards = [];
 
         $workCenters = WORKCENTER::where('WCSHNA', '!=', 'EL01')
-            ->where('WCSHNA', '!=', 'HA01')
-            ->where('WCSHNA', '!=', 'HB01')
-            ->where('WCSHNA', '!=', 'HC01')
             ->with('operatorPanels')
             ->get();
 
