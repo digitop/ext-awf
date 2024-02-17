@@ -21,6 +21,7 @@ const app = new Vue({
 
                     $('#hide-app').css('display', 'none')
                     $('#vue-app').css('display', 'block')
+                    $('#pulse-line').css('display', 'none')
 
                     $('#product-color').css('fill', '#' + data.color)
                     $('#product-designation').append(data.designation)
@@ -52,12 +53,14 @@ const app = new Vue({
 
                         if (data.pillar === 'A') {
                             if (data.side === 'L') {
+                                $('#pulse-line').css('display', 'block')
                                 $('#pulse-line').css('top', '38%')
                                 $('#pulse-line').css('left', '19.5%')
                                 $('#pulse-line').css('height', '15%')
                                 $('#pulse-line').css('transform', 'rotate(-18deg)')
                             }
                             if (data.side === 'R') {
+                                $('#pulse-line').css('display', 'block')
                                 $('#pulse-line').css('top', '38%')
                                 $('#pulse-line').css('left', '36.5%')
                                 $('#pulse-line').css('height', '15%')
@@ -66,12 +69,14 @@ const app = new Vue({
                         }
                         if (data.pillar === 'B') {
                             if (data.side === 'L') {
+                                $('#pulse-line').css('display', 'block')
                                 $('#pulse-line').css('top', '59.5%')
                                 $('#pulse-line').css('left', '19.2%')
                                 $('#pulse-line').css('height', '10%')
                                 $('#pulse-line').css('transform', 'rotate(-83deg)')
                             }
                             if (data.side === 'R') {
+                                $('#pulse-line').css('display', 'block')
                                 $('#pulse-line').css('top', '59.5%')
                                 $('#pulse-line').css('left', '37%')
                                 $('#pulse-line').css('height', '10%')
@@ -80,6 +85,7 @@ const app = new Vue({
                         }
                         if (data.pillar === 'C') {
                             if (data.side === 'L') {
+                                $('#pulse-line').css('display', 'block')
                                 $('#pulse-line').css('top', '79.5%')
                                 $('#pulse-line').css('left', '19.2%')
                                 $('#pulse-line').css('height', '10%')
@@ -88,6 +94,7 @@ const app = new Vue({
                                 $('#pulse-line').css('transform', 'rotate(-136deg)')
                             }
                             if (data.side === 'R') {
+                                $('#pulse-line').css('display', 'block')
                                 $('#pulse-line').css('top', '79%')
                                 $('#pulse-line').css('left', '36.5%')
                                 $('#pulse-line').css('height', '10%')

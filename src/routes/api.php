@@ -23,7 +23,7 @@ Route::group(
         Route::get('/set-sequence/{pillar}/{sequenceId}', ['uses' => 'SequenceController@set'])
             ->name('awf-sequence.set');
         Route::get('/sequence/welder/{pillar}/{WCSHNA}', ['uses' => 'SequenceController@welder'])
-            ->name('awf-sequence.set');
+            ->name('awf-sequence.welder.set');
 
         Route::get('/product-feature/get', ['uses' => 'ProductFeaturesController@create'])
             ->name('product-feature.create');

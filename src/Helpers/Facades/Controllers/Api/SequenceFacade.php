@@ -76,20 +76,11 @@ class SequenceFacade extends Facade
             ));
         }
 
-        $porscheProductNumber = null;
-
-        if (
-            $request->has('porscheProductNumber') &&
-            is_string($request->porscheProductNumber) &&
-            $request->porscheProductNumber !== 'null'
-        ) {
-            $porscheProductNumber = $request->porscheProductNumber;
-        }
-
         $database = config('database.connections.mysql.database');
 
         $queryString = '
-            select a.PRCODE, a.SEQUID, a.SEPSEQ, a.SEARNU, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEINPR from AWF_SEQUENCE_LOG asl
+            select a.PRCODE, a.SEQUID, a.SEPSEQ, a.SEARNU, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEINPR, a.SESCRA
+            from AWF_SEQUENCE_LOG asl
                 join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
                 join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
                 join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE
@@ -111,62 +102,24 @@ class SequenceFacade extends Facade
                     'SEQUID' => 0,
                     'PRCODE' => 'dummy',
                     'ORCODE' => 'dummy',
-                    'SESIDE' => $request?->side,
+                    'SESIDE' => $request->side,
                     'SEPILL' => $pillar,
-                    'SEPONR' => $porscheProductNumber,
+                    'SESCRA' => false,
                 ]
             ]);
         }
 
-        $noChange = false;
-
-        if (
-            $request->has('no_change') &&
+        $noChange = $request->has('no_change') &&
             (
                 (is_string($request->no_change) && $request->no_change == 'true') ||
                 (is_bool($request->no_change) && $request->no_change == true)
-            )
-        ) {
-            $noChange = true;
-        }
+            );
 
-        if ($workCenter->WCSHNA === 'EL01' && $sequence[0]->PRCODE !== 'dummy') {
-            if ($noChange) {
-                event(new NextProductEvent(
-                        (new NextProductEventResponse($sequence, null))->generate()
-                    )
-                );
-            }
-            else {
-                $side = $request->side == 'L' ? 'R' : 'L';
-
-                $queryString = '
-                    select a.PRCODE, a.SEQUID, a.SEPSEQ, a.SEARNU, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEINPR from AWF_SEQUENCE_LOG asl
-                        join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
-                        join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
-                        join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE
-                        join ' . $database . '.PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = asl.WCSHNA
-                        join ' . $database . '.PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
-                    where asl.LSTIME is null and asl.LETIME is null and a.SEINPR = (ppd.PORANK - 1) and
-                        asl.WCSHNA = "' . $workCenter->WCSHNA . '"' .
-                        ($pillar !== null ? ' and a.SEPILL = "' . $pillar .'"' : '') .
-                        ($request->has('side') ? ' and a.SESIDE = "' . $side . '"' : '') .
-                        ' order by a.SEQUID' .
-                        ($request->has('limit') ? ' limit ' . $request->limit : '')
-                ;
-
-                $sequence2 = new Collection(DB::connection('custom_mysql')->select($queryString));
-
-                if (empty($sequence2)) {
-                    (new PreparationStationPanelFacade())->default();
-                }
-                else {
-                    event(new NextProductEvent(
-                            (new NextProductEventResponse($sequence2, null))->generate()
-                        )
-                    );
-                }
-            }
+        if ($noChange && $workCenter->WCSHNA === 'EL01' && $sequence[0]->PRCODE !== 'dummy') {
+            event(new NextProductEvent(
+                    (new NextProductEventResponse($sequence, null))->generate()
+                )
+            );
         }
 
         if (!$noChange && $sequence[0]->PRCODE !== 'dummy') {

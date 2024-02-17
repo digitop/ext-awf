@@ -115,7 +115,7 @@ class ShiftManagementPanelManualDataRecordFacade extends Facade
                 $error = $checkSerial['error'];
             }
             else {
-                $error = 'Hiba lépett fel az adatok mentése során!';
+                $error = __('response.check.cannot_attach_piece');
             }
         }
         else {

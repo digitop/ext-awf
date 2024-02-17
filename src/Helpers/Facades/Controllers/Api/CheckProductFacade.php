@@ -80,6 +80,15 @@ class CheckProductFacade extends Facade
             ));
         }
 
+        publishMqtt(env('DEPLOYMENT_SUBDOMAIN') . '/api/SCAN_OK/', [
+            [
+                "to" => 'wc:' .  $workCenter->WCSHNA,
+                "payload" => [
+                    "status" => true,
+                ],
+            ]
+        ]);
+
         return new CustomJsonResponse(new JsonResponseModel(
             new ResponseData(
                 true,

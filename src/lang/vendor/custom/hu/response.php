@@ -10,5 +10,6 @@ return [
         'empty_color' => 'Nem létezik szín a termékhez!',
         'serial_not_found' => 'Sorozatszám nem található!',
         'not_next_product' => 'Nem ez a következő termék!',
+        'cannot_attach_piece' => 'Ez a vonalkód nem rögzíthető a darabhoz!',
     ],
 ];

@@ -10,5 +10,6 @@ return [
         'empty_color' => 'Es gibt keine Farbe für das Produkt!',
         'serial_not_found' => 'Seriennummer nicht gefunden!',
         'not_next_product' => 'Dies ist nicht das nächste Produkt!',
+        'cannot_attach_piece' => 'Dieser Barcode kann nicht am Stück angebracht werden!',
     ],
 ];

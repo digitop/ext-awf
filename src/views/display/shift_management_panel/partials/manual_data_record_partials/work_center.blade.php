@@ -7,6 +7,7 @@
 
 @section('awf-shift-content')
     @if (session('error'))
+        @php($error = session('error'))
         <label>
             <input type="checkbox" class="alertCheckbox" autocomplete="off"/>
             <div class="alert warning">
