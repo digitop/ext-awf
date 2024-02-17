@@ -3,6 +3,7 @@
 namespace AWF\Extension\Providers;
 
 use AWF\Extension\Commands\GenerateDataCommand;
+use AWF\Extension\Helpers\Facades\Controllers\Api\CheckProductFacade;
 use AWF\Extension\Helpers\Facades\Controllers\Api\ScrapFacade;
 use Illuminate\Support\ServiceProvider as IlluminateServiceProvider;
 use Illuminate\Support\Facades\Event;
@@ -49,6 +50,11 @@ class ServiceProvider extends IlluminateServiceProvider
                 case 'App\\Events\\Dashboard\\ProductQualified':
                     if (array_key_exists(0, $data) && !empty($data[0])) {
                         (new ScrapFacade())->index($data[0]);
+                    }
+                    break;
+                case 'App\\Events\\Api\\OperatorPanelSaveSerialEvent':
+                    if (array_key_exists(0, $data) && !empty($data[0])) {
+                        (new CheckProductFacade())->publis($data[0]);
                     }
                     break;
                 default:

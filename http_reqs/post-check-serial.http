@@ -1,7 +1,7 @@
-POST http://localhost:8000/api/ext/awf-extension/order/check-serial/11
+POST https://oeem.awf.hu/api/ext/awf-extension/order/check-serial/3
 Accept: application/json
 Content-Type: application/json
 
 {
-  "serial": "123457"
+  "serial": "HW01000220291"
 }

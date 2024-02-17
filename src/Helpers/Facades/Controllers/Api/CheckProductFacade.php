@@ -19,6 +19,7 @@ use App\Models\REPNO;
 use App\Models\DASHBOARD;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\DB;
+use App\Events\Api\OperatorPanelSaveSerialEvent;
 
 class CheckProductFacade extends Facade
 {
@@ -88,5 +89,17 @@ class CheckProductFacade extends Facade
             ),
             Response::HTTP_OK
         ));
+    }
+
+    public function publis(OperatorPanelSaveSerialEvent $event)
+    {
+        publishMqtt(env('DEPLOYMENT_SUBDOMAIN') . '/api/SCAN_OK/', [
+            [
+                "to" => 'wc:' .  $event->WCSHNA,
+                "payload" => [
+                    "status" => true,
+                ],
+            ]
+        ]);
     }
 }

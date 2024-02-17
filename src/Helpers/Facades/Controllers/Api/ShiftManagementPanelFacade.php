@@ -51,7 +51,7 @@ class ShiftManagementPanelFacade extends Facade
                 "to" => 'dh:' . (int)$dashboardId,
                 "payload" => [
                     "status" => "default",
-                    'orderCode' => $sequence->ORCODE,
+                    'orderCode' => is_object($sequence) ? $sequence?->ORCODE : null,
                 ],
             ]
         ]);
