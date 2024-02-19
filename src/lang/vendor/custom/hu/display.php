@@ -31,7 +31,7 @@ return [
         ],
     ],
     'production-details' => [
-        'got-over' => 'Utolsó befejezett darab, ami még nem került bele a követkekző gépbe',
+        'got-over' => 'Utolsó befejezett darab',
         'in-place' => 'Aktuálisan a gépben lévő darab',
         'waiting-first' => 'Következő darab',
         'waitings' => 'Várakozó darabok',

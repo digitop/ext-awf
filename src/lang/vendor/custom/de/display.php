@@ -31,7 +31,7 @@ return [
         ],
     ],
     'production-details' => [
-        'got-over' => 'Letztes fertiges Stück, das noch nicht in die nächste Maschine aufgenommen wurde',
+        'got-over' => 'Letztes fertiges Stück',
         'in-place' => 'Das Stück, das sich derzeit in der Maschine befindet',
         'waiting-first' => 'Nächstes Stück',
         'waitings' => 'Wartestücke',

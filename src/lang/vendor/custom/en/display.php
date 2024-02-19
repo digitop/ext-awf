@@ -31,7 +31,7 @@ return [
         ],
     ],
     'production-details' => [
-        'got-over' => 'Last finished piece that has not yet been included in the next machine',
+        'got-over' => 'Last finished piece',
         'in-place' => 'The piece currently in the machine',
         'waiting-first' => 'Next piece',
         'waitings' => 'Waiting pieces',
