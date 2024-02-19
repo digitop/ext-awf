@@ -89,7 +89,7 @@ class ProductFeaturesFacade extends Facade
                 join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE
                 join ' . $database . '.PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = asl.WCSHNA
                 join ' . $database . '.PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
-            where (asl.LSTIME is null or asl.LSTIME > ' . $start . ' and asl.LETIME is null and a.SEINPR = (ppd.PORANK - 1) and
+            where (asl.LSTIME is null or asl.LSTIME > ' . $start . ') and asl.LETIME is null and a.SEINPR = (ppd.PORANK - 1) and
                 asl.WCSHNA = "' . $workCenter->WCSHNA . '" order by a.SEQUID limit 1'
         ;
 
