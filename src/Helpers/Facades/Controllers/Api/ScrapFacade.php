@@ -72,6 +72,15 @@ class ScrapFacade extends Facade
                     'SESCRA' => true,
                 ]);
 
+            $logs = AWF_SEQUENCE_LOG::where('SEQUID', '=', $sequence->SEQUID)
+                ->whereNotNull('LSTIME')
+                ->get();
+            $now = (new \DateTime())->format('Y-m-d H:i:s');
+
+            foreach ($logs as $log) {
+                $log->update(['LETIME' => $now]);
+            }
+
             AWF_SEQUENCE_LOG::create([
                 'SEQUID' => $sequence->SEQUID,
                 'WCSHNA' => 'EL01',
@@ -79,13 +88,23 @@ class ScrapFacade extends Facade
 
             $sequence = AWF_SEQUENCE::where('SEQUID', $sequence->SEQUID)
                 ->where('SEINPR', '=', 0)
-                ->where('SESCRA', 'is', true)
+                ->where('SESCRA', true)
                 ->first();
 
             AWF_SEQUENCE_WORKCENTER::create([
                 'SEQUID' => $sequence->SEQUID,
                 'WCSHNA' => 'EL01',
                 'RNREPN' => REPNO::where('ORCODE', '=', $sequence->ORCODE)->where('WCSHNA', '=', 'EL01')->first()->RNREPN
+            ]);
+
+            publishMqtt(env('DEPLOYMENT_SUBDOMAIN') . '/api/SEQUENCE_SCRAP/', [
+                [
+                    "to" => 'wc:' . $workCenter->WCSHNA,
+                    "payload" => [
+                        "status" => true,
+                        'state' => 'scrap',
+                    ],
+                ]
             ]);
 
             return new CustomJsonResponse(new JsonResponseModel(

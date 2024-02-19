@@ -96,6 +96,45 @@ class SequenceFacade extends Facade
 
         $sequence = new Collection(DB::connection('custom_mysql')->select($queryString));
 
+        if (!empty($sequence[0])) {
+            $side = $request->has('side') ? $request->side : null;
+
+            if (empty($side)) {
+                $side = $sequence[0]->SESIDE;
+            }
+
+            if ($side == 'L') {
+                $side = 'R';
+            }
+            elseif ($side == 'R') {
+                $side = 'L';
+            }
+
+            $queryString = '
+            select a.PRCODE, a.SEQUID, a.SEPSEQ, a.SEARNU, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEINPR, a.SESCRA
+            from AWF_SEQUENCE_LOG asl
+                join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
+                join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
+                join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE
+                join ' . $database . '.PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = asl.WCSHNA
+                join ' . $database . '.PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
+            where asl.LSTIME is null and asl.LETIME is null and a.SEINPR <= ppd.PORANK and
+                asl.WCSHNA = "' . $workCenter->WCSHNA . '" and a.SESIDE = "' . $side . '"' .
+                ($pillar !== null ? ' and a.SEPILL = "' . $pillar .'"' : '') .
+                ' order by a.SEQUID limit 1'
+            ;
+
+            $nextIsScrapSequence = DB::connection('custom_mysql')->select($queryString);
+
+            if (!empty($nextIsScrapSequence[0])) {
+                $nextIsScrapSequence = $nextIsScrapSequence[0];
+            }
+
+            if (is_object($nextIsScrapSequence) && $nextIsScrapSequence?->SESCRA == true) {
+                $sequence = null;
+            }
+        }
+
         if (empty($sequence[0])) {
             $sequence = new Collection([(object)
                 [
@@ -105,6 +144,7 @@ class SequenceFacade extends Facade
                     'SESIDE' => $request->side,
                     'SEPILL' => $pillar,
                     'SESCRA' => false,
+                    'SEPONR' => null,
                 ]
             ]);
         }

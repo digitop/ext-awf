@@ -88,6 +88,7 @@ class SequenceFacadeResponse  implements ResponseInterface
             ->setORCODE($sequence->ORCODE)
             ->setSESIDE($sequence->SESIDE)
             ->setSEPONR($sequence->SEPONR)
+            ->setSESCRA($sequence->SESCRA)
             ->setOPNAME(
                 isset($this->workCenter?->operatorPanels) &&
                 !empty($this->workCenter?->operatorPanels[0]) ?

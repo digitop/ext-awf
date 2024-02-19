@@ -207,6 +207,7 @@ class MoveSequenceFacade extends Facade
     {
         AWF_SEQUENCE_LOG::where('WCSHNA', '=', $request->WCSHNA)
             ->where('SEQUID', '=', $request->SEQUID)
+            ->whereNull('LETIME')
             ->first()
             ?->update([
                 'LETIME' => (new \DateTime()),
@@ -236,12 +237,10 @@ class MoveSequenceFacade extends Facade
                 ->where('WCSHNA', '=', $nextProductWorkCenterData->WCSHNA)
                 ->first();
 
-            if (empty($sequenceLog)) {
-                AWF_SEQUENCE_LOG::create([
-                    'SEQUID' => $request->SEQUID,
-                    'WCSHNA' => $nextProductWorkCenterData->WCSHNA,
-                ]);
-            }
+            AWF_SEQUENCE_LOG::create([
+                'SEQUID' => $request->SEQUID,
+                'WCSHNA' => $nextProductWorkCenterData->WCSHNA,
+            ]);
         }
     }
 }

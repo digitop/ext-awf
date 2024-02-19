@@ -11,6 +11,7 @@ class SequenceResponseModel extends ObjectToArray
     protected string|null $ORCODE = null;
     protected string|null $SESIDE = null;
     protected string|null $SEPONR = null;
+    protected string|null $SESCRA = null;
     protected string|null $OPNAME = null;
     protected string|null $RNREPN = null;
     protected string|null $DHIDEN = null;
@@ -61,7 +62,18 @@ class SequenceResponseModel extends ObjectToArray
         $this->SEPONR = $SEPONR;
         return $this;
     }
-    
+
+    public function getSESCRA(): ?string
+    {
+        return $this->SESCRA;
+    }
+
+    public function setSESCRA(?string $SESCRA): SequenceResponseModel
+    {
+        $this->SESCRA = $SESCRA;
+        return $this;
+    }
+
     public function getOPNAME(): null|string
     {
         return $this->OPNAME;

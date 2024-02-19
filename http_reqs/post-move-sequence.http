@@ -1,10 +1,10 @@
-POST https://oeem.awf.hu/api/ext/awf-extension/move-sequence
+POST http://localhost:8000/api/ext/awf-extension/move-sequence
 Accept: application/json
 Content-Type: application/json
 
 {
-  "WCSHNA": "EL01",
-  "SEQUID": 119761
+  "WCSHNA": "VAJ01",
+  "SEQUID": 122196
 }
 
 ### order change
