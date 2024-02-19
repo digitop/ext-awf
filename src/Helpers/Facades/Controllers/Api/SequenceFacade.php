@@ -156,8 +156,6 @@ class SequenceFacade extends Facade
             );
 
         if ($noChange && $workCenter->WCSHNA === 'EL01' && $sequence[0]->PRCODE !== 'dummy') {
-
-
             event(new NextProductEvent(
                     (new NextProductEventResponse($sequence, null))->generate()
                 )

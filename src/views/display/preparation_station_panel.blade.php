@@ -27,6 +27,7 @@
     <div class="awf-container middle">
         <span class="half" style="padding-left: 7vh;">
             <div id="pulse-line" class="pulse-line"></div>
+            @include('awf-extension::display.warning', ['class' => 'warning-sign'])
             @include('awf-extension::display.car.top', ['class' => 'middle-image', 'fill' => '#000', 'id' => 'product-color'])
         </span>
         <span class="half half-right">

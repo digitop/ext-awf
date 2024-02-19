@@ -13,6 +13,7 @@ class NextProductEventModel extends ObjectToArray
     protected string|null $porscheSequenceNumber = null;
     protected string|null $articleNumber = null;
     protected string|null $image = null;
+    protected bool|null $isScrap = true;
 
     public function __construct(
         string|null $designation = null,
@@ -121,6 +122,17 @@ class NextProductEventModel extends ObjectToArray
     public function setImage(string|null $image): NextProductEventModel
     {
         $this->image = $image;
+        return $this;
+    }
+
+    public function getIsScrap(): bool|null
+    {
+        return $this->isScrap;
+    }
+
+    public function setIsScrap(bool|null $isScrap): NextProductEventModel
+    {
+        $this->isScrap = $isScrap;
         return $this;
     }
 }

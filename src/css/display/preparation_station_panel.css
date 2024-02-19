@@ -198,3 +198,10 @@ body {
 .porsche-data table tr td {
     text-align: right;
 }
+
+.warning-sign {
+    position: absolute;
+    height: 15vh;
+    top: 58%;
+    left: 24.5%;
+}

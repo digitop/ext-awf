@@ -36,6 +36,7 @@ class NextProductEventResponse implements ResponseInterface
                 ->setPorscheOrderNumber($item->SEPONR)
                 ->setPorscheSequenceNumber($item->SEPSEQ)
                 ->setArticleNumber($item->SEARNU)
+                ->setIsScrap($item->SESCRA)
                 ->get();
 
             $data['sequenceId'] = $item->SEQUID;

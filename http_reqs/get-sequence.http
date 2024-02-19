@@ -4,14 +4,14 @@ Accept: application/json
 Content-Type: application/json
 
 ### get data by WC
-GET http://localhost:8000/api/ext/awf-extension/get-sequence/VAJ01/A
+GET http://localhost:8000/api/ext/awf-extension/get-sequence/EL01/A
 Accept: application/json
 Content-Type: application/json
 
 {
-  "side": "R",
+  "side": "L",
   "limit": 1,
-  "no_change": "false"
+  "no_change": "true"
 }
 
 ### get default preparation panel

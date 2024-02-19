@@ -22,9 +22,14 @@ const app = new Vue({
                     $('#hide-app').css('display', 'none')
                     $('#vue-app').css('display', 'block')
                     $('#pulse-line').css('display', 'none')
+                    $('#warning-sign').css('display', 'none')
 
                     $('#product-color').css('fill', '#' + data.color)
                     $('#product-designation').append(data.designation)
+
+                    if (data.isScrap === true) {
+                        $('#warning-sign').css('display', 'block')
+                    }
 
                     if (data.designation.length > 20) {
                         $('#product-designation').css('font-size', '7vh')
