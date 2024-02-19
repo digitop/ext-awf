@@ -130,7 +130,7 @@ class ShiftManagementProductionPanelFacade extends Facade
             where asl.LSTIME is not null and asl.LSTIME >= "' . $start . '" and asl.LSTIME = (
                     select max(LSTIME) from AWF_SEQUENCE_LOG where LSTIME is not null and LETIME is not null and WCSHNA = asl.WCSHNA
                 )
-                and asl.LETIME is not null and a.SEINPR = ppd.PORANK and asl.WCSHNA = pcd.WCSHNA
+                and asl.LETIME is not null and a.SEINPR >= ppd.PORANK and asl.WCSHNA = pcd.WCSHNA
         ');
 
         if (!empty($gotOver[0])) {
