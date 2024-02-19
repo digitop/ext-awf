@@ -3,8 +3,8 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "WCSHNA": "VAJ01",
-  "SEQUID": 122196
+  "WCSHNA": "VAB01",
+  "SEQUID": 122201
 }
 
 ### order change
