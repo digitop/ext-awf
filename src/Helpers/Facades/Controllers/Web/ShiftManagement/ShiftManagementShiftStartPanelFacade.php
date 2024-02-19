@@ -74,14 +74,14 @@ class ShiftManagementShiftStartPanelFacade extends Facade
             (new ShiftManagementResettingEventResponse())->generate()
         ));
 
-        MQTT::publish(
-            env('DEPLOYMENT_SUBDOMAIN') . '/web/shift-management-reset-defalt',
-            json_encode([
-                'success' => true,
-                'status' => ShiftManagementResettingEventModel::DEFAULT
-            ])
-        );
-
-        MQTT::disconnect();
+        publishMqtt(env('DEPLOYMENT_SUBDOMAIN') . '/web/shift-management-reset-default', [
+            [
+                "to" => 'wc:' . 'EL01',
+                "payload" => [
+                    'success' => true,
+                    'status' => ShiftManagementResettingEventModel::DEFAULT
+                ],
+            ]
+        ]);
     }
 }
