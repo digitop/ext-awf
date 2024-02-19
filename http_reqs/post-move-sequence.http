@@ -7,7 +7,7 @@ Content-Type: application/json
   "SEQUID": 122201
 }
 
-### order change
+### order changeonjs
 POST http://localhost:8000/api/dashboard/2/order/saveOrderChange
 Accept: application/json
 Content-Type: application/json

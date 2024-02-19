@@ -76,6 +76,7 @@ class SequenceFacade extends Facade
             ));
         }
 
+        $start = (new \DateTime())->format('Y-m-d') . ' 00:00:00';
         $database = config('database.connections.mysql.database');
 
         $queryString = '
@@ -86,7 +87,7 @@ class SequenceFacade extends Facade
                 join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE
                 join ' . $database . '.PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = asl.WCSHNA
                 join ' . $database . '.PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
-            where asl.LSTIME is null and asl.LETIME is null and a.SEINPR = (ppd.PORANK - 1) and
+            where (asl.LSTIME is null or asl.LSTIME > ' . $start . ') and asl.LETIME is null and a.SEINPR = (ppd.PORANK - 1) and
                 asl.WCSHNA = "' . $workCenter->WCSHNA . '"' .
                 ($pillar !== null ? ' and a.SEPILL = "' . $pillar .'"' : '') .
                 ($request->has('side') ? ' and a.SESIDE = "' . $request->side . '"' : '') .
