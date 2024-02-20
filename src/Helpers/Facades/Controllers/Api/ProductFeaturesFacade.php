@@ -68,11 +68,7 @@ class ProductFeaturesFacade extends Facade
         }
 
         if (!empty($workCenterId)) {
-            $workCenter = WORKCENTER::where(
-                'WCSHNA',
-                '=',
-                $workCenterId
-            )->first();
+            $workCenter = WORKCENTER::where('WCSHNA', '=', $workCenterId)->first();
         }
 
         if (empty($workCenter)) {
