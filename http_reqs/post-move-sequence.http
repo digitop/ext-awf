@@ -1,9 +1,10 @@
+### move sequence
 POST http://localhost:8000/api/ext/awf-extension/move-sequence
 Accept: application/json
 Content-Type: application/json
 
 {
-  "WCSHNA": "VAB01",
+  "WCSHNA": "KAB01",
   "SEQUID": 122201
 }
 

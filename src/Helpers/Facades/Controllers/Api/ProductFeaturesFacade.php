@@ -20,6 +20,7 @@ use Illuminate\Http\Request;
 use App\Models\PRODUCT;
 use App\Models\DASHBOARD;
 use App\Models\WORKCENTER;
+use App\Models\DASHBOARD_MODULE_SETTINGS;
 
 class ProductFeaturesFacade extends Facade
 {
@@ -58,6 +59,7 @@ class ProductFeaturesFacade extends Facade
     {
         $status = 'default';
         $database = config('database.connections.mysql.database');
+        $start = (new \DateTime())->format('Y-m-d') . ' 00:00:00';
 
         $workCenter = WORKCENTER::where(
             'WCSHNA',
@@ -65,12 +67,33 @@ class ProductFeaturesFacade extends Facade
             DASHBOARD::where('DHIDEN', '=', $request->dashboard)->first()->operatorPanels[0]->WCSHNA
         )->first();
 
+        if (empty($workCenter)) {
+            $moduleSetting = DASHBOARD_MODULE_SETTINGS::where([
+                ['DHIDEN', $request->dashboard],
+                ['DMSKEY', 'scrapStationFilter']
+            ])
+                ->first();
+
+            if ($moduleSetting) {
+                $scrapStationFilter = $moduleSetting->DMSVAL;
+                // Ha van beallitva ertek a szuroben
+                $workCenter = WORKCENTER::find($scrapStationFilter); // Selejt állomás megkeresese
+            }
+        }
+
         $queryString = '
-        select PRCODE, ORCODE from AWF_SEQUENCE a
-            join AWF_SEQUENCE_WORKCENTER asw on asw.SEQUID = a.SEQUID
-            join AWF_SEQUENCE_LOG asl on asl.SEQUID = a.SEQUID
-            where a.SEINPR = 1 and asl.LSTIME is null and asl.LETIME is null and asw.WCSHNA = "' .
-            $workCenter->WCSHNA . '"';
+            select a.PRCODE, a.ORCODE, a.SEQUID, a.SEPSEQ, a.SEARNU, a.SESIDE, a.SEPILL, a.SEPONR, a.SEINPR
+            from AWF_SEQUENCE_LOG asl
+                join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
+                join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
+                join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE
+                join ' . $database . '.PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = asl.WCSHNA
+                join ' . $database . '.PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
+            where ((asl.LSTIME is null and a.SEINPR = (ppd.PORANK - 1)) or (asl.LSTIME > "' . $start .
+            '" and a.SEINPR = ppd.PORANK)) and asl.LETIME is null and
+                asl.WCSHNA = "' . $workCenter->WCSHNA . '"' .
+            ' order by a.SEQUID limit 1'
+        ;
 
         $sequence = DB::connection('custom_mysql')->select($queryString);
 
@@ -78,28 +101,7 @@ class ProductFeaturesFacade extends Facade
             $sequence = $sequence[0];
         }
 
-        $status = 'default';
-        $start = (new \DateTime())->format('Y-m-d') . ' 00:00:00';
-        $workCenter = WORKCENTER::where('WCSHNA', '=', $workCenter->WCSHNA)->first();
-
-        $queryString = '
-            select a.PRCODE, a.SEQUID, a.SEPSEQ, a.SEARNU, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEINPR from AWF_SEQUENCE_LOG asl
-                join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
-                join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
-                join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE
-                join ' . $database . '.PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = asl.WCSHNA
-                join ' . $database . '.PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
-            where (asl.LSTIME is null or asl.LSTIME > "' . $start . '") and asl.LETIME is null and a.SEINPR = (ppd.PORANK - 1) and
-                asl.WCSHNA = "' . $workCenter->WCSHNA . '" order by a.SEQUID limit 1'
-        ;
-
-        $sequence2 = DB::connection('custom_mysql')->select($queryString);
-
-        if (array_key_exists(0, $sequence2)) {
-            $sequence2 = $sequence2[0];
-        }
-
-        if (empty($sequence2)) {
+        if (empty($sequence)) {
             $status = 'waiting';
         }
 

@@ -55,17 +55,24 @@ class SequenceFacade extends Facade
     public function show(Request|FormRequest|null $request = null, Model|string|null ...$model): JsonResponse|null
     {
         list($workCenter, $pillar) = $model;
+        $start = (new \DateTime())->format('Y-m-d') . ' 00:00:00';
 
         if (is_string($pillar) && $pillar === 'null') {
             $pillar = null;
         }
 
-        $logs = AWF_SEQUENCE_LOG::where('WCSHNA', '=', $workCenter->WCSHNA)
-            ->whereNull('LSTIME')
-            ->whereNull('LETIME')
-            ->get();
+//        $logs = AWF_SEQUENCE_LOG::where('WCSHNA', '=', $workCenter->WCSHNA)
+//            ->whereNull('LSTIME')
+//            ->whereNull('LETIME')
+//            ->get();
 
-        if ($logs === null || !array_key_exists(0, $logs->all()) || empty($logs[0])) {
+        $logs = DB::connection('custom_mysql')->select('
+            select * from AWF_SEQUENCE_LOG where LETIME is null and (LSTIME is null or LSTIME > "' . $start .
+            '") and WCSHNA = "' . $workCenter->WCSHNA . '"
+            order by SEQUID
+        ');
+
+        if ($logs === null || !array_key_exists(0, $logs) || empty($logs[0])) {
             return new CustomJsonResponse(new JsonResponseModel(
                 new ResponseData(
                     false,
@@ -76,7 +83,6 @@ class SequenceFacade extends Facade
             ));
         }
 
-        $start = (new \DateTime())->format('Y-m-d') . ' 00:00:00';
         $database = config('database.connections.mysql.database');
 
         $queryString = '
@@ -87,7 +93,8 @@ class SequenceFacade extends Facade
                 join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE
                 join ' . $database . '.PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = asl.WCSHNA
                 join ' . $database . '.PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
-            where (asl.LSTIME is null or asl.LSTIME > "' . $start . '") and asl.LETIME is null and a.SEINPR = (ppd.PORANK - 1) and
+            where ((asl.LSTIME is null and a.SEINPR = (ppd.PORANK - 1)) or (asl.LSTIME > "' . $start .
+                '" and a.SEINPR = ppd.PORANK)) and asl.LETIME is null and
                 asl.WCSHNA = "' . $workCenter->WCSHNA . '"' .
                 ($pillar !== null ? ' and a.SEPILL = "' . $pillar .'"' : '') .
                 ($request->has('side') ? ' and a.SESIDE = "' . $request->side . '"' : '') .
