@@ -137,6 +137,7 @@ const app = new Vue({
                     $('#product-material').html('')
 
                     $('#pulse-line').css('display', 'none')
+                    $('#warning-sign').css('display', 'none')
 
                     $('#porsche-order-number').html('')
                     $('#porsche-sequence-number').html('')
