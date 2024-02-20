@@ -85,7 +85,24 @@ class SequenceFacade extends Facade
 
         $database = config('database.connections.mysql.database');
 
-        $queryString = '
+        if (in_array($workCenter->WCSHNA, ['HA01', 'HB01', 'HC01'], true)) {
+            $queryString = '
+            select a.PRCODE, a.SEQUID, a.SEPSEQ, a.SEARNU, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEINPR, a.SESCRA
+            from AWF_SEQUENCE_LOG asl
+                join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
+                join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
+                join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE
+                join ' . $database . '.PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = asl.WCSHNA
+                join ' . $database . '.PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
+            where ((asl.LSTIME is null and a.SEINPR = (ppd.PORANK - 1)) or (asl.LSTIME > "' . $start .
+                '" and a.SEINPR = ppd.PORANK)) and asl.LETIME is null and
+                asl.WCSHNA = "' . $workCenter->WCSHNA . '"' .
+                ($pillar !== null ? ' and a.SEPILL = "' . $pillar .'"' : '') .
+                ' order by a.SEQUID limit 2'
+            ;
+        }
+        else {
+            $queryString = '
             select a.PRCODE, a.SEQUID, a.SEPSEQ, a.SEARNU, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEINPR, a.SESCRA
             from AWF_SEQUENCE_LOG asl
                 join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
@@ -100,7 +117,8 @@ class SequenceFacade extends Facade
                 ($request->has('side') ? ' and a.SESIDE = "' . $request->side . '"' : '') .
                 ' order by a.SEQUID' .
                 ($request->has('limit') ? ' limit ' . $request->limit : '')
-        ;
+            ;
+        }
 
         $sequence = new Collection(DB::connection('custom_mysql')->select($queryString));
 

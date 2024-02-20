@@ -5,8 +5,7 @@ namespace AWF\Extension\Helpers\Facades\Controllers\Api;
 use AWF\Extension\Helpers\Responses\JsonResponseModel;
 use AWF\Extension\Helpers\Responses\ResponseData;
 use AWF\Extension\Models\AWF_SEQUENCE;
-use AWF\Extension\Models\AWF_SEQUENCE_LOG;
-use AWF\Extension\Models\AWF_SEQUENCE_WORKCENTER;
+use App\Http\Controllers\api\dashboard\scrapStation\ScrapStationController;
 use AWF\Extension\Responses\CustomJsonResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Database\Eloquent\Model;
@@ -68,6 +67,25 @@ class CheckProductFacade extends Facade
             ->first();
 
         if (empty($serial) || (int)$serial->SNCYID < 0) {
+            return new CustomJsonResponse(new JsonResponseModel(
+                new ResponseData(
+                    false,
+                    [],
+                    __('response.check.not_next_product')
+                ),
+                Response::HTTP_OK
+            ));
+        }
+
+        $serialCheck =(new ScrapStationController())->findSerial(
+            $request->dashboard,
+            new Request([
+                'serial' => $request->serial,
+            ]),
+            $workCenter
+        );
+
+        if (is_array($serialCheck) && $serialCheck['success'] == false) {
             return new CustomJsonResponse(new JsonResponseModel(
                 new ResponseData(
                     false,
