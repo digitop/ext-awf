@@ -1,0 +1,4 @@
+### make auto scrap
+GET localhost:8000/api/ext/awf-extension/sequence/auto-scrap/KAB01
+Accept: application/json
+Content-Type: application/json

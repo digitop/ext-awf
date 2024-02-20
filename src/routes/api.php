@@ -50,5 +50,8 @@ Route::group(
 
         Route::post('/order/check-serial/{dashboardId}', ['uses' => 'OrderController@store'])
             ->name('order.check-serial');
+
+        Route::get('/sequence/auto-scrap/{WCSHNA}', ['uses' => 'AutoScrapController@scrap'])
+            ->name('sequence.auto-scrap.scrap');
     }
 );
