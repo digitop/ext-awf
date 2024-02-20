@@ -61,11 +61,19 @@ class ProductFeaturesFacade extends Facade
         $database = config('database.connections.mysql.database');
         $start = (new \DateTime())->format('Y-m-d') . ' 00:00:00';
 
-        $workCenter = WORKCENTER::where(
-            'WCSHNA',
-            '=',
-            DASHBOARD::where('DHIDEN', '=', $request->dashboard)->first()->operatorPanels[0]->WCSHNA
-        )->first();
+        $workCenterId = DASHBOARD::where('DHIDEN', '=', $request->dashboard)->with('operatorPanels')->first();
+
+        if (!empty($workCenterId) && array_key_exists(0, $workCenterId->operatorPanels->all())) {
+            $workCenterId = $workCenterId->operatorPanels[0]?->WCSHNA;
+        }
+
+        if (!empty($workCenterId)) {
+            $workCenter = WORKCENTER::where(
+                'WCSHNA',
+                '=',
+                $workCenterId
+            )->first();
+        }
 
         if (empty($workCenter)) {
             $moduleSetting = DASHBOARD_MODULE_SETTINGS::where([
