@@ -7,6 +7,7 @@ use AWF\Extension\Helpers\Facades\Controllers\Api\CheckProductFacade;
 use AWF\Extension\Helpers\Facades\Controllers\Api\ScrapFacade;
 use Illuminate\Support\ServiceProvider as IlluminateServiceProvider;
 use Illuminate\Support\Facades\Event;
+use App\Models\QUALREPHEAD;
 
 class ServiceProvider extends IlluminateServiceProvider
 {
@@ -48,8 +49,15 @@ class ServiceProvider extends IlluminateServiceProvider
         Event::listen('*', function ($event, $data) {
             switch ($event) {
                 case 'App\\Events\\Dashboard\\ProductQualified':
-                    if (array_key_exists(0, $data) && !empty($data[0])) {
-                        (new ScrapFacade())->index($data[0]);
+                    if (array_key_exists(0, $data) && !empty($data[0]) && $data[0]->scrapReport !== false) {
+                        $qualificationHead = QUALREPHEAD::where('QRIDEN', '=', $data[0]->scrapReport)->first();
+
+                        if (
+                            $qualificationHead->QRAUTO === 0 ||
+                            (is_bool($qualificationHead->QRAUTO) && $qualificationHead->QRAUTO === false)
+                        ) {
+                            (new ScrapFacade())->index($data[0]);
+                        }
                     }
                     break;
                 case 'App\\Events\\Api\\OperatorPanelSaveSerialEvent':
@@ -63,13 +71,13 @@ class ServiceProvider extends IlluminateServiceProvider
         });
 
         $this->app->config["filesystems.disks.awfSequenceFtp"] = [
-            'driver' => 'ftp',
-            'host' => '130.93.209.93',
-            'username' => 'awf',
-            'password' => '3muo5cYRc1$t!Cvh',
-            'port' => 21, //
-            'root' => '/tmp/as400/',
-            'ssl' => false,
+            'driver' => '',
+            'host' => '',
+            'username' => '',
+            'password' => '',
+            'port' => '', //
+            'root' => '/',
+            'ssl' => true,
             'timeout' => 30
         ];
 
