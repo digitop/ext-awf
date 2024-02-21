@@ -9,7 +9,11 @@
 }
 
 .timer-closer {
-    margin-top: 5vh !important;
+    margin-top: 3vh !important;
+}
+
+.timer {
+    font-size: 11vh !important;
 }
 
 .centered {

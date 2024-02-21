@@ -40,11 +40,15 @@
         <span class="half half-left centered">
             <div id="next-product-designation">
             </div>
+            <div id="next-product-code">
+            </div>
             <div id="next-product-material">
             </div>
         </span>
         <span class="half half-right centered">
             <div id="current-product-designation">
+            </div>
+            <div id="current-product-code">
             </div>
             <div id="current-product-material">
             </div>

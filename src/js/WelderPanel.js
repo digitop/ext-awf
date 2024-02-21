@@ -30,15 +30,16 @@ const app = new Vue({
                         if (key == 'current') {
                             if (data?.designation != null) {
                                 $('#current-product-designation').html('')
+                                $('#current-product-code').html('')
                                 $('#current-product-material').html('')
 
                                 $('#product-color').css('fill', '#' + data.color)
                                 $('#hide-app').css('display', 'none')
                                 $('#vue-app').css('display', 'block')
 
-                                $('#current-product-designation').append(data.designation + ' - ' + data.articleNumber)
-
-
+                                $('#current-product-designation').append(data.designation)
+                                $('#current-product-code').append(data.articleNumber)
+                                $('#current-product-code').css('font-size', '5vh')
 
                                 if (data.designation.length > 20) {
                                     $('#current-product-designation').css('font-size', '5vh')
@@ -65,7 +66,9 @@ const app = new Vue({
                                 $('#vue-app').css('display', 'none')
 
                                 $('#current-product-designation').html('')
+                                $('#current-product-code').html('')
                                 $('#current-product-material').html('')
+
                                 $('#product-color').css('fill', '#000')
                             }
                         }
@@ -73,10 +76,13 @@ const app = new Vue({
                         if (key == 'next') {
                             if (data?.designation != null) {
                                 $('#next-product-designation').html('')
+                                $('#next-product-code').html('')
                                 $('#next-product-material').html('')
                                 $('#product-image').attr('src', '')
 
-                                $('#next-product-designation').append(data.designation + ' - ' + data.articleNumber)
+                                $('#next-product-designation').append(data.designation)
+                                $('#next-product-code').append(data.articleNumber)
+                                $('#next-product-code').css('font-size', '5vh')
 
                                 if (typeof data.image !== "undefined" && data.image !== null && data.image.length > 0) {
                                     $('#product-image').attr('src', data.image)
@@ -104,7 +110,9 @@ const app = new Vue({
                             }
                             else {
                                 $('#next-product-designation').html('')
+                                $('#next-product-code').html('')
                                 $('#next-product-material').html('')
+
                                 $('#product-image').src = ''
                             }
                         }
