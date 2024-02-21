@@ -36,7 +36,7 @@ const app = new Vue({
                                 $('#hide-app').css('display', 'none')
                                 $('#vue-app').css('display', 'block')
 
-                                $('#current-product-designation').append(data.designation)
+                                $('#current-product-designation').append(data.designation + ' - ' + data.articleNumber)
 
 
 
@@ -76,7 +76,7 @@ const app = new Vue({
                                 $('#next-product-material').html('')
                                 $('#product-image').attr('src', '')
 
-                                $('#next-product-designation').append(data.designation)
+                                $('#next-product-designation').append(data.designation + ' - ' + data.articleNumber)
 
                                 if (typeof data.image !== "undefined" && data.image !== null && data.image.length > 0) {
                                     $('#product-image').attr('src', data.image)

@@ -38,6 +38,7 @@ class WelderNextProductEventResponse  implements NullableResponseInterface
                 $product->features()->where('FESHNA', '=', 'SZASZ')->first()?->FEVALU,
                 $product->features()->where('FESHNA', '=', 'TESZNE')->first()?->FEVALU,
             ))
+                ->setArticleNumber($product->PRCODE)
                 ->get();
 
             $data['sequenceId'] = $item->SEQUID;
@@ -57,6 +58,7 @@ class WelderNextProductEventResponse  implements NullableResponseInterface
                 $product->features()->where('FESHNA', '=', 'SZASZ')->first()?->FEVALU,
                 $product->features()->where('FESHNA', '=', 'TESZNE')->first()?->FEVALU,
             ))
+                ->setArticleNumber($product->PRCODE)
                 ->setImage(
                     $imagePath,
                 )

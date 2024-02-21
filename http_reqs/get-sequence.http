@@ -15,13 +15,13 @@ Content-Type: application/json
 }
 
 ### get data by WC - teszt
-GET http://localhost:8000/api/ext/awf-extension/get-sequence/HB01/C
+GET http://localhost:8003/api/ext/awf-extension/get-sequence/HB01/B
 Accept: application/json
 Content-Type: application/json
 
 {
   "side": "",
-  "limit": 1,
+  "limit": 2,
   "no_change": "false"
 }
 

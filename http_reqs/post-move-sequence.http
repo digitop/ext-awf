@@ -4,8 +4,18 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "WCSHNA": "HC01",
-  "SEQUID": 135862
+  "WCSHNA": "EL01",
+  "SEQUID": 129353
+}
+
+### move sequence - test
+POST http://localhost:8003/api/ext/awf-extension/move-sequence
+Accept: application/json
+Content-Type: application/json
+
+{
+  "WCSHNA": "HB01",
+  "SEQUID": 129353
 }
 
 ### order changeonjs
