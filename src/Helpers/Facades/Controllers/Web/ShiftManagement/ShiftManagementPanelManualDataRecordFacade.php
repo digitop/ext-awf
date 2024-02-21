@@ -45,7 +45,7 @@ class ShiftManagementPanelManualDataRecordFacade extends Facade
         $database = config('database.connections.mysql.database');
 
         $sequence = DB::connection('custom_mysql')->select('
-            select asw.WCSHNA, asw.RNREPN, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEPSEQ, a.PRCODE, s.SNSERN from AWF_SEQUENCE a
+            select a.SEQUID, asw.WCSHNA, asw.RNREPN, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEPSEQ, a.PRCODE, s.SNSERN from AWF_SEQUENCE a
                 join AWF_SEQUENCE_LOG asl on a.SEQUID = asl.SEQUID
                 join AWF_SEQUENCE_WORKCENTER asw on a.SEQUID = asw.SEQUID
                 left join ' . $database . '.SERIALNUMBER s on s.RNREPN = asw.RNREPN

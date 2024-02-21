@@ -108,3 +108,11 @@ form table td {
     border: 1px solid #EDD;
     color: #A66;
 }
+
+.awf-move-sequence-button {
+    position: absolute !important;
+    left: 60% !important;
+    top: 80% !important;
+    font-size: x-large !important;
+    padding: 1vh 5vh !important;
+}

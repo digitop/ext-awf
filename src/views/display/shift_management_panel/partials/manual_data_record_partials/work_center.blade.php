@@ -3,6 +3,10 @@
 @section('awf-css')
     <link rel="stylesheet"
           href="{{ url('vendor/oeem-extensions/awf/extension/css/display/manual_data_record_workcenter.css') }}">
+    <link rel="stylesheet"
+          href="{{ url('vendor/oeem-extensions/awf/extension/css/display/loading.css') }}">
+    <link rel="stylesheet"
+          href="{{ url('vendor/oeem-extensions/awf/extension/css/display/modal.css') }}">
 @endsection
 
 @section('awf-shift-content')
@@ -36,6 +40,18 @@
             </div>
         </label>
     @endif
+
+    <section id="loading">
+        <div id="loading-content"></div>
+    </section>
+
+    <div id="successModal" class="modal">
+        <div class="modal-content modal-success">
+            <p style="text-align: center; margin-top: 5%">
+                @include('awf-extension::success', ['class' => 'success-sign'])
+            </p>
+        </div>
+    </div>
 
     <div style="margin-top: 20vh;">
         @if(empty($sequence))
@@ -110,6 +126,55 @@
                     </div>
                 </div>
             </form>
+
+            @if(!empty($sequence->SNSERN))
+                <button id="awf-move-sequence-button" class="button button-blue awf-move-sequence-button"
+                        type="submit"
+                >
+                    {{ __('display.button.next-work-center') }}
+                </button>
+
+                <script>
+                    var successModal = $('#successModal')
+
+                    $(document).click(function () {
+                        if (successModal.css('display') == 'block') {
+                            successModal.css('display', 'none')
+                        }
+                    })
+
+                    $('#awf-move-sequence-button').bind('click', function () {
+                        showLoading()
+
+                        $.post(
+                            '{{ route('awf-sequence.store') }}',
+                            {
+                                WCSHNA:'{{ $sequence->WCSHNA }}',
+                                SEQUID:'{{ $sequence->SEQUID }}'
+                            },
+                            function (data) {
+                                if (data?.success == true) {
+                                    successModal.css('display', 'block')
+                                    location.reload()
+                                }
+                            }
+                        )
+                            .always(function () {
+                                hideLoading()
+                            })
+                    })
+
+                    function showLoading() {
+                        document.querySelector('#loading').classList.add('loading')
+                        document.querySelector('#loading-content').classList.add('loading-content')
+                    }
+
+                    function hideLoading() {
+                        document.querySelector('#loading').classList.remove('loading')
+                        document.querySelector('#loading-content').classList.remove('loading-content')
+                    }
+                </script>
+            @endif
         @endif
     </div>
 

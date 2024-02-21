@@ -21,6 +21,7 @@ return [
         'productLifecycle' => 'Termék lekérdezése vonalkód alapján',
         'sequenceUpdate' => 'Szekvencia frissítése',
         'submit' => 'Rögzítés',
+        'next-work-center' => 'Tovább a következő munkaállomásra',
     ],
     'data' => [
         'shift-sequence' => [
