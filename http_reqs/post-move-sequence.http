@@ -1,11 +1,11 @@
 ### move sequence
-POST http://localhost:8000/api/ext/awf-extension/move-sequence
+POST https://oeem.awf.hu/api/ext/awf-extension/move-sequence
 Accept: application/json
 Content-Type: application/json
 
 {
-  "WCSHNA": "KAB01",
-  "SEQUID": 122201
+  "WCSHNA": "HC01",
+  "SEQUID": 135862
 }
 
 ### order changeonjs
