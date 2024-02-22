@@ -22,6 +22,7 @@ return [
         'sequenceUpdate' => 'Szekvencia frissítése',
         'submit' => 'Rögzítés',
         'next-work-center' => 'Tovább a következő munkaállomásra',
+        'confirm' => 'Megerősítés',
     ],
     'data' => [
         'shift-sequence' => [
@@ -54,4 +55,6 @@ return [
     'noData' => 'Nem áll rendelkezésre adat',
     'serialNumber' => 'Vonalkód',
     'alreadyHasSerial' => 'Már lett vonalkód rögzítve',
+    'waring-message' => 'Biztos benne, hogy végre kívánja hajtani a(z) :action műveletet',
+    'time-left' => ' másodperc van hátra',
 ];

@@ -22,6 +22,7 @@ return [
         'sequenceUpdate' => 'Aktualisierungssequenz',
         'submit' => 'Einreichen',
         'next-work-center' => 'Weiter zum nächsten Arbeitsplatz',
+        'confirm' => 'Bestätigung',
     ],
     'data' => [
         'shift-sequence' => [
@@ -54,4 +55,6 @@ return [
     'noData' => 'Keine Daten verfügbar',
     'serialNumber' => 'Seriennummer',
     'alreadyHasSerial' => 'Es wurde bereits ein Barcode erfasst',
+    'waring-message' => 'Sind Sie sicher, dass Sie die Aktion :action ausführen möchten?',
+    'time-left' => ' Sekunden übrig',
 ];

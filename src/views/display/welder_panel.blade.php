@@ -58,7 +58,7 @@
                 @include('awf-extension::success', ['class' => 'countdown-success-sign'])
             </div>
             <span id="countdown-timer" style="padding-left: 2vh;"></span>
-            <span style="padding-right: 2vh;"> másodperc van hátra</span>
+            <span style="padding-right: 2vh;">{{ __('display.time-left') }}</span>
         </div>
         <div class="timer timer-closer">
             <span id="time"></span>

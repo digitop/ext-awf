@@ -22,6 +22,7 @@ return [
         'sequenceUpdate' => 'Update sequence',
         'submit' => 'Submit',
         'next-work-center' => 'Continue to the next work center',
+        'confirm' => 'Confirmation',
     ],
     'data' => [
         'shift-sequence' => [
@@ -54,4 +55,6 @@ return [
     'noData' => 'No data available',
     'serialNumber' => 'Serial number',
     'alreadyHasSerial' => 'A barcode has already been recorded',
+    'waring-message' => 'Are you sure you want to perform the :action action',
+    'time-left' => ' second(s) left',
 ];

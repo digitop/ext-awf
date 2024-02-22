@@ -23,9 +23,9 @@
     <div id="warningModal" class="modal">
         <div class="modal-content modal-warning">
             <p style="text-align: center; margin-top: 5%; font-size: xxx-large;">
-                Biztos benne, hogy végre akarja hajtani a műszak kezdése műveletet?
+                {{ __('display.waring-message', ['action' => __('display.button.shiftStart')]) }}?
             </p>
-            <button class="button button-red button-modal" id="success-shift-start-button">Igen</button>
+            <button class="button button-red button-modal" id="success-shift-start-button">{{ __('display.button.confirm') }}</button>
         </div>
     </div>
 
@@ -50,7 +50,8 @@
                 <td>{{ $aPillar->SEPSEQ }}</td>
                 <td>{{ $aPillar->SEARNU }}</td>
                 <td>
-                    <a class="button-small button-blue" href="{{ route('awf-shift-management-panel.shift-start.index', ['pillar' => 'A']) }}">
+                    <a class="button-small button-blue"
+                       href="{{ route('awf-shift-management-panel.shift-start.index', ['pillar' => 'A']) }}">
                         {{ __('button.operations') }}
                     </a>
                 </td>
@@ -65,7 +66,8 @@
                 <td>{{ $bPillar->SEPSEQ }}</td>
                 <td>{{ $bPillar->SEARNU }}</td>
                 <td>
-                    <a class="button-small button-blue" href="{{ route('awf-shift-management-panel.shift-start.index', ['pillar' => 'B']) }}">
+                    <a class="button-small button-blue"
+                       href="{{ route('awf-shift-management-panel.shift-start.index', ['pillar' => 'B']) }}">
                         {{ __('button.operations') }}
                     </a>
                 </td>
@@ -80,7 +82,8 @@
                 <td>{{ $cPillar->SEPSEQ }}</td>
                 <td>{{ $cPillar->SEARNU }}</td>
                 <td>
-                    <a class="button-small button-blue" href="{{ route('awf-shift-management-panel.shift-start.index', ['pillar' => 'C']) }}">
+                    <a class="button-small button-blue"
+                       href="{{ route('awf-shift-management-panel.shift-start.index', ['pillar' => 'C']) }}">
                         {{ __('button.operations') }}
                     </a>
                 </td>
@@ -93,9 +96,9 @@
 
     <div style="margin-top: 20%; margin-left: 12%;">
         <button
-            id="reset-default"
-            class="button button-green"
-            style="width: 80%;"
+                id="reset-default"
+                class="button button-green"
+                style="width: 80%;"
         >
             {{ __('display.button.startOfShift') }}
         </button>
