@@ -302,6 +302,10 @@ class SequenceFacade extends Facade
             $sequence3 = new Collection([$waitings[1]]);
         }
 
+        if ($workCenter->WCSHNA == 'HC01' && !empty($sequence2)) {
+            $sequence3 = $sequence2;
+        }
+
         if (!empty($sequence2) && !empty($sequence3)) {
             event(new WelderNextProductEvent(
                 (new WelderNextProductEventResponse(
