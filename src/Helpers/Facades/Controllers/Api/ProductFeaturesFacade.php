@@ -86,7 +86,7 @@ class ProductFeaturesFacade extends Facade
         }
 
         $queryString = '
-            select a.PRCODE, a.ORCODE,r.OPSHNA, a.SEQUID, a.SEPSEQ, a.SEARNU, a.SESIDE, a.SEPILL, a.SEPONR, a.SEINPR
+            select a.PRCODE, a.ORCODE,r.OPSHNA, a.SEQUID, a.SEPSEQ, a.SEARNU, a.SESIDE, a.SEPILL, a.SEPONR, a.SEINPR, p.PRNAME
             from AWF_SEQUENCE_LOG asl
                 join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
                 join ' . $database . '.REPNO r on r.ORCODE = a.ORCODE
@@ -124,6 +124,7 @@ class ProductFeaturesFacade extends Facade
                     ))->setSequence($sequence)->generate(),
                     'status' => $workCenter?->features()->where('WFSHNA', '=', 'OPSTATUS')->first()->WFVALU,
                     'orderCode' => $sequence?->ORCODE ?? null,
+                    'name' => $sequence?->PRNAME,
                     'opshna' => $sequence?->OPSHNA ?? null,
                 ]
             ),

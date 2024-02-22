@@ -5,7 +5,7 @@ Content-Type: application/json
 
 {
   "WCSHNA": "EL01",
-  "SEQUID": 129353
+  "SEQUID": 137638
 }
 
 ### move sequence - test
@@ -14,8 +14,8 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "WCSHNA": "HB01",
-  "SEQUID": 129353
+  "WCSHNA": "EL01",
+  "SEQUID": 137638
 }
 
 ### order changeonjs

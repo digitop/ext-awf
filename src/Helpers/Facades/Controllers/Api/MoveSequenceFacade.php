@@ -50,7 +50,8 @@ class MoveSequenceFacade extends Facade
             $workCenter = WORKCENTER::where('WCSHNA', '=', $nextProductWorkCenterData->WCSHNA)->first();
 
             $queryString = '
-            select a.PRCODE, a.SEQUID, a.SEPSEQ, a.SEARNU, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEINPR from AWF_SEQUENCE_LOG asl
+            select a.PRCODE, a.SEQUID, a.SEPSEQ, a.SEARNU, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEINPR, p.PRNAME
+            from AWF_SEQUENCE_LOG asl
                 join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
                 join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
                 join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE
@@ -79,7 +80,8 @@ class MoveSequenceFacade extends Facade
                     "to" => 'dh:' . $workCenter->operatorPanels[0]->dashboard->DHIDEN,
                     "payload" => [
                         "status" => $status,
-                        'orderCode' => $sequence2?->ORCODE ?? null
+                        'orderCode' => $sequence2?->ORCODE ?? null,
+                        'name' => $sequence2?->PRNAME,
                     ],
                 ]
             ]);
@@ -119,7 +121,8 @@ class MoveSequenceFacade extends Facade
                     "to" => 'dh:' . $workCenter->operatorPanels[0]->dashboard->DHIDEN,
                     "payload" => [
                         "status" => $status,
-                        'orderCode' => $sequence2?->ORCODE ?? null
+                        'orderCode' => $sequence2?->ORCODE ?? null,
+                        'name' => $sequence2?->PRNAME,
                     ],
                 ]
             ]);
@@ -130,7 +133,8 @@ class MoveSequenceFacade extends Facade
             $workCenter2 = WORKCENTER::where('WCSHNA', '=', $request->WCSHNA)->first();
 
             $queryString = '
-            select a.PRCODE, a.SEQUID, a.SEPSEQ, a.SEARNU, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEINPR from AWF_SEQUENCE_LOG asl
+            select a.PRCODE, a.SEQUID, a.SEPSEQ, a.SEARNU, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEINPR, p.PRNAME
+            from AWF_SEQUENCE_LOG asl
                 join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
                 join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
                 join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE
@@ -160,7 +164,8 @@ class MoveSequenceFacade extends Facade
                     "to" => 'dh:' . $workCenter2->operatorPanels[0]->dashboard->DHIDEN,
                     "payload" => [
                         "status" => $status,
-                        'orderCode' => $sequence3?->ORCODE ?? null
+                        'orderCode' => $sequence3?->ORCODE ?? null,
+                        'name' => $sequence3?->PRNAME,
                     ],
                 ]
             ]);

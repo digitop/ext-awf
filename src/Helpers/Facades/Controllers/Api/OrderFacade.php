@@ -40,8 +40,9 @@ class OrderFacade extends Facade
         $sequence = null;
 
         $waitings = DB::connection('custom_mysql')->select('
-            select a.ORCODE
+            select a.ORCODE, p.PRNAME
             from AWF_SEQUENCE a
+                join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
                 join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE
                 join ' . $database . '.PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = "' . $model->WCSHNA . '"
                 join ' . $database . '.PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
@@ -60,7 +61,8 @@ class OrderFacade extends Facade
             new ResponseData(
                 $success,
                 [
-                    'orderCode' => $sequence?->ORCODE ?? null
+                    'orderCode' => $sequence?->ORCODE ?? null,
+                    'name' => $sequence?->PRNAME,
                 ],
                 $success ? '' : 'Nem áll rendelkezésre szekvencia adat'
             ),
@@ -81,6 +83,7 @@ class OrderFacade extends Facade
                     [
                         'orderCode' => null,
                         'side' => null,
+                        'name' => null,
                     ],
                     $success ? '' : 'Nem érkezett serial number'
                 ),
@@ -95,6 +98,7 @@ class OrderFacade extends Facade
                     [
                         'orderCode' => null,
                         'side' => null,
+                        'name' => null,
                     ],
                     $success ? '' : 'Nem érkezett serial number'
                 ),
@@ -106,8 +110,9 @@ class OrderFacade extends Facade
         $isWelder = in_array($workCenter->WCSHNA, ['HA01', 'HB01', 'HC01'], true);
 
         $queryString = '
-            select a.SEQUID, a.SESIDE, a.SEPILL, a.SEINPR, a.PRCODE, a.ORCODE, ppd.PFIDEN, ppd.PORANK, ppd.OPSHNA, asw.RNREPN
+            select a.SEQUID, a.SESIDE, a.SEPILL, a.SEINPR, a.PRCODE, a.ORCODE, ppd.PFIDEN, ppd.PORANK, ppd.OPSHNA, asw.RNREPN, p.PRNAME
             from AWF_SEQUENCE a
+                join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
                 join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE
                 join ' . $database . '.PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = "' . $workCenter->WCSHNA . '"
                 join ' . $database . '.PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
@@ -126,6 +131,7 @@ class OrderFacade extends Facade
                     [
                         'orderCode' => null,
                         'side' => null,
+                        'name' => null,
                     ],
                     $success ? '' : 'Nincs a gépnél következő darab'
                 ),
@@ -168,6 +174,7 @@ class OrderFacade extends Facade
                             [
                                 'orderCode' => null,
                                 'side' => null,
+                                'name' => null,
                             ],
                             $success ? '' : $error
                         ),
@@ -194,6 +201,7 @@ class OrderFacade extends Facade
                 [
                     'orderCode' => $waiting->ORCODE ?? null,
                     'side' => $waiting->SESIDE,
+                    'name' => $waiting?->PRNAME,
                 ]
             ),
             Response::HTTP_OK
