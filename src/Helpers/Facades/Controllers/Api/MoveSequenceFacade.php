@@ -165,7 +165,7 @@ class MoveSequenceFacade extends Facade
                     "payload" => [
                         "status" => $status,
                         'orderCode' => $sequence3?->ORCODE ?? null,
-                        'name' => $sequence3?->PRNAME,
+                        'name' => $sequence3?->PRNAME ?? null,
                     ],
                 ]
             ]);

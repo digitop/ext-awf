@@ -19,3 +19,18 @@
 .centered {
     text-align: center;
 }
+
+.countdown {
+    position: absolute;
+    top: 30%;
+    font-size: xxx-large;
+    left: 35%;
+    background-color: #3ebd94;
+}
+
+.countdown-success-sign {
+    height: 40%;
+    width: 40%;
+    margin-left: 15vh;
+}
+

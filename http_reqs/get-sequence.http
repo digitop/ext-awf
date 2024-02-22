@@ -31,6 +31,6 @@ Accept: application/json
 Content-Type: application/json
 
 ### get welder data
-GET http://localhost:8000/api/ext/awf-extension/sequence/welder/B/HB01
+GET http://localhost:8003/api/ext/awf-extension/sequence/welder/B/HB01
 Accept: application/json
 Content-Type: application/json

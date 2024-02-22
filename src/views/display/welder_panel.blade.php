@@ -53,6 +53,13 @@
             <div id="current-product-material">
             </div>
         </span>
+        <div id="countdown-container" class="countdown">
+            <div>
+                @include('awf-extension::success', ['class' => 'countdown-success-sign'])
+            </div>
+            <span id="countdown-timer" style="padding-left: 2vh;"></span>
+            <span style="padding-right: 2vh;"> másodperc van hátra</span>
+        </div>
         <div class="timer timer-closer">
             <span id="time"></span>
         </div>
@@ -93,6 +100,7 @@
 <script>
     var viewAppletData = {
         welderNextSequence: JSON.parse('{{ json_encode($welderNextSequence) }}'),
+        timerCount: 0
     };
 </script>
 <script src="{!! asset('/dist/vue.js') !!}"></script>
