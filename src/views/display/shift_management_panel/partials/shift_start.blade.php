@@ -12,6 +12,23 @@
         <div id="loading-content"></div>
     </section>
 
+    <div id="successModal" class="modal">
+        <div class="modal-content modal-success">
+            <p style="text-align: center; margin-top: 5%">
+                @include('awf-extension::success', ['class' => 'success-sign'])
+            </p>
+        </div>
+    </div>
+
+    <div id="warningModal" class="modal">
+        <div class="modal-content modal-warning">
+            <p style="text-align: center; margin-top: 5%; font-size: xxx-large;">
+                Biztos benne, hogy végre akarja hajtani a műszak kezdése műveletet?
+            </p>
+            <button class="button button-red button-modal" id="success-shift-start-button">Igen</button>
+        </div>
+    </div>
+
     <div class="page-title" style="margin-top: 12%;">
         {{ __('display.button.shiftStart') }}
     </div>
@@ -84,10 +101,36 @@
         </button>
 
         <script>
+            var successModal = $('#successModal')
+            var warningModal = $('#warningModal')
+
+            function showWarning() {
+                warningModal.css('display', 'block')
+            }
+
+            $(document).click(function () {
+                if (successModal.css('display') == 'block') {
+                    successModal.css('display', 'none')
+                }
+                if (warningModal.css('display') == 'block') {
+                    warningModal.css('display', 'none')
+                }
+            })
+
             $('#reset-default').bind('click', function () {
+                setTimeout(showWarning, 100)
+            })
+
+            $('#success-shift-start-button').bind('click', function () {
+                warningModal.css('display', 'none')
                 showLoading()
 
-                $.get('{{ route('awf-shift-management-panel.shift-start.default') }}')
+                $.get('{{ route('awf-shift-management-panel.shift-start.default') }}', function (response) {
+                    console.log('response: ', response)
+                    if (response.success === true) {
+                        successModal.css('display', 'block')
+                    }
+                })
                     .always(function () {
                         hideLoading()
                     })

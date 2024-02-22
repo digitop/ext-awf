@@ -46,7 +46,23 @@
     background-color: #e14f4f;
 }
 
+.modal-warning {
+    color: #795c17;
+    background-color: #C9971C;
+}
+
+.info {
+    /*border: 1px solid #FEEC6F;*/
+    background-color: #537ade;
+}
+
 .success-sign {
     height: 55%;
     width: 55%;
+}
+
+button.button-modal {
+    padding: 1vh 5vh !important;
+    margin-top: 10vh !important;
+    margin-left: 70% !important;
 }

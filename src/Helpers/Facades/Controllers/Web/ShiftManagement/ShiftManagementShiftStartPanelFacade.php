@@ -6,7 +6,10 @@ use AWF\Extension\Events\ShiftManagementResettingEvent;
 use AWF\Extension\Helpers\DataTable\ShiftStartDataTable;
 use AWF\Extension\Helpers\Facades\Controllers\Web\Facade;
 use AWF\Extension\Helpers\Models\ShiftManagementResettingEventModel;
+use AWF\Extension\Helpers\Responses\JsonResponseModel;
+use AWF\Extension\Helpers\Responses\ResponseData;
 use AWF\Extension\Models\AWF_SEQUENCE;
+use AWF\Extension\Responses\CustomJsonResponse;
 use AWF\Extension\Responses\ShiftManagementResettingEventResponse;
 use Illuminate\Contracts\Foundation\Application as ContractsApplication;
 use Illuminate\Contracts\View\Factory;
@@ -19,6 +22,7 @@ use Illuminate\Http\Request;
 use Illuminate\View\View as IlluminateView;
 use Illuminate\Support\Facades\Session;
 use PhpMqtt\Client\Facades\MQTT;
+use Symfony\Component\HttpFoundation\Response;
 
 class ShiftManagementShiftStartPanelFacade extends Facade
 {
@@ -68,7 +72,7 @@ class ShiftManagementShiftStartPanelFacade extends Facade
         ]);
     }
 
-    public function default(): void
+    public function default(): JsonResponse
     {
         event(new ShiftManagementResettingEvent(
             (new ShiftManagementResettingEventResponse())->generate()
@@ -83,5 +87,12 @@ class ShiftManagementShiftStartPanelFacade extends Facade
                 ],
             ]
         ]);
+
+        return new CustomJsonResponse(new JsonResponseModel(
+            new ResponseData(
+                true
+            ),
+            Response::HTTP_OK
+        ));
     }
 }

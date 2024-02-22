@@ -48,8 +48,8 @@ class ShiftManagementShiftStartPanelController extends Controller
         return $this->facade->create($request, $model);
     }
 
-    public function default(): void
+    public function default(): JsonResponse
     {
-        $this->facade->default();
+        return $this->facade->default();
     }
 }

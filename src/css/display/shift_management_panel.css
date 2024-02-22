@@ -194,6 +194,16 @@ button.button-blue:hover, button.button-blue:active {
     color: white;
 }
 
+button.button-red {
+    background-color: #de5b53;
+    color: white;
+}
+
+button.button-red:hover, button.button-red:active {
+    background-color: #a82a1f;
+    color: white;
+}
+
 .footer {
     position: absolute;
     bottom: 0;
