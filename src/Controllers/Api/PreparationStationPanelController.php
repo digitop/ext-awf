@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use AWF\Extension\Helpers\Facades\Controllers\Api\Facade;
 use AWF\Extension\Helpers\Facades\Controllers\Web\PreparationStationPanelFacade;
 use AWF\Extension\Interfaces\WebControllerFacadeInterface;
+use AWF\Extension\Requests\Api\PreparationStationPanelDefaultRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -22,8 +23,8 @@ class PreparationStationPanelController extends Controller
         $this->webFacade = new PreparationStationPanelFacade();
     }
 
-    public function default(): void
+    public function default(PreparationStationPanelDefaultRequest $request): void
     {
-        $this->webFacade->default();
+        $this->webFacade->default($request);
     }
 }

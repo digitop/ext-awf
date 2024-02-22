@@ -24,6 +24,7 @@ class SequenceShowRequest extends FormRequest
             'side' => ['nullable', 'string', 'max:1', 'min:1', 'in:R,L'],
             'limit' => ['nullable', 'int', 'min:1'],
             'no_change' => ['nullable', 'string', 'in:true,false'],
+            'to_preparation_panel' => ['nullable', 'string', 'in:true,false'],
             'porscheProductNumber' => ['nullable', 'string'],
         ];
     }
@@ -44,6 +45,8 @@ class SequenceShowRequest extends FormRequest
             'limit.min' => __('validation.min.numeric', ['attribute' => 'limit', 'min' => 1]),
             'no_change.in' => __('validation.in', ['attribute' => 'no_change']),
             'no_change.string' => __('validation.string', ['attribute' => 'no_change']),
+            'to_preparation_panel.in' => __('validation.in', ['attribute' => 'to_preparation_panel']),
+            'to_preparation_panel.string' => __('validation.string', ['attribute' => 'to_preparation_panel']),
             'porscheProductNumber.string' => __('validation.string', ['attribute' => 'porscheProductNumber']),
         ];
     }

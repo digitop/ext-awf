@@ -31,11 +31,14 @@ class PreparationStationPanelFacade extends Facade
         ]);
     }
 
-    public function default(): void
+    public function default(Request|FormRequest|null $request = null): void
     {
-        event(new NextProductEvent(
-                (new NextProductEventModel())->get()
-            )
-        );
+        $eventModel = new NextProductEventModel();
+
+        if ($request->has('fabric_shelf') && (int)$request->fabric_shelf === 1) {
+            $eventModel->setIsBecauseFabricShelf(__('response.preparation-panel.because-fabric-shelf'));
+        }
+
+        event(new NextProductEvent($eventModel->get()));
     }
 }

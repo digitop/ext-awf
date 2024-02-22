@@ -179,6 +179,15 @@ class OrderFacade extends Facade
             $i++;
         }
 
+        publishMqtt(env('DEPLOYMENT_SUBDOMAIN') . '/api/AWF_ORDER_CHECK_SERIAL/', [
+            [
+                "to" => 'wc:' . $workCenter->WCSHNA,
+                "payload" => [
+                    "success" => true,
+                ],
+            ]
+        ]);
+
         return new CustomJsonResponse(new JsonResponseModel(
             new ResponseData(
                 true,

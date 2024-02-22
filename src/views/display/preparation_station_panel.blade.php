@@ -64,6 +64,7 @@
 </div>
 
 <div id="hide-app" class="hide">
+    <div id="is-because-fabric-shelf" class="is-because-fabric-shelf"></div>
     <div class="timer-bottom">
         <div class="timer">
             <span id="hidden-time"></span>

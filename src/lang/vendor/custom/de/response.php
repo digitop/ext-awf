@@ -12,4 +12,7 @@ return [
         'not_next_product' => 'Dies ist nicht das nächste Produkt!',
         'cannot_attach_piece' => 'Dieser Barcode kann nicht am Stück angebracht werden!',
     ],
+    'preparation-panel' => [
+        'because-fabric-shelf' => 'Warten auf das Stoffregal!',
+    ],
 ];

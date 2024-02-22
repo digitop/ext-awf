@@ -12,4 +12,7 @@ return [
         'not_next_product' => 'Nem ez a következő termék!',
         'cannot_attach_piece' => 'Ez a vonalkód nem rögzíthető a darabhoz!',
     ],
+    'preparation-panel' => [
+        'because-fabric-shelf' => 'Várakozás a szövet polcra',
+    ],
 ];

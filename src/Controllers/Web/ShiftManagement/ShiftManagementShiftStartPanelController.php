@@ -15,6 +15,8 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View as IlluminateView;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\App;
 
 class ShiftManagementShiftStartPanelController extends Controller
 {
@@ -23,6 +25,13 @@ class ShiftManagementShiftStartPanelController extends Controller
     public function __construct()
     {
         $this->facade = new ShiftManagementShiftStartPanelFacade();
+
+        if (session() === null || empty(Session::get('locale')[0])) {
+            $locale = 'hu_HU';
+            setlocale(LC_ALL, implode('-', explode('_', $locale)));
+            Session::put('locale', $locale);
+            App::setLocale(substr($locale, 0, 2));
+        }
     }
     public function index(
         ShiftStartDataTable $dataTable,

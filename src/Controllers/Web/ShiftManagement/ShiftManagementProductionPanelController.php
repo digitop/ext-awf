@@ -15,6 +15,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View as IlluminateView;
 use App\Models\WORKCENTER;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\App;
 
 class ShiftManagementProductionPanelController extends Controller
 {
@@ -23,6 +25,13 @@ class ShiftManagementProductionPanelController extends Controller
     public function __construct()
     {
         $this->facade = new ShiftManagementProductionPanelFacade();
+
+        if (session() === null || empty(Session::get('locale')[0])) {
+            $locale = 'hu_HU';
+            setlocale(LC_ALL, implode('-', explode('_', $locale)));
+            Session::put('locale', $locale);
+            App::setLocale(substr($locale, 0, 2));
+        }
     }
     public function create(Request $request): Application|Factory|View|IlluminateView|ContractsApplication|null
     {

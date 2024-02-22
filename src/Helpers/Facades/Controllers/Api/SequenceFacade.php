@@ -181,7 +181,13 @@ class SequenceFacade extends Facade
                 (is_bool($request->no_change) && $request->no_change == true)
             );
 
-        if ($noChange && $workCenter->WCSHNA === 'EL01' && $sequence[0]->PRCODE !== 'dummy') {
+        $toPreparationPanel = $request->has('to_preparation_panel') &&
+            (
+                (is_string($request->to_preparation_panel) && $request->to_preparation_panel == 'true') ||
+                (is_bool($request->to_preparation_panel) && $request->to_preparation_panel == true)
+            );
+
+        if ($noChange && $workCenter->WCSHNA === 'EL01' && $sequence[0]->PRCODE !== 'dummy' && $toPreparationPanel) {
             event(new NextProductEvent(
                     (new NextProductEventResponse($sequence, null))->generate()
                 )

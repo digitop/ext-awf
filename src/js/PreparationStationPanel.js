@@ -12,6 +12,9 @@ const app = new Vue({
                 var data = e[0];
 
                 if (data?.designation != null) {
+                    $('#is-because-fabric-shelf').html('')
+                    $('#is-because-fabric-shelf').css('display', 'none')
+
                     $('#product-designation').html('')
                     $('#product-material').html('')
 
@@ -142,6 +145,17 @@ const app = new Vue({
                     $('#porsche-order-number').html('')
                     $('#porsche-sequence-number').html('')
                     $('#porsche-article-number').html('')
+
+                    $('#is-because-fabric-shelf').html('')
+                    $('#is-because-fabric-shelf').css('display', 'block')
+
+                    if (data?.isBecauseFabricShelf != null) {
+                        $('#is-because-fabric-shelf').append(data.isBecauseFabricShelf)
+                    }
+
+                    if (e?.isBecauseFabricShelf !== null) {
+                        $('#is-because-fabric-shelf').append(e.isBecauseFabricShelf)
+                    }
                 }
             });
     },

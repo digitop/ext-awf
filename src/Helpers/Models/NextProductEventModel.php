@@ -14,6 +14,7 @@ class NextProductEventModel extends ObjectToArray
     protected string|null $articleNumber = null;
     protected string|null $image = null;
     protected bool|null $isScrap = true;
+    protected string|null $isBecauseFabricShelf = null;
 
     public function __construct(
         string|null $designation = null,
@@ -133,6 +134,17 @@ class NextProductEventModel extends ObjectToArray
     public function setIsScrap(bool|null $isScrap): NextProductEventModel
     {
         $this->isScrap = $isScrap;
+        return $this;
+    }
+
+    public function getIsBecauseFabricShelf(): string|null
+    {
+        return $this->isBecauseFabricShelf;
+    }
+
+    public function setIsBecauseFabricShelf(string|null $isBecauseFabricShelf): NextProductEventModel
+    {
+        $this->isBecauseFabricShelf = $isBecauseFabricShelf;
         return $this;
     }
 }

@@ -16,6 +16,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View as IlluminateView;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\App;
 
 class ShiftManagementPanelManualDataRecordController extends Controller
 {
@@ -24,6 +26,13 @@ class ShiftManagementPanelManualDataRecordController extends Controller
     public function __construct()
     {
         $this->facade = new ShiftManagementPanelManualDataRecordFacade();
+
+        if (session() === null || empty(Session::get('locale')[0])) {
+            $locale = 'hu_HU';
+            setlocale(LC_ALL, implode('-', explode('_', $locale)));
+            Session::put('locale', $locale);
+            App::setLocale(substr($locale, 0, 2));
+        }
     }
     public function create(Request $request): Application|Factory|View|IlluminateView|ContractsApplication|null
     {
