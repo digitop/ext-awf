@@ -124,7 +124,7 @@ class ProductFeaturesFacade extends Facade
                     ))->setSequence($sequence)->generate(),
                     'status' => $workCenter?->features()->where('WFSHNA', '=', 'OPSTATUS')->first()->WFVALU,
                     'orderCode' => $sequence?->ORCODE ?? null,
-                    'name' => $sequence?->PRNAME,
+                    'name' => $sequence?->PRNAME ?? null,
                     'opshna' => $sequence?->OPSHNA ?? null,
                 ]
             ),
