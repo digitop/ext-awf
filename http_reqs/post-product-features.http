@@ -1,18 +1,18 @@
 ### get features of a given product by machine
-POST localhost:8000/api/ext/awf-extension/product-feature/show
+POST https://oeem.awf.hu/api/ext/awf-extension/product-feature/show
 Accept: application/json
 Content-Type: application/json
 
 {
-  "productCode": "F46B04104"
+  "productCode": "F46B04204"
 }
 
 ### check if selected color is right
-POST localhost:8000/api/ext/awf-extension/product-feature/check
+POST https://oeem.awf.hu/api/ext/awf-extension/product-feature/check
 Accept: application/json
 Content-Type: application/json
 
 {
-  "dashboard": "1",
-  "color": "ffffff"
+  "dashboard": "9",
+  "color": "475358"
 }

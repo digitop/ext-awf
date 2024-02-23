@@ -4,12 +4,12 @@ Accept: application/json
 Content-Type: application/json
 
 ### get features of all product - colors
-GET localhost:8000/api/ext/awf-extension/product-feature/get/colors
+GET https://oeem.awf.hu/api/ext/awf-extension/product-feature/get/colors
 Accept: application/json
 Content-Type: application/json
 
 {
-  "dashboard": "7"
+  "dashboard": "9"
 }
 
 ### get features of all product - materials

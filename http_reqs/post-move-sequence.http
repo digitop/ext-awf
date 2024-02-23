@@ -5,17 +5,17 @@ Content-Type: application/json
 
 {
   "WCSHNA": "EL01",
-  "SEQUID": 137638
+  "SEQUID": 140668
 }
 
 ### move sequence - test
-POST http://localhost:8003/api/ext/awf-extension/move-sequence
+POST http://localhost:8000/api/ext/awf-extension/move-sequence
 Accept: application/json
 Content-Type: application/json
 
 {
-  "WCSHNA": "KBJ01",
-  "SEQUID": 129355
+  "WCSHNA": "EL01",
+  "SEQUID": 130383
 }
 
 ### order changeonjs

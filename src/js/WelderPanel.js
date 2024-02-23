@@ -136,6 +136,9 @@ const app = new Vue({
                 this.welderNextSequence = e
             })
     },
+    beforeDestroy() {
+        this.timerCount.destroy()
+    },
     methods: {
 
     }

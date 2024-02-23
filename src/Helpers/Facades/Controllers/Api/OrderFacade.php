@@ -107,7 +107,6 @@ class OrderFacade extends Facade
         }
 
         $workCenter = WORKCENTER::where('WCSHNA', '=', $model[0]->operatorPanels[0]->WCSHNA)->first();
-        $isWelder = in_array($workCenter->WCSHNA, ['HA01', 'HB01', 'HC01'], true);
 
         $queryString = '
             select a.SEQUID, a.SESIDE, a.SEPILL, a.SEINPR, a.PRCODE, a.ORCODE, ppd.PFIDEN, ppd.PORANK, ppd.OPSHNA, asw.RNREPN, p.PRNAME
@@ -120,7 +119,7 @@ class OrderFacade extends Facade
                 left join AWF_SEQUENCE_WORKCENTER asw on asw.SEQUID = a.SEQUID and asw.WCSHNA = pcd.WCSHNA
             where a.SEINPR < ppd.PORANK
                 and (asl.LSTIME >= "' . $start . '" or asl.LSTIME is null)
-            order by asl.LSTIME DESC, a.SEQUID limit ' . ($isWelder ? 2 : 1);
+            order by asl.LSTIME DESC, a.SEQUID limit 1';
 
         $waitings = DB::connection('custom_mysql')->select($queryString);
 
