@@ -117,8 +117,8 @@ class OrderFacade extends Facade
                 join ' . $database . '.PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
                 left join AWF_SEQUENCE_LOG asl on a.SEQUID = asl.SEQUID and asl.WCSHNA = pcd.WCSHNA
                 left join AWF_SEQUENCE_WORKCENTER asw on asw.SEQUID = a.SEQUID and asw.WCSHNA = pcd.WCSHNA
-            where a.SEINPR < ppd.PORANK
-                and (asl.LSTIME >= "' . $start . '" or asl.LSTIME is null)
+            where a.SEINPR <= ppd.PORANK
+                and (asl.LSTIME >= "' . $start . '" or asl.LSTIME is null)  and asl.LETIME is null
             order by asl.LSTIME DESC, a.SEQUID limit 1';
 
         $waitings = DB::connection('custom_mysql')->select($queryString);
@@ -164,6 +164,10 @@ class OrderFacade extends Facade
                 }
                 else {
                     $error = 'Hiba lépett fel az adatok mentése során!';
+                }
+
+                if (array_key_exists('errorCode', $checkSerial) && !empty($checkSerial['errorCode'])) {
+                    $error .= ' - ' . $checkSerial['errorCode'];
                 }
 
                 if (count($waitings) - 1 == $i) {

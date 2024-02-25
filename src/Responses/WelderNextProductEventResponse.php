@@ -68,15 +68,15 @@ class WelderNextProductEventResponse  implements NullableResponseInterface
         $workCenter = null;
 
         if ($this->collection[0]->SEPILL === 'A') {
-            $workCenter = 'HA01';
+            $workCenter = 'HAB01';
         }
 
         if ($this->collection[0]->SEPILL === 'B') {
-            $workCenter = 'HB01';
+            $workCenter = 'HBB01';
         }
 
         if ($this->collection[0]->SEPILL === 'C') {
-            $workCenter = 'HC01';
+            $workCenter = 'HCB01';
         }
 
         $data['workCenter'] = $workCenter;
