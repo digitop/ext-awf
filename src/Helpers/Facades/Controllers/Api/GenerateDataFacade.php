@@ -30,7 +30,19 @@ class GenerateDataFacade extends Facade
 
         try {
             $this->generatePath();
-            $this->deleteAllSequenceThatNotInProduction();
+            $i = 0;
+            $deleteSuccess = false;
+
+            while ($deleteSuccess === false && $i < 3) {
+                try {
+                    $this->deleteAllSequenceThatNotInProduction();
+
+                    $deleteSuccess = true;
+                }
+                catch (\Exception $e) {
+                    $i++;
+                }
+            }
 
             foreach (Storage::disk('awfSequenceFtp')->files() as $filePath) {
                 if (str_contains($filePath, 'P992')) {
@@ -82,7 +94,8 @@ class GenerateDataFacade extends Facade
                 json_encode($details)
             ),
             Response::HTTP_OK
-        ));
+            )
+        );
     }
 
     protected function generateData(string $filePath): void
@@ -137,7 +150,8 @@ class GenerateDataFacade extends Facade
 
         DB::connection('custom_mysql')->insert($insertQuery);
 
-        $sequences = DB::connection('custom_mysql')->select('select SEQUID from AWF_SEQUENCE where SEINPR = 0 and SEPILL = "' . $pillar . '"');
+        $sequences = DB::connection('custom_mysql'
+        )->select('select SEQUID from AWF_SEQUENCE where SEINPR = 0 and SEPILL = "' . $pillar . '"');
 
         if (!empty($sequences[0])) {
             $insertLog = 'insert into AWF_SEQUENCE_LOG (SEQUID, WCSHNA) values';
@@ -217,7 +231,8 @@ class GenerateDataFacade extends Facade
 
         if (!empty($deleteSeq)) {
             DB::connection('custom_mysql')->delete('delete from AWF_SEQUENCE_LOG where SEQUID in (' . $deleteSeq . ')');
-            DB::connection('custom_mysql')->delete('delete from AWF_SEQUENCE_WORKCENTER where SEQUID in (' . $deleteSeq . ')');
+            DB::connection('custom_mysql'
+            )->delete('delete from AWF_SEQUENCE_WORKCENTER where SEQUID in (' . $deleteSeq . ')');
             DB::connection('custom_mysql')->delete('delete from AWF_SEQUENCE where SEQUID in (' . $deleteSeq . ')');
         }
 
