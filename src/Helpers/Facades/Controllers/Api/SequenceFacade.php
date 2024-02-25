@@ -229,8 +229,8 @@ class SequenceFacade extends Facade
         $logs = DB::connection('custom_mysql')->select('
             select a.SEQUID from AWF_SEQUENCE a
                 join AWF_SEQUENCE_LOG asl on a.SEQUID = asl.SEQUID
-            where a.SEINPR > 0 and (asl.LSTIME is null or asl.LETIME is null) and a.SEQUID < 111479
-        ');
+            where a.SEINPR > 0 and (asl.LSTIME is null or asl.LETIME is null) and a.SEQUID < ' . $sequenceId
+        );
 
         if (array_key_exists(0, $logs) && !empty($logs[0])) {
             foreach ($logs as $log) {
@@ -245,6 +245,26 @@ class SequenceFacade extends Facade
                     ->update([
                         'LETIME' => $now,
                     ]);
+            }
+        }
+
+        $logs = DB::connection('custom_mysql')->select('select * from AWF_SEQUENCE_LOG where SEQUID >= ' . $sequenceId);
+
+        if (array_key_exists(0, $logs) && !empty($logs[0])) {
+            foreach ($logs as $log) {
+                if ($log->WCSHNA === 'EL01') {
+                    AWF_SEQUENCE_LOG::where('SEQUID', '=', $log->SEQUID)
+                        ->where('WCSHNA', '=', $log->WCSHNA)
+                        ->update([
+                            'LSTIME' => null,
+                            'LETIME' => null,
+                        ]);
+                }
+                else {
+                    AWF_SEQUENCE_LOG::where('SEQUID', '=', $log->SEQUID)
+                        ->where('WCSHNA', '=', $log->WCSHNA)
+                        ->delete();
+                }
             }
         }
 

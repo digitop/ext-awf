@@ -38,7 +38,7 @@ class ShiftStartDataTable extends DataTable
      */
     public function query(): QueryBuilder|EloquentBuilder
     {
-         $records = AWF_SEQUENCE::whereIn('SEINPR', [0, 1]);
+        $records = AWF_SEQUENCE::whereIn('SEINPR', [0, 1])->where('SESIDE', 'L');
 
          if ($this->getPillar() !== null) {
              $records->where('SEPILL', '=', $this->getPillar());
