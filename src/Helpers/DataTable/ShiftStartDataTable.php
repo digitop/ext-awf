@@ -38,15 +38,23 @@ class ShiftStartDataTable extends DataTable
      */
     public function query(): QueryBuilder|EloquentBuilder
     {
-        $records = AWF_SEQUENCE::whereIn('SEINPR', [0, 1])->where('SESIDE', 'L');
+        $records = AWF_SEQUENCE::where('SESIDE', 'L')
+            ->selectRaw('AWF_SEQUENCE.*')
+            ->join('AWF_SEQUENCE_LOG as asl', function ($join) {
+                $start = (new \DateTime())->format('Y-m-d') . ' 00:00:00';
+
+                $join->on('asl.SEQUID', '=', 'AWF_SEQUENCE.SEQUID')
+                    ->whereNull('LSTIME')
+                    ->orWhere('LSTIME', '>=', $start);
+            });
 
          if ($this->getPillar() !== null) {
-             $records->where('SEPILL', '=', $this->getPillar());
+             $records->where('AWF_SEQUENCE.SEPILL', '=', $this->getPillar());
          }
 
          $records
-            ->orderBy('SEPILL', 'DESC')
-            ->orderBy('SEQUID', 'ASC');
+             ->orderBy('AWF_SEQUENCE.SEPILL', 'DESC')
+             ->orderBy('AWF_SEQUENCE.SEQUID', 'ASC');
 
         return $this->applyScopes($records);
     }

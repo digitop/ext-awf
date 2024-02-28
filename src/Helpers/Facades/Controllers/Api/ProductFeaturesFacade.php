@@ -155,7 +155,6 @@ class ProductFeaturesFacade extends Facade
         )->first();
 
         $sequenceLog = AWF_SEQUENCE_LOG::where('WCSHNA', '=', $workCenter->WCSHNA)
-            ->whereNull('LSTIME')
             ->whereNull('LETIME')
             ->orderBy('SEQUID')
             ->first();

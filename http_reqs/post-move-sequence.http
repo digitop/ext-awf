@@ -4,8 +4,8 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "WCSHNA": "KCJ01",
-  "SEQUID": 144909
+  "WCSHNA": "KCB01",
+  "SEQUID": 130374
 }
 
 ### move sequence - test
@@ -14,8 +14,8 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "WCSHNA": "EL01",
-  "SEQUID": 130383
+  "WCSHNA": "KCB01",
+  "SEQUID": 130374
 }
 
 ### order changeonjs

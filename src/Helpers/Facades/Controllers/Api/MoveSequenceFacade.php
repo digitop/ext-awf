@@ -27,7 +27,6 @@ class MoveSequenceFacade extends Facade
         $database = config('database.connections.mysql.database');
 
         $sequence = AWF_SEQUENCE::where('SEQUID', '=', $request->SEQUID)
-            ->where('SEEXPI', '>=', (new \DateTime())->format('Y-m-d'))
             ->first();
 
         if (empty($sequence)) {
