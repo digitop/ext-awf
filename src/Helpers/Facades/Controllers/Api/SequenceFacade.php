@@ -284,16 +284,71 @@ class SequenceFacade extends Facade
         $start = (new \DateTime())->format('Y-m-d') . ' 00:00:00';
 
         $waitings = DB::connection('custom_mysql')->select('
-            select asl.LSTIME, a.SEQUID, a.SEPONR, a.SEPSEQ, a.SESIDE, a.SEPILL, a.SEINPR, a.PRCODE, a.ORCODE, ppd.PFIDEN, ppd.PORANK, ppd.OPSHNA
+            select asl.LSTIME, r.RNREPN, s.SNSERN, a.SEQUID, a.SEPONR, a.SEPSEQ, a.SESIDE, a.SEPILL,
+                   a.SEINPR, a.PRCODE, a.ORCODE, ppd.PFIDEN, ppd.PORANK, ppd.OPSHNA
             from AWF_SEQUENCE a
                 join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE
                 join ' . $database . '.PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = "' . $workCenter->WCSHNA . '"
                 join ' . $database . '.PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
+                join ' . $database . '.REPNO r on r.WCSHNA = pcd.WCSHNA and r.ORCODE = a.ORCODE
+                left join ' . $database . '.SERIALNUMBER s on s.RNREPN = r.RNREPN and s.PRCODE = a.PRCODE
                 left join AWF_SEQUENCE_LOG asl on a.SEQUID = asl.SEQUID and asl.WCSHNA = pcd.WCSHNA
             where a.SEINPR < ppd.PORANK and a.SESIDE = "L"
                 and (asl.LSTIME >= "' . $start . '" or asl.LSTIME is null)
             order by asl.LSTIME DESC, a.SEQUID limit 2
         ');
+
+        $alreadyReaded = false;
+
+        $queryString = '
+            select r.RNREPN, s.SNSERN, a.SEQUID, a.SEPONR, a.SEPSEQ, a.SESIDE, a.SEPILL
+            from AWF_SEQUENCE a
+                join AWF_SEQUENCE_LOG asl on a.SEQUID = asl.SEQUID and asl.WCSHNA = "' . $workCenter->WCSHNA . '"
+                join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE
+                join ' . $database . '.PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = asl.WCSHNA
+                join ' . $database . '.PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
+                join ' . $database . '.REPNO r on r.WCSHNA = pcd.WCSHNA and r.ORCODE = a.ORCODE
+                left join ' . $database . '.SERIALNUMBER s on s.RNREPN = r.RNREPN and s.PRCODE = a.PRCODE
+            where a.SEINPR <= ppd.PORANK
+                and (asl.LSTIME >= "' . $start . '" or asl.LSTIME is null) and asl.LETIME is null
+            order by asl.LSTIME DESC, a.SEQUID
+        ';
+
+        $inProgress = DB::connection('custom_mysql')->select($queryString);
+
+        if (array_key_exists(0, $inProgress) && !empty($inProgress)) {
+            $inProgress = $inProgress[0];
+        }
+
+        if (is_object($inProgress) && !empty($inProgress?->SNSERN)) {
+            $side = $inProgress->SESIDE === 'L' ? 'R' : 'L';
+
+            $queryString = '
+                select r.RNREPN, s.SNSERN, a.SEQUID, a.SEPONR, a.SEPSEQ, a.SESIDE, a.SEPILL
+                from AWF_SEQUENCE a
+                    join AWF_SEQUENCE_LOG asl on a.SEQUID = asl.SEQUID
+                    join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE
+                    join ' . $database . '.PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = asl.WCSHNA
+                    join ' . $database . '.PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
+                    join ' . $database . '.REPNO r on r.WCSHNA = pcd.WCSHNA and r.ORCODE = a.ORCODE
+                    left join ' . $database . '.SERIALNUMBER s on s.RNREPN = r.RNREPN and s.PRCODE = a.PRCODE
+                where a.SEINPR <= ppd.PORANK
+                    and (asl.LSTIME >= "' . $start . '" or asl.LSTIME is null) and asl.LETIME is not null 
+                    and a.SESIDE = "' . $side . '" and a.SEPONR = "' . $inProgress->SEPONR . '" 
+                    and a.SEPSEQ = "' . $inProgress->SEPSEQ . '" and a.SEPILL = "' . $inProgress->SEPILL . '"
+                order by asl.LSTIME DESC, a.SEQUID
+            ';
+
+            $inProgressOtherSide = DB::connection('custom_mysql')->select($queryString);
+
+            if (array_key_exists(0, $inProgressOtherSide) && !empty($inProgressOtherSide)) {
+                $inProgressOtherSide = $inProgressOtherSide[0];
+            }
+
+            if (is_object($inProgressOtherSide) && !empty($inProgressOtherSide?->SNSERN)) {
+                $alreadyReaded = true;
+            }
+        }
 
         if (array_key_exists(0, $waitings) && !empty($waitings[0])) {
             $sequence2 = new Collection([$waitings[0]]);
@@ -307,7 +362,7 @@ class SequenceFacade extends Facade
             $sequence3 = $sequence2;
         }
 
-        if (!empty($sequence2) && !empty($sequence3)) {
+        if (!empty($sequence2) && !empty($sequence3) && $alreadyReaded) {
             event(new WelderNextProductEvent(
                 (new WelderNextProductEventResponse(
                     $sequence2 ?? null,

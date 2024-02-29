@@ -8,10 +8,10 @@ Content-Type: application/json
 }
 
 ### check serial - test
-POST http://localhost:8000/api/ext/awf-extension/order/check-serial/12
+POST http://localhost:8000/api/ext/awf-extension/order/check-serial/23
 Accept: application/json
 Content-Type: application/json
 
 {
-  "serial": "HW01000220360"
+  "serial": "HW01000226513"
 }
