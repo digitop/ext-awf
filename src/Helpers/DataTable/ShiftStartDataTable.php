@@ -3,6 +3,7 @@
 namespace AWF\Extension\Helpers\DataTable;
 
 use AWF\Extension\Models\AWF_SEQUENCE;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Services\DataTable;
 use Illuminate\Database\Query\Builder as QueryBuilder;
@@ -27,6 +28,31 @@ class ShiftStartDataTable extends DataTable
             ->addColumn('actions', function ($record) {
                 return '<a href="' . route('awf-sequence.set', ['pillar' => $this->getPillar(), 'sequenceId' => $record->SEQUID]) .'">' . __('display.button.setAsStart') . '</a>';
             })
+            ->setRowClass(function ($record) {
+                $start = (new \DateTime())->format('Y-m-d') . ' 00:00:00';
+                $database = config('database.connections.mysql.database');
+
+                $queryString = '
+                    select a.PRCODE, a.SEQUID, a.SEPSEQ, a.SEARNU, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEINPR, a.SESCRA
+                    from AWF_SEQUENCE_LOG asl
+                        join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
+                        join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
+                        join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE
+                        join ' . $database . '.PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = asl.WCSHNA
+                        join ' . $database . '.PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
+                    where ((asl.LSTIME is null and a.SEINPR = (ppd.PORANK - 1)) or (asl.LSTIME > "' . $start .
+                    '" and a.SEINPR = ppd.PORANK)) and asl.LETIME is null and
+                        asl.WCSHNA = "EL01" and a.SEPILL = "' . $this->getPillar() .
+                    '" and a.SESIDE = "L" order by a.SEQUID limit 1';
+
+                $sequence = DB::connection('custom_mysql')->select($queryString);
+
+                if (array_key_exists(0, $sequence) && !empty($sequence[0])) {
+                    $sequence = $sequence[0];
+                }
+
+                return is_object($sequence) && $record->SEQUID === $sequence->SEQUID ? 'alert-success' : '';
+            })
             ->rawColumns(['actions'])
             ->make();
     }
@@ -38,15 +64,17 @@ class ShiftStartDataTable extends DataTable
      */
     public function query(): QueryBuilder|EloquentBuilder
     {
-        $records = AWF_SEQUENCE::where('SESIDE', 'L')
-            ->selectRaw('AWF_SEQUENCE.*')
+        $records = AWF_SEQUENCE::selectRaw('AWF_SEQUENCE.*')
             ->join('AWF_SEQUENCE_LOG as asl', function ($join) {
+                $join->on('asl.SEQUID', '=', 'AWF_SEQUENCE.SEQUID');
+            })
+            ->where('asl.WCSHNA', '=', 'EL01')
+            ->where(function ($query) {
                 $start = (new \DateTime())->format('Y-m-d') . ' 00:00:00';
 
-                $join->on('asl.SEQUID', '=', 'AWF_SEQUENCE.SEQUID')
-                    ->whereNull('LSTIME')
-                    ->orWhere('LSTIME', '>=', $start);
-            });
+                $query->whereNull('asl.LSTIME')->orWhere('asl.LSTIME', '>=', $start);
+            })
+            ->where('SESIDE', 'L');
 
          if ($this->getPillar() !== null) {
              $records->where('AWF_SEQUENCE.SEPILL', '=', $this->getPillar());

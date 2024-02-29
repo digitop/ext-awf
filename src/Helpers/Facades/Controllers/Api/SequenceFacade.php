@@ -61,11 +61,6 @@ class SequenceFacade extends Facade
             $pillar = null;
         }
 
-//        $logs = AWF_SEQUENCE_LOG::where('WCSHNA', '=', $workCenter->WCSHNA)
-//            ->whereNull('LSTIME')
-//            ->whereNull('LETIME')
-//            ->get();
-
         $logs = DB::connection('custom_mysql')->select('
             select * from AWF_SEQUENCE_LOG where LETIME is null and (LSTIME is null or LSTIME > "' . $start .
             '") and WCSHNA = "' . $workCenter->WCSHNA . '"

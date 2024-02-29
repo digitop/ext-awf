@@ -283,6 +283,10 @@ a.back:hover, a.button-blue:active {
     background-color: #ddd;
 }
 
+.dataTable .alert-success {
+    background-color: #3ebd94 !important;
+}
+
 .oppanel-button {
     margin: 1%;
     background-image: linear-gradient(-180deg, #37AEE2 0%, #1E96C8 100%);
