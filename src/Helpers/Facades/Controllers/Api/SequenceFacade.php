@@ -128,11 +128,11 @@ class SequenceFacade extends Facade
 
             $nextIsScrapSequence = DB::connection('custom_mysql')->select($queryString);
 
-            if (!empty($nextIsScrapSequence[0])) {
-                $nextIsScrapSequence = $nextIsScrapSequence[0];
-            }
-
-            if (is_object($nextIsScrapSequence) && $nextIsScrapSequence?->SESCRA == true) {
+            if (
+                array_key_exists(0, $nextIsScrapSequence) &&
+                is_object($nextIsScrapSequence[0]) &&
+                $nextIsScrapSequence[0]->SESCRA == true
+            ) {
                 $sequence = $nextIsScrapSequence;
             }
         }

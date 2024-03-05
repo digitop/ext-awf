@@ -8,6 +8,7 @@ class ResponseData extends ObjectToArray
 {
     protected bool $success = false;
     protected array $data = [];
+    protected array|null $next = null;
     protected string $message = '';
 
     public function __construct(bool $success = false, array $data = [], string $message = '')
@@ -47,6 +48,17 @@ class ResponseData extends ObjectToArray
     public function setMessage(string $message): ResponseData
     {
         $this->message = $message;
+        return $this;
+    }
+
+    public function getNext(): array|null
+    {
+        return $this->next;
+    }
+
+    public function setNext(array|null $next): ResponseData
+    {
+        $this->next = $next;
         return $this;
     }
 }
