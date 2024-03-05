@@ -133,7 +133,7 @@ class SequenceFacade extends Facade
             }
 
             if (is_object($nextIsScrapSequence) && $nextIsScrapSequence?->SESCRA == true) {
-                $sequence = null;
+                $sequence = $nextIsScrapSequence;
             }
         }
 
@@ -224,7 +224,8 @@ class SequenceFacade extends Facade
         $logs = DB::connection('custom_mysql')->select('
             select a.SEQUID from AWF_SEQUENCE a
                 join AWF_SEQUENCE_LOG asl on a.SEQUID = asl.SEQUID
-            where a.SEINPR > 0 and (asl.LSTIME is null or asl.LETIME is null) and a.SEQUID < ' . $sequenceId
+            where a.SEINPR > 0 and (asl.LSTIME is not null or asl.LETIME is null) and a.SEQUID < ' . $sequenceId . ' 
+            and a.SEPILL = "' . $pillar . '"'
         );
 
         if (array_key_exists(0, $logs) && !empty($logs[0])) {
@@ -243,10 +244,16 @@ class SequenceFacade extends Facade
             }
         }
 
-        $logs = DB::connection('custom_mysql')->select('select * from AWF_SEQUENCE_LOG where SEQUID >= ' . $sequenceId);
+        $logs = DB::connection('custom_mysql')->select('
+            select asl.WCSHNA, a.SEQUID from AWF_SEQUENCE a
+                join AWF_SEQUENCE_LOG asl on a.SEQUID = asl.SEQUID
+            where a.SEINPR >= 0 and a.SEQUID >= ' . $sequenceId . ' and a.SEPILL = "' . $pillar . '"'
+        );
 
         if (array_key_exists(0, $logs) && !empty($logs[0])) {
             foreach ($logs as $log) {
+                AWF_SEQUENCE::where('SEQUID', '=', $log->SEQUID)->update(['SEINPR' => 0]);
+
                 if ($log->WCSHNA === 'EL01') {
                     AWF_SEQUENCE_LOG::where('SEQUID', '=', $log->SEQUID)
                         ->where('WCSHNA', '=', $log->WCSHNA)
