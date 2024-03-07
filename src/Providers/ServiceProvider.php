@@ -3,6 +3,7 @@
 namespace AWF\Extension\Providers;
 
 use AWF\Extension\Commands\GenerateDataCommand;
+use AWF\Extension\Commands\MqttListenerCommand;
 use AWF\Extension\Helpers\Facades\Controllers\Api\CheckProductFacade;
 use AWF\Extension\Helpers\Facades\Controllers\Api\ScrapFacade;
 use Illuminate\Support\ServiceProvider as IlluminateServiceProvider;
@@ -98,5 +99,6 @@ class ServiceProvider extends IlluminateServiceProvider
     public function register(): void
     {
         $this->commands([GenerateDataCommand::class]);
+        $this->commands([MqttListenerCommand::class]);
     }
 }

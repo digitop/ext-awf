@@ -2,6 +2,7 @@
 
 namespace AWF\Extension\Helpers\Facades\Controllers\Web\ShiftManagement;
 
+use AWF\Extension\Events\AllWorkCenterIsAliveEvent;
 use AWF\Extension\Events\ShiftManagementResettingEvent;
 use AWF\Extension\Helpers\DataTable\ShiftStartDataTable;
 use AWF\Extension\Helpers\Facades\Controllers\Web\Facade;
@@ -94,5 +95,18 @@ class ShiftManagementShiftStartPanelFacade extends Facade
             ),
             Response::HTTP_OK
         ));
+    }
+
+    public function startOfShift(array $data): JsonResponse
+    {
+        event(new AllWorkCenterIsAliveEvent($data));
+
+        return new CustomJsonResponse(new JsonResponseModel(
+            new ResponseData(
+                true
+            ),
+            Response::HTTP_OK
+        )
+        );
     }
 }

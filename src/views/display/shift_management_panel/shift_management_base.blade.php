@@ -15,6 +15,12 @@
 
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
 
+    @if(env('APP_ENV') === 'production')
+        @include('common.inc.production.scripts', ['path'=>asset('dist/production')])
+    @else
+        @include('common.inc.development.scripts', ['path'=>asset('dist/development')])
+    @endif
+
     @yield('awf-css')
     <title></title>
 </head>

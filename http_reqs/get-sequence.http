@@ -4,7 +4,7 @@ Accept: application/json
 Content-Type: application/json
 
 ### get data by WC
-GET https://oeem.awf.hu/api/ext/awf-extension/get-sequence/KCJ01/C
+GET https://oeem.awf.hu/api/ext/awf-extension/get-sequence/HCJ01/C
 Accept: application/json
 Content-Type: application/json
 
@@ -15,7 +15,7 @@ Content-Type: application/json
 }
 
 ### get data by WC - teszt
-GET http://localhost:8000/api/ext/awf-extension/get-sequence/KBJ01/B
+GET http://localhost:8000/api/ext/awf-extension/get-sequence/HAJ01/A
 Accept: application/json
 Content-Type: application/json
 
