@@ -20,6 +20,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\DB;
 use App\Events\Api\OperatorPanelSaveSerialEvent;
 
+
+/**
+ * API endpoint for barcode/serial verification of qualification stations
+ */
 class CheckProductFacade extends Facade
 {
     public function check(Request|FormRequest|null $request = null, Model|string|null $model = null): JsonResponse|null
@@ -40,15 +44,14 @@ class CheckProductFacade extends Facade
         $database = config('database.connections.mysql.database');
 
         $waitings = DB::connection('custom_mysql')->select('
-            select asl.LSTIME, a.SEQUID, a.SEPONR, a.SEPSEQ, a.SESIDE, a.SEPILL, a.SEINPR, a.PRCODE, a.ORCODE, ppd.PFIDEN, ppd.PORANK, ppd.OPSHNA, p.PRNAME
+            select asl.LSTIME, a.SEQUID, a.SEPONR, a.SEPSEQ, a.SESIDE, a.SEPILL, a.SEINPR, a.PRCODE,
+                   a.ORCODE, r.PORANK, r.OPSHNA, p.PRNAME, r.RNREPN
             from AWF_SEQUENCE a
                 join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
-                join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE
-                join ' . $database . '.PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = "' . $workCenter->WCSHNA . '"
-                join ' . $database . '.PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
-                left join AWF_SEQUENCE_LOG asl on a.SEQUID = asl.SEQUID and asl.WCSHNA = pcd.WCSHNA
-                left join AWF_SEQUENCE_WORKCENTER asw on a.SEQUID = asw.SEQUID and asw.WCSHNA = pcd.WCSHNA
-            where a.SEINPR < ppd.PORANK
+                join ' . $database . '.REPNO r on r.ORCODE = a.ORCODE and r.WCSHNA = "' . $workCenter->WCSHNA . '"
+                left join AWF_SEQUENCE_LOG asl on a.SEQUID = asl.SEQUID and asl.WCSHNA = r.WCSHNA
+                left join AWF_SEQUENCE_WORKCENTER asw on a.SEQUID = asw.SEQUID and asw.WCSHNA = r.WCSHNA
+            where a.SEINPR < r.PORANK
                 and (asl.LSTIME >= "' . $start . '" or asl.LSTIME is null)
             order by asl.LSTIME DESC, a.SEQUID limit 1
         ');
@@ -67,7 +70,7 @@ class CheckProductFacade extends Facade
         $serial = SERIALNUMBER::where('SNSERN', '=', $request->serial)
             ->first();
 
-        if (empty($serial) || (int)$serial->SNCYID < 0) {
+        if (empty($serial) || $serial->PRCODE !== $waitings[0]->PRCODE) {
             return new CustomJsonResponse(new JsonResponseModel(
                 new ResponseData(
                     false,

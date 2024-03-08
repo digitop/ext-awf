@@ -14,8 +14,8 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "WCSHNA": "KBJ01",
-  "SEQUID": 150581
+  "WCSHNA": "VBB01",
+  "SEQUID": 150580
 }
 
 ### order changeonjs

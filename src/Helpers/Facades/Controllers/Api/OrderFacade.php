@@ -70,6 +70,9 @@ class OrderFacade extends Facade
         ));
     }
 
+    /**
+     * API endpoint for barcode/serial verification of welder stations
+     */
     public function store(FormRequest|Request $request, Model|string|null ...$model): JsonResponse|null
     {
         $success = false;
