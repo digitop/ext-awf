@@ -133,7 +133,7 @@ class SequenceFacade extends Facade
                 is_object($nextIsScrapSequence[0]) &&
                 $nextIsScrapSequence[0]->SESCRA == true
             ) {
-                $sequence = $nextIsScrapSequence;
+                $sequence = new Collection($nextIsScrapSequence);
             }
         }
 
