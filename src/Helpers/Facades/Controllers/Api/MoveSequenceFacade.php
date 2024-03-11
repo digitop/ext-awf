@@ -258,6 +258,7 @@ class MoveSequenceFacade extends Facade
 
             $sequenceLog = AWF_SEQUENCE_LOG::where('SEQUID', '=', $request->SEQUID)
                 ->where('WCSHNA', '=', $nextProductWorkCenterData->WCSHNA)
+                ->whereNull('LETIME')
                 ->first();
 
             if (empty($sequenceLog)) {

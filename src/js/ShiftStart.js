@@ -17,18 +17,18 @@ const app = new Vue({
                     $('#reset-default').removeClass('button-green')
                 }
 
-                if (typeof e?.alive !== 'undefined' && e?.alive === true) {
-                    $('#reset-default').addClass('button-green')
-
-                    if ($('#reset-default').hasClass('button-red')) {
-                        $('#reset-default').removeClass('button-red')
-                    }
-                }
-                else {
+                if (typeof e?.alive !== 'undefined' && e?.alive === false) {
                     $('#reset-default').addClass('button-red')
 
                     if ($('#reset-default').hasClass('button-green')) {
                         $('#reset-default').removeClass('button-green')
+                    }
+                }
+                else {
+                    $('#reset-default').addClass('button-green')
+
+                    if ($('#reset-default').hasClass('button-red')) {
+                        $('#reset-default').removeClass('button-red')
                     }
                 }
             });

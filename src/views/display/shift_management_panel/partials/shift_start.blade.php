@@ -104,7 +104,7 @@
             <button
                     v-on:click="startOfShiftButtonClick"
                     id="reset-default"
-                    class="button"
+                    class="button button-green"
                     style="width: 80%;"
             >
                 {{ __('display.button.startOfShift') }}
