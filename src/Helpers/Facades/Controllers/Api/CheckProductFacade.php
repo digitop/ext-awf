@@ -6,6 +6,7 @@ use AWF\Extension\Helpers\Responses\JsonResponseModel;
 use AWF\Extension\Helpers\Responses\ResponseData;
 use AWF\Extension\Models\AWF_SEQUENCE;
 use App\Http\Controllers\api\dashboard\scrapStation\ScrapStationController;
+use AWF\Extension\Models\AWF_SEQUENCE_WORKCENTER;
 use AWF\Extension\Responses\CustomJsonResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Database\Eloquent\Model;
@@ -119,11 +120,19 @@ class CheckProductFacade extends Facade
             ]
         ]);
 
+        $sequence = AWF_SEQUENCE::where('SEQUID', '=', $waitings[0]->SEQUID)->first();
+        $sequenceWorkCenter = AWF_SEQUENCE_WORKCENTER::where('SEQUID', '=', $waitings[0]->SEQUID)->first();
+        $orderCode = $sequence->ORCODE;
+
+        if ($serial->RNREPN !== $sequenceWorkCenter->RNREPN) {
+            $orderCode = REPNO::where('RNREPN', '=', $serial->RNREPN)->first()->ORCODE;
+        }
+
         return new CustomJsonResponse(new JsonResponseModel(
             new ResponseData(
                 true,
                 [
-                    'orderCode' => AWF_SEQUENCE::where('SEQUID', '=', $waitings[0]->SEQUID)->first()->ORCODE,
+                    'orderCode' => $orderCode,
                     'name' => $waitings[0]?->PRNAME,
                 ]
             ),
