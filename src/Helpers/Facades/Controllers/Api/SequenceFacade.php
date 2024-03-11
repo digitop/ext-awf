@@ -281,6 +281,12 @@ class SequenceFacade extends Facade
             $pillar = null;
         }
 
+        $startShift = array_key_exists('startShift', $request->all()) &&
+            (
+                (is_string($request->startShift) && $request->startShift === 'true') ||
+                (is_bool($request->startShift) && $request->startShift === true)
+            );
+
         $database = config('database.connections.mysql.database');
 
         $start = (new \DateTime())->format('Y-m-d') . ' 00:00:00';
@@ -364,13 +370,14 @@ class SequenceFacade extends Facade
             $sequence3 = $sequence2;
         }
 
-        if (!empty($sequence2) && !empty($sequence3) && $alreadyReaded) {
+        if (!empty($sequence2) && !empty($sequence3) && ($alreadyReaded || $startShift)) {
             event(new WelderNextProductEvent(
                 (new WelderNextProductEventResponse(
                     $sequence2 ?? null,
                     $workCenter
                 ))
                     ->setNext($sequence3 ?? null)
+                    ->setStartShift($startShift)
                     ->generate()
             ));
 

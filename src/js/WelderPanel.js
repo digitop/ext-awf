@@ -10,6 +10,7 @@ const app = new Vue({
     watch: {
         timerCount: {
             handler (value) {
+                console.log('timer: ', value)
                 if (value > 0) {
                     $('#countdown-container').css('display', 'block')
                     $('#countdown-timer').html('')
@@ -19,20 +20,10 @@ const app = new Vue({
                     }, 1000)
                 }
                 else {
-                    let workCenter = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1)
-                    let isWorkCenter = false
-
                     $('#countdown-container').css('display', 'none')
 
-                    if (
-                        typeof this.welderNextSequence['workCenter'] !== 'undefined' &&
-                        this.welderNextSequence['workCenter'] === workCenter
-                    ) {
-                        isWorkCenter = true
-                    }
-
                     $.each(this.welderNextSequence, function (key, data) {
-                        if (isWorkCenter == true) {
+                        console.log('key: ', key)
                             if (key == 'current') {
                                 if (data?.designation != null) {
                                     $('#current-product-designation').html('')
@@ -115,6 +106,7 @@ const app = new Vue({
                                     }
                                 }
                                 else {
+                                    console.log('else')
                                     $('#next-product-designation').html('')
                                     $('#next-product-code').html('')
                                     $('#next-product-material').html('')
@@ -122,7 +114,6 @@ const app = new Vue({
                                     $('#product-image').src = ''
                                 }
                             }
-                        }
                     })
                 }
             },
@@ -133,7 +124,22 @@ const app = new Vue({
         window.Echo.channel('next-welder-product')
             .listen('.next-welder-product-event', (e) => {
                 this.timerCount = 30
-                this.welderNextSequence = e
+
+                if (e['startShift'] === true) {
+                    this.timerCount = 1
+                }
+
+                let workCenter = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1)
+
+                if (
+                    typeof e['workCenter'] !== 'undefined' &&
+                    e['workCenter'] === workCenter
+                ) {
+                    this.welderNextSequence = e
+                }
+                console.log('isWorkCenter: ', isWorkCenter)
+                console.log('this.welderNextSequence[\'workCenter\']: ', this.welderNextSequence['workCenter'])
+                console.log('workCenter: ', workCenter)
             })
     },
     beforeDestroy() {

@@ -15,6 +15,7 @@ class WelderNextProductEventResponse  implements NullableResponseInterface
     protected Collection|Model $collection;
     protected Collection|Model|null $next;
     protected Model|null $model;
+    protected bool $startShift = false;
 
     public function __construct(Model|Collection|null $collection = null, Model|null $model = null)
     {
@@ -38,7 +39,7 @@ class WelderNextProductEventResponse  implements NullableResponseInterface
                 $product->features()->where('FESHNA', '=', 'SZASZ')->first()?->FEVALU,
                 $product->features()->where('FESHNA', '=', 'TESZNE')->first()?->FEVALU,
             ))
-                ->setArticleNumber($product->PRCODE)
+                ->setArticleNumber($item->ORCODE)
                 ->get();
 
             $data['sequenceId'] = $item->SEQUID;
@@ -58,7 +59,7 @@ class WelderNextProductEventResponse  implements NullableResponseInterface
                 $product->features()->where('FESHNA', '=', 'SZASZ')->first()?->FEVALU,
                 $product->features()->where('FESHNA', '=', 'TESZNE')->first()?->FEVALU,
             ))
-                ->setArticleNumber($product->PRCODE)
+                ->setArticleNumber($item->ORCODE)
                 ->setImage(
                     $imagePath,
                 )
@@ -80,6 +81,7 @@ class WelderNextProductEventResponse  implements NullableResponseInterface
         }
 
         $data['workCenter'] = $workCenter;
+        $data['startShift'] = $this->startShift;
 
         return $data;
     }
@@ -114,6 +116,17 @@ class WelderNextProductEventResponse  implements NullableResponseInterface
     public function setNext(Model|Collection|null $next): WelderNextProductEventResponse
     {
         $this->next = $next;
+        return $this;
+    }
+
+    public function isStartShift(): bool
+    {
+        return $this->startShift;
+    }
+
+    public function setStartShift(bool $startShift): WelderNextProductEventResponse
+    {
+        $this->startShift = $startShift;
         return $this;
     }
 }
