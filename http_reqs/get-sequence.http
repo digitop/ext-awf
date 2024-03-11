@@ -15,7 +15,7 @@ Content-Type: application/json
 }
 
 ### get data by WC - teszt
-GET http://localhost:8000/api/ext/awf-extension/get-sequence/VBB01/B
+GET http://localhost:8000/api/ext/awf-extension/get-sequence/EL01/A
 Accept: application/json
 Content-Type: application/json
 

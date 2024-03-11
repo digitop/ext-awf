@@ -83,6 +83,17 @@ class MqttListenerCommand extends Command
 
                 $workCenters = [];
             }
+
+            $endTime = microtime(true);
+            $dataToLog = 'Type: ' . $this->description . "\n";
+            $dataToLog .= 'Time: ' . date("Y m d H:i:s") . "\n";
+            $dataToLog .= 'Duration: ' . number_format($endTime - LARAVEL_START, 3) . "\n";
+            $dataToLog .= 'Output: ' . json_encode($workCenters) . "\n";
+
+            Storage::disk('local')->append(
+                'logs/shift_start_button_state_' . Carbon::now()->format('Ymd') . '.log',
+                $dataToLog . "\n" . str_repeat("=", 20) . "\n\n"
+            );
         }, 0);
 
         $mqtt->loop();

@@ -89,7 +89,17 @@ class CheckProductFacade extends Facade
             $workCenter
         );
 
-        if (is_array($serialCheck) && $serialCheck['success'] == false) {
+        if (
+            is_array($serialCheck) &&
+            (
+                $serialCheck['success'] == false ||
+                (
+                    array_key_exists('serials', $serialCheck) &&
+                    $serialCheck['serials'][0]['isNew'] == false &&
+                    $serialCheck['serials'][0]['isReproduced'] == false
+                )
+            )
+        ) {
             return new CustomJsonResponse(new JsonResponseModel(
                 new ResponseData(
                     false,
