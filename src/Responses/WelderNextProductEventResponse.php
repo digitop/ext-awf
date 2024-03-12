@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Storage;
 
 class WelderNextProductEventResponse  implements NullableResponseInterface
 {
-    protected Collection|Model $collection;
+    protected Collection|Model|null $collection;
     protected Collection|Model|null $next;
     protected Model|null $model;
     protected bool $startShift = false;
