@@ -69,6 +69,7 @@ class CheckProductFacade extends Facade
         }
 
         $serial = SERIALNUMBER::where('SNSERN', '=', $request->serial)
+            ->where('PRCODE', '=', $waitings[0]->PRCODE)
             ->first();
 
         if (empty($serial) || $serial->PRCODE !== $waitings[0]->PRCODE) {
@@ -105,7 +106,8 @@ class CheckProductFacade extends Facade
                 new ResponseData(
                     false,
                     [],
-                    __('response.check.not_next_product')
+                    is_array($serialCheck) || is_array($serialCheck) ? json_encode($serialCheck) :
+                        __('response.check.not_next_product')
                 ),
                 Response::HTTP_OK
             ));

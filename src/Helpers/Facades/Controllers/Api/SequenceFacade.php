@@ -120,7 +120,8 @@ class SequenceFacade extends Facade
                 join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE
                 join ' . $database . '.PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = asl.WCSHNA
                 join ' . $database . '.PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
-            where asl.LSTIME is null and asl.LETIME is null and a.SEINPR <= ppd.PORANK and
+            where ((asl.LSTIME is null and a.SEINPR = (ppd.PORANK - 1)) or (asl.LSTIME > "' . $start .
+                '" and a.SEINPR = ppd.PORANK)) and asl.LETIME is null and a.SEINPR <= ppd.PORANK and
                 asl.WCSHNA = "' . $workCenter->WCSHNA . '" and a.SESIDE = "' . $side . '"' .
                 ($pillar !== null ? ' and a.SEPILL = "' . $pillar .'"' : '') .
                 ' order by a.SEQUID limit 1'

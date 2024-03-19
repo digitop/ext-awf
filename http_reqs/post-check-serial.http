@@ -1,10 +1,10 @@
 ### check serial
-POST https://oeem.awf.hu/api/ext/awf-extension/order/check-serial/12
+POST https://oeem.awf.hu/api/ext/awf-extension/order/check-serial/11
 Accept: application/json
 Content-Type: application/json
 
 {
-  "serial": "HW01000220360"
+  "serial": "HW01000242439"
 }
 
 ### check serial - test
