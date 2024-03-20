@@ -23,6 +23,7 @@ class ProductFeaturesCheckRequest extends FormRequest
         return [
             'dashboard' => ['required', 'string', 'min:1', 'max:32', 'exists:DASHBOARD,DHIDEN'],
             'color' => ['required', 'string', 'max:6', 'min:6'],
+            'material' => ['required', 'string', 'max:32', 'min:0'],
         ];
     }
 
@@ -43,6 +44,10 @@ class ProductFeaturesCheckRequest extends FormRequest
             'color.string' => __('validation.string', ['attribute' => 'color']),
             'color.max' => __('validation.max.string', ['attribute' => 'color', 'max' => 6]),
             'color.min' => __('validation.min.string', ['attribute' => 'color', 'min' => 6]),
+            'material.required' => __('validation.required', ['attribute' => 'material']),
+            'material.string' => __('validation.string', ['attribute' => 'material']),
+            'material.max' => __('validation.max.string', ['attribute' => 'material', 'max' => 32]),
+            'material.min' => __('validation.min.string', ['attribute' => 'material', 'min' => 0]),
         ];
     }
 }

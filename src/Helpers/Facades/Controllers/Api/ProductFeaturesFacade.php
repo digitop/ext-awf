@@ -188,8 +188,9 @@ class ProductFeaturesFacade extends Facade
         }
 
         $color = $product->features()->where('FESHNA', '=', 'SZASZ')->first();
+        $material = $product->features()->where('FESHNA', '=', 'SZAA')->first();
 
-        if ($color->FEVALU !== $request->color) {
+        if ($color->FEVALU !== $request->color || $material->FEVALU !== $request->material) {
             $workCenter->features()->where('WFSHNA', '=', 'OPSTATUS')->first()?->update([
                 'WFVALU' => 'fail',
             ]);

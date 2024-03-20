@@ -7,6 +7,17 @@ Content-Type: application/json
   "productCode": "F46B17201"
 }
 
+### check if selected color is right - test
+POST http://oeem.local/api/ext/awf-extension/product-feature/check
+Accept: application/json
+Content-Type: application/json
+
+{
+  "dashboard": "3",
+  "color": "323137",
+  "material": "dinamica"
+}
+
 ### check if selected color is right
 POST https://oeem.awf.hu/api/ext/awf-extension/product-feature/check
 Accept: application/json

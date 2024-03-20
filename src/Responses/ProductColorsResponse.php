@@ -55,6 +55,7 @@ class ProductColorsResponse implements ResponseInterface
                 $data[] = [
                     'designation' => $designation,
                     'color' => $product?->features()->where('FESHNA', '=', 'SZASZ')->first()?->FEVALU,
+                    'material' => $product?->features()->where('FESHNA', '=', 'SZAA')->first()?->FEVALU,
                 ];
 
                 $availableColors[] = $designation;
