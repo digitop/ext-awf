@@ -4,8 +4,8 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "WCSHNA": "HAJ01",
-  "SEQUID": 179849
+  "WCSHNA": "KAB01",
+  "SEQUID": 181504
 }
 
 ### move sequence - test

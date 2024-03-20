@@ -23,6 +23,7 @@ return [
         'submit' => 'Submit',
         'next-work-center' => 'Continue to the next work center',
         'confirm' => 'Confirmation',
+        'shelfReset' => 'Reactivate shelf',
     ],
     'data' => [
         'shift-sequence' => [

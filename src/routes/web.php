@@ -46,6 +46,11 @@ Route::group(
         )
             ->name('awf-shift-management-panel.manual-data-record');
         Route::get(
+            'shift-management/reactivate-shelf',
+            ['uses' => 'ShiftManagementPanelController@set']
+        )
+            ->name('awf-shift-management-panel.reactivate-shelf');
+        Route::get(
             'shift-management/manual-data-record/{WCSHNA}',
             ['uses' => 'ShiftManagementPanelManualDataRecordController@show']
         )

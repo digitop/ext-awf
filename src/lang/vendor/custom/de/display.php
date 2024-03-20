@@ -23,6 +23,7 @@ return [
         'submit' => 'Einreichen',
         'next-work-center' => 'Weiter zum nächsten Arbeitsplatz',
         'confirm' => 'Bestätigung',
+        'shelfReset' => 'Regal Reaktivierung',
     ],
     'data' => [
         'shift-sequence' => [

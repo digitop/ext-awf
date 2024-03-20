@@ -36,4 +36,9 @@ class ShiftManagementPanelController extends Controller
     {
         return $this->facade->create($request);
     }
+
+    public function set(): JsonResponse
+    {
+        return $this->facade->set();
+    }
 }

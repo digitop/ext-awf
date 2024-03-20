@@ -23,6 +23,7 @@ return [
         'submit' => 'Rögzítés',
         'next-work-center' => 'Tovább a következő munkaállomásra',
         'confirm' => 'Megerősítés',
+        'shelfReset' => 'Csincsilla újraaktiválás',
     ],
     'data' => [
         'shift-sequence' => [

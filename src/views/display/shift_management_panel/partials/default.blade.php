@@ -60,6 +60,13 @@
                 </a>
             </td>
         </tr>
+        <tr>
+            <td colspan="3" style="width: 55%; padding-top: 5vh;">
+                <button class="button button-light-green" id="resetShelf">
+                    {{ __('display.button.shelfReset') }}
+                </button>
+            </td>
+        </tr>
     </table>
 
     <script>
@@ -104,6 +111,23 @@
                         hideLoading()
                     })
             }
+
+            return;
+        })
+
+        $('#resetShelf').bind('click', async function () {
+            showLoading()
+
+            await $.get('{{ route('awf-shift-management-panel.reactivate-shelf') }}', function (createResponse) {
+                createSequenceSuccess = createResponse.success
+
+                if (createResponse.success === false) {
+                    errorModal.css('display', 'block')
+                }
+            })
+                .always(function () {
+                    hideLoading()
+                })
 
             return;
         })

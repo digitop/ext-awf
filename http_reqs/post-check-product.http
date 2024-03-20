@@ -4,8 +4,8 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "dashboard": "16",
-  "serial": "HW01000242393"
+  "dashboard": "13",
+  "serial": "HW01000242840"
 }
 
 ### check if it is the next product - teszt
