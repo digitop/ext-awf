@@ -3,6 +3,7 @@
 namespace AWF\Extension\Helpers\Facades\Controllers\Api;
 
 use App\Http\Controllers\api\dashboard\operatorPanel\OperatorPanelController;
+use App\Http\Controllers\api\dashboard\scrapStation\ScrapStationController;
 use AWF\Extension\Helpers\Responses\JsonResponseModel;
 use AWF\Extension\Helpers\Responses\ResponseData;
 use AWF\Extension\Responses\CustomJsonResponse;
@@ -111,85 +112,83 @@ class OrderFacade extends Facade
 
         $workCenter = WORKCENTER::where('WCSHNA', '=', $model[0]->operatorPanels[0]->WCSHNA)->first();
 
-        $queryString = '
-            select a.SEQUID, a.SESIDE, a.SEPILL, a.SEINPR, a.PRCODE, a.ORCODE, ppd.PFIDEN, ppd.PORANK, ppd.OPSHNA, asw.RNREPN, p.PRNAME
+        $waitings = DB::connection('custom_mysql')->select('
+            select asl.LSTIME, a.SEQUID, a.SEPONR, a.SEPSEQ, a.SESIDE, a.SEPILL, a.SEINPR, a.PRCODE,
+                   a.ORCODE, r.PORANK, r.OPSHNA, p.PRNAME, r.RNREPN
             from AWF_SEQUENCE a
                 join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
-                join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE
-                join ' . $database . '.PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = "' . $workCenter->WCSHNA . '"
-                join ' . $database . '.PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
-                left join AWF_SEQUENCE_LOG asl on a.SEQUID = asl.SEQUID and asl.WCSHNA = pcd.WCSHNA
-                left join AWF_SEQUENCE_WORKCENTER asw on asw.SEQUID = a.SEQUID and asw.WCSHNA = pcd.WCSHNA
-            where a.SEINPR <= ppd.PORANK
-                and (asl.LSTIME >= "' . $start . '" or asl.LSTIME is null)  and asl.LETIME is null
-            order by asl.LSTIME DESC, a.SEQUID limit 1';
-
-        $waitings = DB::connection('custom_mysql')->select($queryString);
+                join ' . $database . '.SERIALNUMBER s on s.SNSERN = "' . $request->serial . '"
+                join ' . $database . '.REPNO r on r.ORCODE = a.ORCODE and r.WCSHNA = "' . $workCenter->WCSHNA .
+            '" and r.ORCODE = substring(s.RNREPN, 1, position("-" in s.RNREPN) - 1)
+                left join AWF_SEQUENCE_LOG asl on a.SEQUID = asl.SEQUID and asl.WCSHNA = r.WCSHNA
+                left join AWF_SEQUENCE_WORKCENTER asw on a.SEQUID = asw.SEQUID and asw.WCSHNA = r.WCSHNA
+            where a.SEINPR < r.PORANK
+                and (asl.LSTIME >= "' . $start . '" or asl.LSTIME is null)
+            order by asl.LSTIME DESC, a.SEQUID limit 1
+        '
+        );
 
         if (!array_key_exists(0, $waitings) || empty($waitings[0])) {
             return new CustomJsonResponse(new JsonResponseModel(
                 new ResponseData(
-                    $success,
-                    [
-                        'orderCode' => null,
-                        'side' => null,
-                        'name' => null,
-                    ],
-                    $success ? '' : 'Nincs a gépnél következő darab'
+                    false,
+                    [],
+                    __('response.check.not_next_product')
                 ),
                 Response::HTTP_OK
             ));
         }
 
-        $i = 0;
+        $serial = SERIALNUMBER::where('SNSERN', '=', $request->serial)
+            ->where('PRCODE', '=', $waitings[0]->PRCODE)
+            ->first();
 
-        foreach ($waitings as $waiting) {
-            $checkSerial = (new OperatorPanelController())->checkAndSaveSerial(
-                new Request([
-                    'SNSERN' => $request->serial,
-                    'RNREPN' => $waiting->RNREPN,
-                    'SNCOUN' => 1,
-                    'SNRDCN' => 1,
-                    'subProduct' => false,
-                    'parentSNSERN' => false,
-                    'PRCODE' => $waiting->PRCODE,
-                ]),
-                $workCenter->operatorPanels[0]->dashboard->DHIDEN
+        if (empty($serial) || $serial->PRCODE !== $waitings[0]->PRCODE) {
+            return new CustomJsonResponse(new JsonResponseModel(
+                new ResponseData(
+                    false,
+                    [],
+                    __('response.check.not_next_product')
+                ),
+                Response::HTTP_OK
+            )
             );
+        }
 
-            if ($checkSerial['success'] == true) {
-                break;
-            }
+        $serialCheck = (new OperatorPanelController())->checkAndSaveSerial(
+            new Request([
+                'SNSERN' => $request->serial,
+                'RNREPN' => $waitings[0]->RNREPN,
+                'SNCOUN' => 1,
+                'SNRDCN' => 1,
+                'subProduct' => false,
+                'parentSNSERN' => false,
+                'PRCODE' => $waitings[0]->PRCODE,
+            ]),
+            $model[0]->DHIDEN
+        );
 
-            if ($checkSerial['success'] == false) {
-                if (array_key_exists('error', $checkSerial) && !empty($checkSerial['error'])) {
-                    $error = $checkSerial['error'];
-                }
-                else {
-                    $error = 'Hiba lépett fel az adatok mentése során!';
-                }
-
-                if (array_key_exists('errorCode', $checkSerial) && !empty($checkSerial['errorCode'])) {
-                    $error .= ' - ' . $checkSerial['errorCode'];
-                }
-
-                if (count($waitings) - 1 == $i) {
-                    return new CustomJsonResponse(new JsonResponseModel(
-                        new ResponseData(
-                            $success,
-                            [
-                                'orderCode' => null,
-                                'side' => null,
-                                'name' => null,
-                            ],
-                            $success ? '' : $error
-                        ),
-                        Response::HTTP_OK
-                    ));
-                }
-            }
-
-            $i++;
+        if (
+            is_array($serialCheck) &&
+            (
+                $serialCheck['success'] == false ||
+                (
+                    array_key_exists('serials', $serialCheck) &&
+                    $serialCheck['serials'][0]['isNew'] == false &&
+                    $serialCheck['serials'][0]['isReproduced'] == false
+                )
+            )
+        ) {
+            return new CustomJsonResponse(new JsonResponseModel(
+                new ResponseData(
+                    false,
+                    [],
+                    is_array($serialCheck) || is_array($serialCheck) ? json_encode($serialCheck) :
+                        __('response.check.not_next_product')
+                ),
+                Response::HTTP_OK
+            )
+            );
         }
 
         publishMqtt(env('DEPLOYMENT_SUBDOMAIN') . '/api/AWF_ORDER_CHECK_SERIAL/', [
@@ -205,9 +204,9 @@ class OrderFacade extends Facade
             new ResponseData(
                 true,
                 [
-                    'orderCode' => $waiting->ORCODE ?? null,
-                    'side' => $waiting->SESIDE,
-                    'name' => $waiting?->PRNAME,
+                    'orderCode' => $waitings[0]->ORCODE ?? null,
+                    'side' => $waitings[0]->SESIDE ?? null,
+                    'name' => $waitings[0]->PRNAME ?? null,
                 ]
             ),
             Response::HTTP_OK

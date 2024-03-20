@@ -9,13 +9,13 @@ Content-Type: application/json
 }
 
 ### move sequence - test
-POST http://localhost:8000/api/ext/awf-extension/move-sequence
+POST http://oeem.local/api/ext/awf-extension/move-sequence
 Accept: application/json
 Content-Type: application/json
 
 {
-  "WCSHNA": "EL01",
-  "SEQUID": 149932
+  "WCSHNA": "KBJ01",
+  "SEQUID": 150589
 }
 
 ### order changeonjs
