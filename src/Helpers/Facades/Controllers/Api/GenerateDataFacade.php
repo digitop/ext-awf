@@ -248,6 +248,8 @@ class GenerateDataFacade extends Facade
             DB::delete('delete from ORDERHEAD where ORCODE in (' . $deleteOrder . ')');
         }
 
+        AWF_SEQUENCE::where('SEINPR', '<', 4)->update(['SEINPR' => 5]);
+
         AWF_SEQUENCE_LOG::whereNull('LSTIME')->update([
             'LSTIME' => $now,
         ]);
