@@ -4,25 +4,27 @@ Accept: application/json
 Content-Type: application/json
 
 ### get data by WC
-GET https://oeem.awf.hu/api/ext/awf-extension/get-sequence/VAB02/A
+GET https://oeem.awf.hu/api/ext/awf-extension/get-sequence/HCJ01/C
 Accept: application/json
 Content-Type: application/json
 
 {
-  "side": "L",
+  "side": "R",
   "limit": 1,
+  "serial": "HW01000244124",
   "no_change": "true"
 }
 
 ### get data by WC - teszt
-GET http://oeem.local/api/ext/awf-extension/get-sequence/EL01/B
+GET http://oeem.local/api/ext/awf-extension/get-sequence/HBJ01/B
 Accept: application/json
 Content-Type: application/json
 
 {
-  "side": "L",
+  "side": "R",
   "limit": 1,
-  "no_change": "false"
+  "serial": "HW01000226969",
+  "no_change": "true"
 }
 
 ### get default preparation panel

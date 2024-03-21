@@ -196,6 +196,7 @@ class OrderFacade extends Facade
                 "to" => 'wc:' . $workCenter->WCSHNA,
                 "payload" => [
                     "success" => true,
+                    'serial' => $request->serial,
                 ],
             ]
         ]);

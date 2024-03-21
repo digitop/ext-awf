@@ -69,19 +69,7 @@ class SequenceFacadeResponse  implements ResponseInterface
     {
         $this->setWorkCenter($this->workCenter, $sequence);
 
-        $sequenceWorkCenter = AWF_SEQUENCE_WORKCENTER::where('SEQUID', '=', $sequence->SEQUID)
-            ->where('WCSHNA', '=', $this->workCenter?->WCSHNA)
-            ->first();
-
         $product = PRODUCT::where('PRCODE', '=', $sequence->PRCODE)->with('features')->first();
-
-        $repno = $sequenceWorkCenter?->RNREPN;
-
-        if (empty($repno) && !empty($this->workCenter?->WCSHNA)) {
-            $repno = REPNO::where('ORCODE', '=', $sequence->ORCODE)
-                ->where('WCSHNA', '=', $this->workCenter?->WCSHNA)
-                ->first()?->RNREPN;
-        }
 
         return (new SequenceResponseModel())
             ->setSEQUID($sequence->SEQUID)
@@ -95,7 +83,7 @@ class SequenceFacadeResponse  implements ResponseInterface
                     $this->workCenter?->operatorPanels[0] :
                     null
             )
-            ->setRNREPN($repno)
+            ->setRNREPN($sequence->RNREPN)
             ->setPlc($product?->features()->where('FESHNA', '=', 'PLCCOLOR')->first()?->FEVALU ?? null)
             ->setPruftisch($product?->features()->where('FESHNA', '=', 'PLCPRUFCOLOR')->first()?->FEVALU ?? null)
             ->setPreviousRepnos(
