@@ -9,7 +9,7 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "dashboard": "9"
+  "dashboard": "3"
 }
 
 ### get features of all product - colors

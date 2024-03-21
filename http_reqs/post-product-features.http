@@ -14,8 +14,7 @@ Content-Type: application/json
 
 {
   "dashboard": "3",
-  "color": "323137",
-  "material": "dinamica"
+  "productCode": "F46B00303"
 }
 
 ### check if selected color is right
