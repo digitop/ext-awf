@@ -21,7 +21,7 @@ return [
         'productLifecycle' => 'Query a product based on a barcode',
         'sequenceUpdate' => 'Update sequence',
         'submit' => 'Submit',
-        'next-work-center' => 'Continue to the next work center',
+        'next-work-center' => 'Next sequence',
         'confirm' => 'Confirmation',
         'shelfReset' => 'Reactivate shelf',
     ],

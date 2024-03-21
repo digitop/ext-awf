@@ -41,6 +41,31 @@ class CheckProductFacade extends Facade
             $workCenter = WORKCENTER::find($scrapStationFilter); // Selejt állomás megkeresese
         }
 
+        if (strtolower($request->serial) === 'dummy') {
+            publishMqtt(env('DEPLOYMENT_SUBDOMAIN') . '/api/SCAN_OK/', [
+                [
+                    "to" => 'wc:' . $workCenter->WCSHNA,
+                    "payload" => [
+                        "status" => true,
+                        "serial" => $request->serial,
+                    ],
+                ]
+            ]);
+
+            return new CustomJsonResponse(new JsonResponseModel(
+                new ResponseData(
+                    true,
+                    [
+                        'orderCode' => null,
+                        'name' => null,
+                        "serial" => $request->serial,
+                    ]
+                ),
+                Response::HTTP_OK
+            )
+            );
+        }
+
         $start = (new \DateTime())->format('Y-m-d') . ' 00:00:00';
         $database = config('database.connections.mysql.database');
 
@@ -118,6 +143,7 @@ class CheckProductFacade extends Facade
                 "to" => 'wc:' .  $workCenter->WCSHNA,
                 "payload" => [
                     "status" => true,
+                    "serial" => $request->serial,
                 ],
             ]
         ]);
@@ -136,6 +162,7 @@ class CheckProductFacade extends Facade
                 [
                     'orderCode' => $orderCode,
                     'name' => $waitings[0]?->PRNAME,
+                    "serial" => $request->serial,
                 ]
             ),
             Response::HTTP_OK

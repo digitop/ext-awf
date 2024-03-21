@@ -21,7 +21,7 @@ return [
         'productLifecycle' => 'Termék lekérdezése vonalkód alapján',
         'sequenceUpdate' => 'Szekvencia frissítése',
         'submit' => 'Rögzítés',
-        'next-work-center' => 'Tovább a következő munkaállomásra',
+        'next-work-center' => 'Következő szekvencia',
         'confirm' => 'Megerősítés',
         'shelfReset' => 'Csincsilla újraaktiválás',
     ],

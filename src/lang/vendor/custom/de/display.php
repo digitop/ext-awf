@@ -21,7 +21,7 @@ return [
         'productLifecycle' => 'Fragen Sie ein Produkt anhand eines Barcodes ab',
         'sequenceUpdate' => 'Aktualisierungssequenz',
         'submit' => 'Einreichen',
-        'next-work-center' => 'Weiter zum nächsten Arbeitsplatz',
+        'next-work-center' => 'Nächste Sequenz',
         'confirm' => 'Bestätigung',
         'shelfReset' => 'Regal Reaktivierung',
     ],
