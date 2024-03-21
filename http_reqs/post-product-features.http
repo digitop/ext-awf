@@ -14,7 +14,7 @@ Content-Type: application/json
 
 {
   "dashboard": "3",
-  "productCode": "F46B00303"
+  "productCode": "F46B17301"
 }
 
 ### check if selected color is right
@@ -23,6 +23,7 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "dashboard": "3",
-  "color": "000000"
+  "dashboard": "9",
+  "color": "000000",
+  "material": "stoff"
 }

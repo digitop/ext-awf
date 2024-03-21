@@ -50,7 +50,7 @@ class MoveSequenceFacade extends Facade
             $workCenter = WORKCENTER::where('WCSHNA', '=', $nextProductWorkCenterData->WCSHNA)->first();
 
             $queryString = '
-                select a.PRCODE, a.SEQUID, a.SEPSEQ, a.SEARNU, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEINPR, p.PRNAME
+                select a.PRCODE, a.SEQUID, a.SEPSEQ, a.SEARNU, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEINPR, p.PRNAME, r.RNREPN
                 from AWF_SEQUENCE_LOG asl
                     join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
                     join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
@@ -90,7 +90,7 @@ class MoveSequenceFacade extends Facade
             $workCenter = WORKCENTER::where('WCSHNA', '=', $request->WCSHNA)->first();
 
             $queryString = '
-            select a.PRCODE, a.SEQUID, a.SEPSEQ, a.SEARNU, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEINPR, p.PRNAME
+            select a.PRCODE, a.SEQUID, a.SEPSEQ, a.SEARNU, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEINPR, p.PRNAME, r.RNREPN
             from AWF_SEQUENCE_LOG asl
                 join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
                 join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
@@ -130,7 +130,7 @@ class MoveSequenceFacade extends Facade
             $workCenter2 = WORKCENTER::where('WCSHNA', '=', $request->WCSHNA)->first();
 
             $queryString = '
-            select a.PRCODE, a.SEQUID, a.SEPSEQ, a.SEARNU, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEINPR, p.PRNAME
+            select a.PRCODE, a.SEQUID, a.SEPSEQ, a.SEARNU, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEINPR, p.PRNAME, r.RNREPN
             from AWF_SEQUENCE_LOG asl
                 join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
                 join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
@@ -170,7 +170,7 @@ class MoveSequenceFacade extends Facade
 
         $queryString = '
                 select a.PRCODE, a.SEQUID, a.SEPSEQ, a.SEARNU, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR,
-                       a.SESCRA, a.SEINPR, p.PRNAME
+                       a.SESCRA, a.SEINPR, p.PRNAME, r.RNREPN
                 from AWF_SEQUENCE_LOG asl
                     join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
                     join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
