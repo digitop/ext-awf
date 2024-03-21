@@ -102,7 +102,7 @@ class CheckProductFacade extends Facade
                 new ResponseData(
                     false,
                     [],
-                    __('response.check.not_next_product')
+                    __('response.check.cannot_attach_piece')
                 ),
                 Response::HTTP_OK
             ));
@@ -131,8 +131,7 @@ class CheckProductFacade extends Facade
                 new ResponseData(
                     false,
                     [],
-                    is_array($serialCheck) || is_array($serialCheck) ? json_encode($serialCheck) :
-                        __('response.check.not_next_product')
+                    json_encode($serialCheck)
                 ),
                 Response::HTTP_OK
             ));
