@@ -42,6 +42,7 @@ class MoveSequenceFacade extends Facade
         }
 
         $nextProductWorkCenterData = $this->getNextWorkCenterData($request, $sequence);
+        $workCenter = WORKCENTER::where('WCSHNA', '=', $request->WCSHNA)->first();
 
         $this->move($request, $sequence, $nextProductWorkCenterData);
 
@@ -183,6 +184,19 @@ class MoveSequenceFacade extends Facade
             ' order by a.SEQUID limit 1';
 
         $next = DB::connection('custom_mysql')->select($queryString);
+
+        if (in_array($currentWorkCenter->WCSHNA, ['HAB01', 'HAJ01', 'HBB01', 'HBJ01', 'HCB01', 'HCJ01'], true)) {
+            publishMqtt(env('DEPLOYMENT_SUBDOMAIN') . '/api/SEQUENCE_CHANGE/', [
+                [
+                    "to" => 'dh:' . $currentWorkCenter->operatorPanels[0]->dashboard->DHIDEN,
+                    "payload" => [
+                        "status" => $status,
+                        'orderCode' => $next?->ORCODE ?? null,
+                        'name' => $next?->PRNAME ?? null,
+                    ],
+                ]
+            ]);
+        }
 
         return new CustomJsonResponse(new JsonResponseModel(
             (new ResponseData(

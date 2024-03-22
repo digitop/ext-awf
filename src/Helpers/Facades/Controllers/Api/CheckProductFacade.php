@@ -70,17 +70,18 @@ class CheckProductFacade extends Facade
         $database = config('database.connections.mysql.database');
 
         $waitings = DB::connection('custom_mysql')->select('
-            select asl.LSTIME, a.SEQUID, a.SEPONR, a.SEPSEQ, a.SESIDE, a.SEPILL, a.SEINPR, a.PRCODE,
+        select asl.LSTIME, a.SEQUID, a.SEPONR, a.SEPSEQ, a.SESIDE, a.SEPILL, a.SEINPR, a.PRCODE,
                    a.ORCODE, r.PORANK, r.OPSHNA, p.PRNAME, r.RNREPN
-            from AWF_SEQUENCE a
+            from AWF_SEQUENCE_LOG asl
+                join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
                 join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
-                join ' . $database . '.REPNO r on r.ORCODE = a.ORCODE and r.WCSHNA = "' . $workCenter->WCSHNA . '"
-                left join AWF_SEQUENCE_LOG asl on a.SEQUID = asl.SEQUID and asl.WCSHNA = r.WCSHNA
-                left join AWF_SEQUENCE_WORKCENTER asw on a.SEQUID = asw.SEQUID and asw.WCSHNA = r.WCSHNA
+                join ' . $database . '.REPNO r on r.ORCODE = a.ORCODE and r.WCSHNA = asl.WCSHNA
             where ((asl.LSTIME is null and a.SEINPR = (r.PORANK - 1)) or (asl.LSTIME > "' . $start .
-            '" and a.SEINPR = r.PORANK)) and asl.LETIME is null
-            order by asl.LSTIME DESC, a.SEQUID limit 1
-        ');
+            '" and a.SEINPR = r.PORANK)) and asl.LETIME is null and
+                asl.WCSHNA = "' . $workCenter->WCSHNA . '"' .
+            ' order by asl.LSTIME DESC, a.SEQUID limit 1
+            '
+        );
 
         if (!array_key_exists(0, $waitings) || empty($waitings[0])) {
             return new CustomJsonResponse(new JsonResponseModel(

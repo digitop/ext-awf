@@ -23,7 +23,7 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "dashboard": "9",
+  "dashboard": "6",
   "color": "000000",
-  "material": "stoff"
+  "material": "dinamica"
 }
