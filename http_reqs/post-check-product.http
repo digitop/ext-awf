@@ -4,8 +4,8 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "dashboard": "20",
-  "serial": "HW01000245037"
+  "dashboard": "19",
+  "serial": "HW01000245637"
 }
 
 ### check if it is the next product - teszt
@@ -14,6 +14,6 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "dashboard": "18",
-  "serial": "HW01000244139"
+  "dashboard": "20",
+  "serial": "HW01000245679"
 }

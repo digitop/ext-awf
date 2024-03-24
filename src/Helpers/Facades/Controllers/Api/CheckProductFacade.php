@@ -98,7 +98,7 @@ class CheckProductFacade extends Facade
             ->where('PRCODE', '=', $waitings[0]->PRCODE)
             ->first();
 
-        if (empty($serial) || $serial->PRCODE !== $waitings[0]->PRCODE) {
+        if (empty($serial) || (array_key_exists(0, $waitings) && $serial->PRCODE !== $waitings[0]->PRCODE)) {
             return new CustomJsonResponse(new JsonResponseModel(
                 new ResponseData(
                     false,
@@ -161,7 +161,7 @@ class CheckProductFacade extends Facade
                 true,
                 [
                     'orderCode' => $orderCode,
-                    'name' => $waitings[0]?->PRNAME,
+                    'name' => $waitings[0]?->PRNAME ?? null,
                     "serial" => $request->serial,
                 ]
             ),
