@@ -13,8 +13,8 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "dashboard": "9",
-  "productCode": "F46B05204"
+  "dashboard": "6",
+  "productCode": "F46B02103"
 }
 
 ### check if selected color is right
@@ -23,6 +23,6 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "dashboard": "9",
-  "productCode": "F46B05204"
+  "dashboard": "8",
+  "productCode": "F46B00703"
 }
