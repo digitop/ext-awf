@@ -2,6 +2,8 @@
 
 @section('awf-css')
     <link rel="stylesheet"
+          href="{{ url('vendor/oeem-extensions/awf/extension/css/display/manual_data_record_workcenter.css') }}">
+    <link rel="stylesheet"
           href="{{ url('vendor/oeem-extensions/awf/extension/css/display/production_workcenter.css') }}">
     <link rel="stylesheet"
           href="{{ url('vendor/oeem-extensions/awf/extension/css/display/loading.css') }}">
@@ -27,19 +29,29 @@
     </section>
     <div style="margin-top: 5%;">
         <div class="content">
-            <select class="cdpvars" name="cdpvars" id="cdpvars">
-                @foreach($data['data'] as $item)
-                    <option value="{{ $item->CVNAME }}">{{ $item->CVDESC }}</option>
-                @endforeach
-            </select>
+            @if(!$data['data']->isEmpty())
+                <select class="cdpvars" name="cdpvars" id="cdpvars">
+                    @foreach($data['data'] as $item)
+                        <option value="{{ $item->CVNAME }}">{{ $item->CVDESC }}</option>
+                    @endforeach
+                </select>
 
-            @if(!empty($data['data']))
                 <button id="reset-default"
                         class="button button-green"
                         style="margin-left: 5%; padding: 0.5% 2%; font-size: xx-large;"
                 >
                     {{ __('display.button.confirm') }}
                 </button>
+            @else
+                <label>
+                    <input class="alertCheckbox" autocomplete="off"/>
+                    <div class="alert warning" style="cursor: default !important; margin-top: 10%;">
+                    <span class="alertText">
+                        {{ __('display.noData') }}
+                        <br class="clear"/>
+                    </span>
+                    </div>
+                </label>
             @endif
         </div>
     </div>

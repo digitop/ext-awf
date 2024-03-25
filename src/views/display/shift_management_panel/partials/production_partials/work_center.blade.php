@@ -2,6 +2,8 @@
 
 @section('awf-css')
     <link rel="stylesheet"
+          href="{{ url('vendor/oeem-extensions/awf/extension/css/display/manual_data_record_workcenter.css') }}">
+    <link rel="stylesheet"
           href="{{ url('vendor/oeem-extensions/awf/extension/css/display/production_workcenter.css') }}">
     <link rel="stylesheet"
           href="{{ url('vendor/oeem-extensions/awf/extension/css/display/loading.css') }}">
