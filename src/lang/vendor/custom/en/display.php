@@ -14,6 +14,7 @@ return [
         'shiftStart' => 'Start shift',
         'startOfShift' => 'Start of shift',
         'production' => 'Production details',
+        'plcReset' => 'PLC reset',
         'reason' => 'Operator panel management',
         'back' => 'Back',
         'setAsStart' => 'Set as starting sequence',

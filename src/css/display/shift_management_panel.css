@@ -461,3 +461,9 @@ a.back:hover, a.button-blue:active {
 .menu-icon:hover {
     color: #e9ebee;
 }
+
+.cdpvars {
+    margin-left: 20%;
+    font-size: xx-large;
+    margin-top: 5%;
+}

@@ -32,12 +32,23 @@ Route::group(
             ->name('awf-shift-management-panel.shift-start.index');
         Route::get('shift-management/shift-start-default', ['uses' => 'ShiftManagementShiftStartPanelController@default'])
             ->name('awf-shift-management-panel.shift-start.default');
+
         Route::get('shift-management/production', ['uses' => 'ShiftManagementProductionPanelController@create'])
             ->name('awf-shift-management-panel.production');
         Route::get('shift-management/production/{WCSHNA}', ['uses' => 'ShiftManagementProductionPanelController@show'])
             ->name('awf-shift-management-panel.production.show');
         Route::get('shift-management/production/{WCSHNA}/data', ['uses' => 'ShiftManagementProductionPanelController@data'])
             ->name('awf-shift-management-panel.production.data');
+
+        Route::get('shift-management/reset-plc', ['uses' => 'ShiftManagementResetPlcPanelController@create'])
+            ->name('awf-shift-management-panel.plc-reset');
+        Route::get('shift-management/reset-plc/{WCSHNA}', ['uses' => 'ShiftManagementResetPlcPanelController@show'])
+            ->name('awf-shift-management-panel.plc-reset.show');
+        Route::post('shift-management/reset-plc/{WCSHNA}/reset',
+            ['uses' => 'ShiftManagementResetPlcPanelController@reset']
+        )
+            ->name('awf-shift-management-panel.plc-reset.reset');
+
         Route::get('shift-management/reason', ['uses' => 'ShiftManagementReasonPanelController@create'])
             ->name('awf-shift-management-panel.reason');
         Route::get(

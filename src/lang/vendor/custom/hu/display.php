@@ -14,6 +14,7 @@ return [
         'shiftStart' => 'Műszak kezdés',
         'startOfShift' => 'Műszak megkezdése',
         'production' => 'Termelési adatok',
+        'plcReset' => 'PLC visszaállítás',
         'reason' => 'Operátor panel kezelés',
         'back' => 'Vissza',
         'setAsStart' => 'Kezdő szekvenciának állítás',
@@ -23,7 +24,7 @@ return [
         'submit' => 'Rögzítés',
         'next-work-center' => 'Következő szekvencia',
         'confirm' => 'Megerősítés',
-        'shelfReset' => 'Csincsilla újraaktiválás',
+        'shelfReset' => 'Szövet polc újraaktiválás',
     ],
     'data' => [
         'shift-sequence' => [

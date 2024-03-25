@@ -14,6 +14,7 @@ return [
         'shiftStart' => 'Schicht beginnen',
         'startOfShift' => 'Beginn der Schicht',
         'production' => 'Produktionsdetails',
+        'plcReset' => 'PLC Reset',
         'reason' => 'Verwaltung des Bedienfelds',
         'back' => 'Zurück',
         'setAsStart' => 'Als Startsequenz festlegen',

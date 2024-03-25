@@ -61,10 +61,15 @@
             </td>
         </tr>
         <tr>
-            <td colspan="3" style="width: 55%; padding-top: 5vh;">
+            <td colspan="2" style="width: 55%; padding-top: 5vh;">
                 <button class="button button-light-green" id="resetShelf">
                     {{ __('display.button.shelfReset') }}
                 </button>
+            </td>
+            <td style="width: 30%;">
+                <a class="button button-green" href="{{ route('awf-shift-management-panel.plc-reset') }}">
+                    {{ __('display.button.plcReset') }}
+                </a>
             </td>
         </tr>
     </table>
