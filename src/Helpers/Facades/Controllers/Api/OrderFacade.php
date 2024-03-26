@@ -160,7 +160,7 @@ class OrderFacade extends Facade
                 'SNSERN' => $request->serial,
                 'RNREPN' => $waitings[0]->RNREPN,
                 'SNCOUN' => 1,
-                'SNRDCN' => 1,
+                'SNRDCN' => $serial->SNRDCN,
                 'subProduct' => false,
                 'parentSNSERN' => false,
                 'PRCODE' => $waitings[0]->PRCODE,
