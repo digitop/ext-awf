@@ -1,0 +1,5 @@
+### autoscrap
+GET http://localhost:8003/api/ext/awf-extension/sequence/auto-scrap/KBJ01
+Accept: application/json
+Content-Type: application/json
+

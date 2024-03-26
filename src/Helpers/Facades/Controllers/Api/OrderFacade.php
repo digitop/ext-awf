@@ -122,8 +122,8 @@ class OrderFacade extends Facade
             '" and r.ORCODE = substring(s.RNREPN, 1, position("-" in s.RNREPN) - 1)
                 left join AWF_SEQUENCE_LOG asl on a.SEQUID = asl.SEQUID and asl.WCSHNA = r.WCSHNA
                 left join AWF_SEQUENCE_WORKCENTER asw on a.SEQUID = asw.SEQUID and asw.WCSHNA = r.WCSHNA
-            where a.SEINPR < r.PORANK
-                and (asl.LSTIME >= "' . $start . '" or asl.LSTIME is null)
+            where ((asl.LSTIME is null and a.SEINPR = (r.PORANK - 1)) or (asl.LSTIME > "' . $start .
+            '" and a.SEINPR = r.PORANK)) and asl.LETIME is null
             order by asl.LSTIME DESC, a.SEQUID limit 1
         '
         );
