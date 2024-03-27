@@ -85,8 +85,15 @@ class SequenceFacade extends Facade
             from AWF_SEQUENCE_LOG asl
                 join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
                 join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
-                join ' . $database . '.REPNO r on r.ORCODE = a.ORCODE and r.WCSHNA = asl.WCSHNA
-            where ((asl.LSTIME is null and a.SEINPR = (r.PORANK - 1)) or (asl.LSTIME > "' . $start .
+                join ' . $database . '.REPNO r on r.ORCODE = a.ORCODE and r.WCSHNA = asl.WCSHNA ' .
+                (
+                    $request->has('serial') && !empty($request->serial) ?
+                        'join ' . $database .
+                            '.SERIALNUMBER s on r.ORCODE = substring(s.RNREPN, 1, position("-" in s.RNREPN) - 1) and
+                             s.SNSERN = "' . $request->serial . '" ' :
+                        ''
+                ) .
+            'where ((asl.LSTIME is null and a.SEINPR = (r.PORANK - 1)) or (asl.LSTIME > "' . $start .
             '" and a.SEINPR = r.PORANK)) and asl.LETIME is null and
                 asl.WCSHNA = "' . $workCenter->WCSHNA . '"' .
                 ($pillar !== null ? ' and a.SEPILL = "' . $pillar .'"' : '') .
@@ -97,21 +104,6 @@ class SequenceFacade extends Facade
         $sequence = new Collection(DB::connection('custom_mysql')->select($queryString));
 
         if (!empty($sequence[0])) {
-            if ($request->has('serial') && !empty($request->serial)) {
-                $serial = DB::select(
-                    'select r.RNREPN, r.ORCODE from SERIALNUMBER s
-                        join REPNO r on r.RNREPN = s.RNREPN
-                    where s.SNSERN = "' . $request->serial . '" and r.WCSHNA = "' . $workCenter->WCSHNA . '"'
-                );
-
-                if ($sequence[0]->RNREPN !== $serial[0]->RNREPN) {
-                    $sequence[0]->RNREPN = $serial[0]->RNREPN;
-                    $sequence[0]->ORCODE = $serial[0]->ORCODE;
-                }
-
-
-            }
-
             $side = $request->has('side') ? $request->side : null;
 
             if (empty($side)) {
@@ -196,9 +188,9 @@ class SequenceFacade extends Facade
             $productRank = DB::select('
                 select ppd.PORANK
                     from PRODUCT p
-                           join PRWFDATA pfd on p.PRCODE = pfd.PRCODE
-                           join PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = "' . $workCenter->WCSHNA . '"
-                           join PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
+                       join PRWFDATA pfd on p.PRCODE = pfd.PRCODE
+                       join PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = "' . $workCenter->WCSHNA . '"
+                       join PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
                     where p.PRCODE = "' . $sequence[0]->PRCODE . '"'
             );
 
