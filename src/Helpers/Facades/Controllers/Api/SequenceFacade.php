@@ -151,6 +151,7 @@ class SequenceFacade extends Facade
                     'SEPILL' => $pillar,
                     'SESCRA' => false,
                     'SEPONR' => null,
+                    'RNREPN' => 'dummy'
                 ]
             ]);
         }
