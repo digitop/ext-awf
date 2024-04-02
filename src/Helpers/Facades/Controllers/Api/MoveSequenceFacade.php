@@ -27,10 +27,19 @@ class MoveSequenceFacade extends Facade
     {
         $database = config('database.connections.mysql.database');
 
-        $sequence = AWF_SEQUENCE::where('SEQUID', '=', $request->SEQUID)
-            ->first();
+        $queryString = '
+            select a.PRCODE, a.SEQUID, a.SEPSEQ, a.SEARNU, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR,
+                   a.SESCRA, a.SEINPR, p.PRNAME, r.RNREPN, r.PORANK
+            from AWF_SEQUENCE_LOG asl
+                join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
+                join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
+                join ' . $database . '.REPNO r on r.ORCODE = a.ORCODE and r.WCSHNA = asl.WCSHNA
+            where a.SEQUID = ' . $request->SEQUID .
+            ' order by a.SEQUID limit 1';
 
-        if (empty($sequence)) {
+        $sequence = DB::connection('custom_mysql')->select($queryString);
+
+        if (!array_key_exists(0) || empty($sequence[0])) {
             return new CustomJsonResponse(new JsonResponseModel(
                 new ResponseData(
                     false,
@@ -40,6 +49,8 @@ class MoveSequenceFacade extends Facade
                 Response::HTTP_OK
             ));
         }
+
+        $sequence = $sequence[0];
 
         $nextProductWorkCenterData = $this->getNextWorkCenterData($request, $sequence);
         $workCenter = WORKCENTER::where('WCSHNA', '=', $request->WCSHNA)->first();
@@ -217,18 +228,10 @@ class MoveSequenceFacade extends Facade
         ));
     }
 
-    protected function getNextWorkCenterData(FormRequest|Request $request, Model $sequence): PRWCDATA|null
+    protected function getNextWorkCenterData(FormRequest|Request $request, \stdClass $sequence): \stdClass|null
     {
         $nextProductDetails = DB::select('
-            with porank as (select ppd.PORANK, ppd.PFIDEN
-                from PRODUCT p
-                       join PRWFDATA pfd on p.PRCODE = pfd.PRCODE
-                       join PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = "' . $request->WCSHNA . '"
-                       join PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
-                where p.PRCODE = "' . $sequence->PRCODE . '"
-            )
-            select ppd2.PFIDEN, ppd2.OPSHNA from PROPDATA ppd2
-                where ppd2.PORANK = (select porank.PORANK + 1 from porank where ppd2.PFIDEN = porank.PFIDEN)
+            select max(PORANK) as lastStation from REPNO r where r.RNACTV = 1 and r.WCHSNA = "' . $request->WCSHNA . '"
         ');
 
         if (!empty($nextProductDetails[0])) {
