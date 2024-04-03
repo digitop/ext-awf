@@ -142,18 +142,15 @@ class SequenceFacade extends Facade
         }
 
         if (empty($sequence[0])) {
-            $sequence = new Collection([(object)
-                [
-                    'SEQUID' => 0,
-                    'PRCODE' => 'dummy',
-                    'ORCODE' => 'dummy',
-                    'SESIDE' => $request->side,
-                    'SEPILL' => $pillar,
-                    'SESCRA' => false,
-                    'SEPONR' => null,
-                    'RNREPN' => 'dummy'
-                ]
-            ]);
+            return new CustomJsonResponse(new JsonResponseModel(
+                new ResponseData(
+                    false,
+                    [],
+                    __('response.no_new_data_available')
+                ),
+                Response::HTTP_OK
+            )
+            );
         }
 
         $noChange = $request->has('no_change') &&
@@ -168,14 +165,14 @@ class SequenceFacade extends Facade
                 (is_bool($request->to_preparation_panel) && $request->to_preparation_panel == true)
             );
 
-        if ($noChange && $workCenter->WCSHNA === 'EL01' && $sequence[0]->PRCODE !== 'dummy' && $toPreparationPanel) {
+        if ($noChange && $workCenter->WCSHNA === 'EL01' && $toPreparationPanel) {
             event(new NextProductEvent(
                     (new NextProductEventResponse($sequence, null))->generate()
                 )
             );
         }
 
-        if (!$noChange && $sequence[0]->PRCODE !== 'dummy') {
+        if (!$noChange) {
             foreach ($sequence as $item) {
                 AWF_SEQUENCE_LOG::where('WCSHNA', '=', $workCenter->WCSHNA)
                     ->where('SEQUID', '=', $item->SEQUID)
