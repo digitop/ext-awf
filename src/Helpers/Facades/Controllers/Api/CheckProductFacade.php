@@ -95,7 +95,7 @@ class CheckProductFacade extends Facade
         }
 
         $serial = SERIALNUMBER::where('SNSERN', '=', $request->serial)
-            ->where('PRCODE', '=', $waitings[0]->PRCODE)
+//            ->where('PRCODE', '=', $waitings[0]->PRCODE)
             ->first();
 
         if (empty($serial) || (array_key_exists(0, $waitings) && $serial->PRCODE !== $waitings[0]->PRCODE)) {
@@ -103,7 +103,10 @@ class CheckProductFacade extends Facade
                 new ResponseData(
                     false,
                     [],
-                    __('response.check.cannot_attach_piece')
+                    __(
+                        'response.check.cannot_attach_piece',
+                        ['waiting' => $waitings[0]->PRCODE, 'got' => $serial?->PRCODE]
+                    )
                 ),
                 Response::HTTP_OK
             ));

@@ -115,7 +115,10 @@ class ShiftManagementPanelManualDataRecordFacade extends Facade
                 $error = $checkSerial['error'];
             }
             else {
-                $error = __('response.check.cannot_attach_piece');
+                $error = __(
+                    'response.check.cannot_attach_piece',
+                    ['waiting' => $sequence->PRCODE, 'got' => $request->serialNumber]
+                );
             }
         }
         else {
