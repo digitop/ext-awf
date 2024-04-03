@@ -4,18 +4,18 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "WCSHNA": "VCJ01",
-  "SEQUID": 200153
+  "WCSHNA": "HBJ01",
+  "SEQUID": 212605
 }
 
 ### move sequence - test
-POST http://localhost:8003/api/ext/awf-extension/move-sequence
+POST http://oeem.local/api/ext/awf-extension/move-sequence
 Accept: application/json
 Content-Type: application/json
 
 {
   "WCSHNA": "KBB01",
-  "SEQUID": 129360,
+  "SEQUID": 150590,
   "pillar": "B"
 }
 

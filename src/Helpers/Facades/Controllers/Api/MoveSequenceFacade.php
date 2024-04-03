@@ -26,6 +26,7 @@ class MoveSequenceFacade extends Facade
     public function store(FormRequest|Request $request, Model|string|null ...$model): JsonResponse|null
     {
         $database = config('database.connections.mysql.database');
+        $start = (new \DateTime())->format('Y-m-d') . ' 00:00:00';
 
         $queryString = '
             select a.PRCODE, a.SEQUID, a.SEPSEQ, a.SEARNU, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR,
@@ -33,13 +34,13 @@ class MoveSequenceFacade extends Facade
             from AWF_SEQUENCE_LOG asl
                 join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
                 join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
-                join ' . $database . '.REPNO r on r.ORCODE = a.ORCODE and r.WCSHNA = asl.WCSHNA
+                join ' . $database . '.REPNO r on r.ORCODE = a.ORCODE and r.WCSHNA = "' . $request->WCSHNA . '"
             where a.SEQUID = ' . $request->SEQUID .
             ' order by a.SEQUID limit 1';
 
         $sequence = DB::connection('custom_mysql')->select($queryString);
 
-        if (!array_key_exists(0) || empty($sequence[0])) {
+        if (!array_key_exists(0, $sequence) || empty($sequence[0])) {
             return new CustomJsonResponse(new JsonResponseModel(
                 new ResponseData(
                     false,
@@ -62,13 +63,14 @@ class MoveSequenceFacade extends Facade
             $workCenter = WORKCENTER::where('WCSHNA', '=', $nextProductWorkCenterData->WCSHNA)->first();
 
             $queryString = '
-                select a.PRCODE, a.SEQUID, a.SEPSEQ, a.SEARNU, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEINPR, p.PRNAME, r.RNREPN
+                select a.PRCODE, a.SEQUID, a.SEPSEQ, a.SEARNU, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEINPR,
+                 p.PRNAME, r.RNREPN
                 from AWF_SEQUENCE_LOG asl
                     join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
                     join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
                     join ' . $database . '.REPNO r on r.ORCODE = a.ORCODE and r.WCSHNA = asl.WCSHNA
-                where asl.LSTIME is null and asl.LETIME is null and a.SEINPR = (r.PORANK - 1) and
-                    asl.WCSHNA = "' . $workCenter->WCSHNA . '" order by a.SEQUID limit 1'
+                where ((asl.LSTIME is null and a.SEINPR = (r.PORANK - 1)) or (asl.LSTIME > "' . $start .
+                '" and a.SEINPR = r.PORANK)) and asl.LETIME is null and asl.WCSHNA = "' . $workCenter->WCSHNA . '" order by a.SEQUID limit 1'
             ;
 
             $sequence2 = DB::connection('custom_mysql')->select($queryString);
@@ -102,13 +104,15 @@ class MoveSequenceFacade extends Facade
             $workCenter = WORKCENTER::where('WCSHNA', '=', $request->WCSHNA)->first();
 
             $queryString = '
-            select a.PRCODE, a.SEQUID, a.SEPSEQ, a.SEARNU, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEINPR, p.PRNAME, r.RNREPN
-            from AWF_SEQUENCE_LOG asl
-                join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
-                join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
-                    join ' . $database . '.REPNO r on r.ORCODE = a.ORCODE and r.WCSHNA = asl.WCSHNA
-            where asl.LSTIME is null and asl.LETIME is null and a.SEINPR = (r.PORANK - 1) and
-                asl.WCSHNA = "' . $workCenter->WCSHNA . '" order by a.SEQUID limit 1'
+                select a.PRCODE, a.SEQUID, a.SEPSEQ, a.SEARNU, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEINPR,
+                       p.PRNAME, r.RNREPN
+                from AWF_SEQUENCE_LOG asl
+                    join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
+                    join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
+                        join ' . $database . '.REPNO r on r.ORCODE = a.ORCODE and r.WCSHNA = asl.WCSHNA
+                where ((asl.LSTIME is null and a.SEINPR = (r.PORANK - 1)) or (asl.LSTIME > "' . $start .
+                '" and a.SEINPR = r.PORANK)) and asl.LETIME is null and asl.WCSHNA = "' . $workCenter->WCSHNA .
+                '" order by a.SEQUID limit 1'
             ;
 
             $sequence2 = DB::connection('custom_mysql')->select($queryString);
@@ -142,13 +146,15 @@ class MoveSequenceFacade extends Facade
             $workCenter2 = WORKCENTER::where('WCSHNA', '=', $request->WCSHNA)->first();
 
             $queryString = '
-            select a.PRCODE, a.SEQUID, a.SEPSEQ, a.SEARNU, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEINPR, p.PRNAME, r.RNREPN
-            from AWF_SEQUENCE_LOG asl
-                join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
-                join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
-                    join ' . $database . '.REPNO r on r.ORCODE = a.ORCODE and r.WCSHNA = asl.WCSHNA
-            where asl.LSTIME is null and asl.LETIME is null and a.SEINPR = (r.PORANK - 1) and
-                asl.WCSHNA = "' . $workCenter2->WCSHNA . '" order by a.SEQUID limit 1'
+                select a.PRCODE, a.SEQUID, a.SEPSEQ, a.SEARNU, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEINPR,
+                       p.PRNAME, r.RNREPN
+                from AWF_SEQUENCE_LOG asl
+                    join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
+                    join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
+                        join ' . $database . '.REPNO r on r.ORCODE = a.ORCODE and r.WCSHNA = asl.WCSHNA
+                where ((asl.LSTIME is null and a.SEINPR = (r.PORANK - 1)) or (asl.LSTIME > "' . $start .
+                '" and a.SEINPR = r.PORANK)) and asl.LETIME is null and asl.WCSHNA = "' . $workCenter2->WCSHNA .
+                '" order by a.SEQUID limit 1'
             ;
 
             $sequence3 = DB::connection('custom_mysql')->select($queryString);
@@ -181,14 +187,14 @@ class MoveSequenceFacade extends Facade
         $currentWorkCenter = WORKCENTER::where('WCSHNA', '=', $request->WCSHNA)->first();
 
         $queryString = '
-                select a.PRCODE, a.SEQUID, a.SEPSEQ, a.SEARNU, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR,
-                       a.SESCRA, a.SEINPR, p.PRNAME, r.RNREPN
-                from AWF_SEQUENCE_LOG asl
-                    join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
-                    join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
-                    join ' . $database . '.REPNO r on r.ORCODE = a.ORCODE and r.WCSHNA = asl.WCSHNA
-                where asl.LSTIME is null and asl.LETIME is null and a.SEINPR = (r.PORANK - 1) and
-                    asl.WCSHNA = "' . $currentWorkCenter->WCSHNA . '"' .
+            select a.PRCODE, a.SEQUID, a.SEPSEQ, a.SEARNU, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR,
+                   a.SESCRA, a.SEINPR, p.PRNAME, r.RNREPN
+            from AWF_SEQUENCE_LOG asl
+                join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
+                join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
+                join ' . $database . '.REPNO r on r.ORCODE = a.ORCODE and r.WCSHNA = asl.WCSHNA
+            where ((asl.LSTIME is null and a.SEINPR = (r.PORANK - 1)) or (asl.LSTIME > "' . $start .
+            '" and a.SEINPR = r.PORANK)) and asl.LETIME is null and asl.WCSHNA = "' . $currentWorkCenter->WCSHNA . '"' .
             ($request->has('pillar') && !empty($request->pillar) ?
                 ' and a.SEPILL = "' . $request->pillar . '"' :
                 '') .
@@ -213,7 +219,7 @@ class MoveSequenceFacade extends Facade
             (new ResponseData(
                 true,
                 (new SequenceFacadeResponse(
-                    $sequence,
+                    new Collection([$sequence]),
                     $nextProductWorkCenterData !== null && isset($workCenter) ?
                         $workCenter :
                         null
@@ -231,19 +237,29 @@ class MoveSequenceFacade extends Facade
     protected function getNextWorkCenterData(FormRequest|Request $request, \stdClass $sequence): \stdClass|null
     {
         $nextProductDetails = DB::select('
-            select max(PORANK) as lastStation from REPNO r where r.RNACTV = 1 and r.WCHSNA = "' . $request->WCSHNA . '"
+            select max(PORANK) as lastStation from REPNO r where r.RNACTV = 1 and r.ORCODE = "' . $sequence->ORCODE . '"
         ');
 
-        if (!empty($nextProductDetails[0])) {
-            $nextProductWorkCenterData = PRWCDATA::where('PFIDEN', '=', $nextProductDetails[0]->PFIDEN)
-                ->where('OPSHNA', '=', $nextProductDetails[0]->OPSHNA)
-                ->first();
+        if (array_key_exists(0, $nextProductDetails) && !empty($nextProductDetails[0])) {
+            $nextProductDetails = $nextProductDetails[0]->lastStation;
+
+            if ($sequence->PORANK < $nextProductDetails) {
+                $nextProductWorkCenterData = DB::select('
+                    select WCSHNA from REPNO r where r.RNACTV = 1 and r.ORCODE = "' .
+                    $sequence->ORCODE . '" and r.PORANK = ' . ((int)$sequence->PORANK + 1)
+                );
+
+                $nextProductWorkCenterData = $nextProductWorkCenterData[0];
+            }
         }
 
         return $nextProductWorkCenterData ?? null;
     }
 
-    protected function move(FormRequest|Request $request, Model $sequence, Model|null $nextProductWorkCenterData): void
+    protected function move(FormRequest|Request $request,
+        \stdClass $sequence,
+        \stdClass|null $nextProductWorkCenterData
+    ): void
     {
         AWF_SEQUENCE_LOG::where('WCSHNA', '=', $request->WCSHNA)
             ->where('SEQUID', '=', $request->SEQUID)

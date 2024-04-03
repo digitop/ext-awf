@@ -4,18 +4,19 @@ Accept: application/json
 Content-Type: application/json
 
 ### get data by WC
-GET https://oeem.awf.hu/api/ext/awf-extension/get-sequence/VAB02/A
+GET https://oeem.awf.hu/api/ext/awf-extension/get-sequence/HBJ01/B
 Accept: application/json
 Content-Type: application/json
 
 {
-  "side": "L",
+  "side": "R",
+  "serial": "HW01000251260",
   "limit": 1,
-  "no_change": "true"
+  "no_change": "false"
 }
 
 ### get data by WC - teszt
-GET http://localhost:8003/api/ext/awf-extension/get-sequence/KBB01/B
+GET http://oeem.local/api/ext/awf-extension/get-sequence/KBB01/B
 Accept: application/json
 Content-Type: application/json
 
