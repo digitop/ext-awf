@@ -3,19 +3,20 @@
 namespace AWF\Extension\Helpers\Facades\Controllers\Web\ShiftManagement;
 
 use App\Http\Controllers\api\dashboard\operatorPanel\OperatorPanelController;
-use App\Models\REPNO;
+use AWF\Extension\Helpers\Facades\Controllers\Api\SequenceFacade;
 use AWF\Extension\Helpers\Facades\Controllers\Web\Facade;
+use AWF\Extension\Requests\Api\SequenceShowRequest;
 use Illuminate\Contracts\Foundation\Application as ContractsApplication;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View as IlluminateView;
 use Illuminate\Support\Facades\DB;
 use App\Models\WORKCENTER;
+use App\Models\SERIALNUMBER;
 use Illuminate\Http\RedirectResponse;
 
 class ShiftManagementPanelManualDataRecordFacade extends Facade
@@ -43,20 +44,21 @@ class ShiftManagementPanelManualDataRecordFacade extends Facade
     ): Application|Factory|View|ContractsApplication|null
     {
         $database = config('database.connections.mysql.database');
+        $start = (new \DateTime())->format('Y-m-d') . ' 00:00:00';
 
-        $sequence = DB::connection('custom_mysql')->select('
-            select a.SEQUID, asw.WCSHNA, asw.RNREPN, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEPSEQ, a.PRCODE, s.SNSERN from AWF_SEQUENCE a
-                join AWF_SEQUENCE_LOG asl on a.SEQUID = asl.SEQUID
-                join AWF_SEQUENCE_WORKCENTER asw on a.SEQUID = asw.SEQUID
-                left join ' . $database . '.SERIALNUMBER s on s.RNREPN = asw.RNREPN
-            where asw.WCSHNA = "' . $model[0]->WCSHNA . '"
-                and asl.LETIME is null and a.SEINPR = (
-                    select PORANK from ' . $database . '.PROPDATA ppd
-                        join ' . $database . '.PRWCDATA pcd on pcd.WCSHNA = asw.WCSHNA and pcd.OPSHNA = ppd.OPSHNA and ppd.PFIDEN = pcd.PFIDEN
-                        join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE and pfd.PFIDEN = pcd.PFIDEN
-                )
-                and asl.LSTIME is not null and asl.LETIME is null
-        ');
+        $queryString = '
+            select a.SEQUID, r.WCSHNA, r.RNREPN, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEPSEQ, a.PRCODE, s.SNSERN
+            from AWF_SEQUENCE_LOG asl
+                join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
+                join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
+                join ' . $database . '.REPNO r on r.ORCODE = a.ORCODE and r.WCSHNA = asl.WCSHNA
+                left join ' . $database . '.SERIALNUMBER s on s.RNREPN = r.RNREPN ' .
+            'where ((asl.LSTIME is null and a.SEINPR = (r.PORANK - 1)) or (asl.LSTIME > "' . $start .
+            '" and a.SEINPR = r.PORANK)) and asl.LETIME is null and
+                asl.WCSHNA = "' . $model[0]->WCSHNA . '"' .
+            ' order by a.SEQUID limit 1';
+
+        $sequence = DB::connection('custom_mysql')->select($queryString);
 
         if (!empty($sequence[0])) {
             $sequence = $sequence[0];
@@ -65,7 +67,8 @@ class ShiftManagementPanelManualDataRecordFacade extends Facade
         return view(
             'awf-extension::display.shift_management_panel.partials.manual_data_record_partials.work_center',
             [
-                'sequence' => $sequence
+                'sequence' => $sequence,
+                'workCenter' => $model[0]
             ]
         );
     }
@@ -76,20 +79,22 @@ class ShiftManagementPanelManualDataRecordFacade extends Facade
     {
         $workCenter = $model[0];
         $database = config('database.connections.mysql.database');
+        $start = (new \DateTime())->format('Y-m-d') . ' 00:00:00';
 
-        $sequence = DB::connection('custom_mysql')->select('
-            select asw.WCSHNA, asw.RNREPN, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEPSEQ, a.PRCODE, s.SNSERN from AWF_SEQUENCE a
-                join AWF_SEQUENCE_LOG asl on a.SEQUID = asl.SEQUID
-                join AWF_SEQUENCE_WORKCENTER asw on a.SEQUID = asw.SEQUID
-                left join ' . $database . '.SERIALNUMBER s on s.RNREPN = asw.RNREPN
-            where asw.WCSHNA = "' . $model[0]->WCSHNA . '"
-                and asl.LETIME is null and a.SEINPR = (
-                    select PORANK from ' . $database . '.PROPDATA ppd
-                        join ' . $database . '.PRWCDATA pcd on pcd.WCSHNA = asw.WCSHNA and pcd.OPSHNA = ppd.OPSHNA and ppd.PFIDEN = pcd.PFIDEN
-                        join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE and pfd.PFIDEN = pcd.PFIDEN
-                )
-                and asl.LSTIME is not null and asl.LETIME is null
-        ');
+        $queryString = '
+            select a.SEQUID, r.WCSHNA, r.RNREPN, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEPSEQ, a.PRCODE, s.SNSERN,
+                   r.PORANK, a.SEINPR
+            from AWF_SEQUENCE_LOG asl
+                join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
+                join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
+                join ' . $database . '.REPNO r on r.ORCODE = a.ORCODE and r.WCSHNA = asl.WCSHNA
+                left join ' . $database . '.SERIALNUMBER s on s.RNREPN = r.RNREPN ' .
+            'where ((asl.LSTIME is null and a.SEINPR = (r.PORANK - 1)) or (asl.LSTIME > "' . $start .
+            '" and a.SEINPR = r.PORANK)) and asl.LETIME is null and
+                asl.WCSHNA = "' . $model[0]->WCSHNA . '"' .
+            ' order by a.SEQUID limit 1';
+
+        $sequence = DB::connection('custom_mysql')->select($queryString);
 
         if (!empty($sequence[0])) {
             $sequence = $sequence[0];
@@ -123,6 +128,33 @@ class ShiftManagementPanelManualDataRecordFacade extends Facade
         }
         else {
             $sequence->serial = $request->serialNumber;
+
+            SERIALNUMBER::where('SNSERN', '=', $request->serialNumber)
+                ->where('RNREPN', '=', $sequence->RNREPN)
+                ->update(['SNCYID' => ($model[0]->WCTYPE == 'QS' ? -2 : 10)]);
+
+            $nextProductDetails = DB::select('
+            select PORANK as station from REPNO r where r.RNACTV = 1 and r.ORCODE = "' . $sequence->ORCODE .
+                '" and r.WCSHNA = "' . $model[0]->WCSHNA . '"'
+            );
+
+            if (array_key_exists(0, $nextProductDetails) && !empty($nextProductDetails[0])) {
+                $nextProductDetails = $nextProductDetails[0]->station;
+
+                if ($sequence->SEINPR < $nextProductDetails) {
+                    (new SequenceFacade())->show(
+                        new SequenceShowRequest([
+                            $sequence->SESIDE,
+                            1,
+                            'false',
+                            'false',
+                            $request->serialNumber,
+                        ]),
+                        $model[0],
+                        $sequence->SEPILL
+                    );
+                }
+            }
         }
 
         return redirect()

@@ -116,3 +116,12 @@ form table td {
     font-size: x-large !important;
     padding: 1vh 5vh !important;
 }
+
+.serial {
+    font-size: xxx-large;
+}
+
+.button {
+    padding: 1vh 3vh !important;
+    font-size: xx-large !important;
+}

@@ -23,7 +23,7 @@ Content-Type: application/json
 {
   "side": "L",
   "limit": 1,
-  "no_change": "false"
+  "no_change": "true"
 }
 
 ### get default preparation panel
