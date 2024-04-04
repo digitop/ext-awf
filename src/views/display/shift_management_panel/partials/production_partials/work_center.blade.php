@@ -133,8 +133,8 @@
                             }
                         }
 
-                        if (typeof response.data?.waitings == 'undefined' && !hasWaiting) {
-                            html += '<tr class="awf-sequence-waitings"><td colspan="5">{{ __('display.noData') }}</td></tr>'
+                        if (typeof response.data?.waitings == 'undefined' && !hasWaiting && hasInPlace) {
+                            html += '<tr class="awf-sequence-waitings" style="background-color: #3030bd;"><td colspan="5">{{ __('display.noData') }}</td></tr>'
                             hasWaiting = true
                         }
                         else if (typeof response.data?.waitings != 'undefined' && !hasWaiting) {
