@@ -30,7 +30,7 @@ class ShiftManagementPanelFacade extends Facade
         ]);
 
         $queryString = '
-            select a.ORCODE, p.PRNAME from AWF_SEQUENCE_LOG asl
+            select a.PRCODE, a.ORCODE, p.PRNAME from AWF_SEQUENCE_LOG asl
                 join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
                 join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
                 join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE
@@ -51,7 +51,7 @@ class ShiftManagementPanelFacade extends Facade
                 "to" => 'dh:' . (int)$dashboardId,
                 "payload" => [
                     "status" => "default",
-                    'orderCode' => is_object($sequence) ? $sequence?->ORCODE : null,
+                    'orderCode' => is_object($sequence) ? $sequence?->PRCODE : null,
                     'name' => is_object($sequence) ? $sequence?->PRNAME : null,
                 ],
             ]

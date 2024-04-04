@@ -92,7 +92,7 @@ class MoveSequenceFacade extends Facade
                     "to" => 'dh:' . $workCenter->operatorPanels[0]->dashboard->DHIDEN,
                     "payload" => [
                         "status" => $status,
-                        'orderCode' => $sequence2?->ORCODE ?? null,
+                        'orderCode' => $sequence2?->PRCODE ?? null,
                         'name' => $sequence2?->PRNAME ?? null,
                     ],
                 ]
@@ -134,7 +134,7 @@ class MoveSequenceFacade extends Facade
                     "to" => 'dh:' . $workCenter->operatorPanels[0]->dashboard->DHIDEN,
                     "payload" => [
                         "status" => $status,
-                        'orderCode' => $sequence2?->ORCODE ?? null,
+                        'orderCode' => $sequence2?->PRCODE ?? null,
                         'name' => $sequence2?->PRNAME ?? null,
                     ],
                 ]
@@ -177,7 +177,7 @@ class MoveSequenceFacade extends Facade
                     "to" => 'dh:' . $workCenter2->operatorPanels[0]->dashboard->DHIDEN,
                     "payload" => [
                         "status" => $status,
-                        'orderCode' => $sequence3?->ORCODE ?? null,
+                        'orderCode' => $sequence3?->PRCODE ?? null,
                         'name' => $sequence3?->PRNAME ?? null,
                     ],
                 ]
@@ -208,7 +208,7 @@ class MoveSequenceFacade extends Facade
                     "to" => 'dh:' . $currentWorkCenter->operatorPanels[0]->dashboard->DHIDEN,
                     "payload" => [
                         "status" => $status,
-                        'orderCode' => $next?->ORCODE ?? null,
+                        'orderCode' => $next?->PRCODE ?? null,
                         'name' => $next?->PRNAME ?? null,
                     ],
                 ]

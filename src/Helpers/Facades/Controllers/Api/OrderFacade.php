@@ -41,7 +41,7 @@ class OrderFacade extends Facade
         $sequence = null;
 
         $waitings = DB::connection('custom_mysql')->select('
-            select a.ORCODE, p.PRNAME
+            select a.PRCODE, a.ORCODE, p.PRNAME
             from AWF_SEQUENCE a
                 join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
                 join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE
@@ -62,7 +62,7 @@ class OrderFacade extends Facade
             new ResponseData(
                 $success,
                 [
-                    'orderCode' => $sequence?->ORCODE ?? null,
+                    'orderCode' => $sequence?->PRCODE ?? null,
                     'name' => $sequence?->PRNAME,
                 ],
                 $success ? '' : 'Nem áll rendelkezésre szekvencia adat'
@@ -205,7 +205,7 @@ class OrderFacade extends Facade
             new ResponseData(
                 true,
                 [
-                    'orderCode' => $waitings[0]->ORCODE ?? null,
+                    'orderCode' => $waitings[0]->PRCODE ?? null,
                     'side' => $waitings[0]->SESIDE ?? null,
                     'name' => $waitings[0]->PRNAME ?? null,
                 ]
