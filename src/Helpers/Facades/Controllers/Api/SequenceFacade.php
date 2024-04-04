@@ -173,6 +173,44 @@ class SequenceFacade extends Facade
         }
 
         if (!$noChange) {
+            $queryString = '
+                select a.PRCODE, a.SEQUID, a.SEPSEQ, a.SEARNU, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEINPR, a.SESCRA, r.RNREPN
+                from AWF_SEQUENCE_LOG asl
+                    join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
+                    join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
+                    join ' . $database . '.REPNO r on r.ORCODE = a.ORCODE and r.WCSHNA = asl.WCSHNA ' .
+                'where ((asl.LSTIME is null and a.SEINPR = (r.PORANK - 1)) or (asl.LSTIME > "' . $start .
+                '" and a.SEINPR = r.PORANK)) and asl.LETIME is null and
+                    asl.WCSHNA = "' . $workCenter->WCSHNA . '"' .
+                ($pillar !== null ? ' and a.SEPILL = "' . $pillar . '"' : '') .
+                ($request->has('side') ? ' and a.SESIDE = "' . $request->side . '"' : '') .
+                ' order by a.SEQUID' .
+                ($request->has('limit') ? ' limit ' . $request->limit : '');
+
+            $nextSequence = DB::connection('custom_mysql')->select($queryString);
+
+            if (array_key_exists(0, $nextSequence) && !empty($nextSequence[0])) {
+                $nextSequence = $nextSequence[0];
+
+                if ($sequence[0]->SEQUID !== $nextSequence->SEQUID) {
+                    $statement = DB::connection('custom_mysql')->select("show table status like 'AWF_SEQUENCE'");
+
+                    AWF_SEQUENCE::where('SEQUID', '=', $nextSequence->SEQUID)->update([
+                        'SEQUID' => $statement[0]->Auto_increment,
+                    ]);
+
+                    AWF_SEQUENCE::where('SEQUID', '=', $sequence[0]->SEQUID)->update([
+                        'SEQUID' => $nextSequence->SEQUID,
+                    ]);
+
+                    AWF_SEQUENCE::where('SEQUID', '=', $statement[0]->Auto_increment)->update([
+                        'SEQUID' => $sequence[0]->SEQUID,
+                    ]);
+
+                    $sequence[0]->SEQUID = $nextSequence->SEQUID;
+                }
+            }
+
             foreach ($sequence as $item) {
                 AWF_SEQUENCE_LOG::where('WCSHNA', '=', $workCenter->WCSHNA)
                     ->where('SEQUID', '=', $item->SEQUID)

@@ -16,14 +16,15 @@ Content-Type: application/json
 }
 
 ### get data by WC - teszt
-GET http://oeem.local/api/ext/awf-extension/get-sequence/KBB01/B
+GET http://oeem.local/api/ext/awf-extension/get-sequence/KBJ01/B
 Accept: application/json
 Content-Type: application/json
 
 {
-  "side": "L",
+  "side": "R",
+  "serial": "HW01000257365",
   "limit": 1,
-  "no_change": "true"
+  "no_change": "false"
 }
 
 ### get default preparation panel
