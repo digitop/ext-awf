@@ -3,6 +3,7 @@
 namespace AWF\Extension\Helpers\Facades\Controllers\Web\ShiftManagement;
 
 use App\Http\Controllers\api\dashboard\operatorPanel\OperatorPanelController;
+use AWF\Extension\Helpers\DataTable\ManualDataRecordDataTable;
 use AWF\Extension\Helpers\Facades\Controllers\Api\SequenceFacade;
 use AWF\Extension\Helpers\Facades\Controllers\Web\Facade;
 use AWF\Extension\Requests\Api\SequenceShowRequest;
@@ -12,15 +13,30 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View as IlluminateView;
 use Illuminate\Support\Facades\DB;
 use App\Models\WORKCENTER;
 use App\Models\SERIALNUMBER;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Session;
 
 class ShiftManagementPanelManualDataRecordFacade extends Facade
 {
+    public function index(
+        ManualDataRecordDataTable $dataTable,
+        string|null $workCenterId
+    ): Application|Factory|View|IlluminateView|ContractsApplication|JsonResponse|null
+    {
+        if (empty(Session::get('locale'))) {
+            Session::put('locale', 'hu_HU');
+        }
+
+        $dataTable->setWorkCenterId($workCenterId);
+        return $dataTable->render('awf-extension::display/shift_management_panel.partials.table');
+    }
+
     public function create(Request|FormRequest|null $request = null,
         Model|string|null $model = null
     ): Application|Factory|View|IlluminateView|ContractsApplication|null

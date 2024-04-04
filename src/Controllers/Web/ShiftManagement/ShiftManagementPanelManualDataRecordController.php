@@ -4,6 +4,7 @@ namespace AWF\Extension\Controllers\Web\ShiftManagement;
 
 use App\Http\Controllers\Controller;
 use App\Models\WORKCENTER;
+use AWF\Extension\Helpers\DataTable\ManualDataRecordDataTable;
 use AWF\Extension\Helpers\Facades\Controllers\Web\ShiftManagement\ShiftManagementPanelManualDataRecordFacade;
 use AWF\Extension\Interfaces\WebControllerFacadeInterface;
 use Illuminate\Contracts\Foundation\Application as ContractsApplication;
@@ -34,6 +35,15 @@ class ShiftManagementPanelManualDataRecordController extends Controller
             App::setLocale(substr($locale, 0, 2));
         }
     }
+
+    public function index(
+        ManualDataRecordDataTable $dataTable,
+        string $WCSHNA
+    ): Application|Factory|View|IlluminateView|JsonResponse|ContractsApplication|null
+    {
+        return $this->facade->index($dataTable, $WCSHNA);
+    }
+
     public function create(Request $request): Application|Factory|View|IlluminateView|ContractsApplication|null
     {
         return $this->facade->create($request);

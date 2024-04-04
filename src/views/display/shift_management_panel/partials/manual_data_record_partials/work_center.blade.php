@@ -127,7 +127,15 @@
                 </div>
             </form>
 
-            @if(!empty($sequence->SNSERN))
+            <a
+                    class="button button-red awf-sequences-button"
+                    id="sequences"
+                    href="{{ route('awf-shift-management-panel.manual-data-record.index', ['WCSHNA' => $sequence->WCSHNA]) }}"
+            >
+                Szekvenciák
+            </a>
+
+        @if(!empty($sequence->SNSERN))
                 <button id="awf-move-sequence-button" class="button button-blue awf-move-sequence-button"
                         type="submit"
                 >

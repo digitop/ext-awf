@@ -12,9 +12,9 @@ use Yajra\Datatables\Html\Builder as HtmlBuilder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Session;
 
-class ShiftStartDataTable extends DataTable
+class ManualDataRecordDataTable extends DataTable
 {
-    protected string|null $pillar = null;
+    protected string|null $workCenterId = null;
 
     /**
      * Display ajax response.
@@ -23,11 +23,13 @@ class ShiftStartDataTable extends DataTable
      */
     public function ajax(): JsonResponse
     {
-        $dataTables =  new EloquentDataTable($this->query());
+        $dataTables = new EloquentDataTable($this->query());
 
         return $dataTables
             ->addColumn('actions', function ($record) {
-                return '<a href="' . route('awf-sequence.set', ['pillar' => $this->getPillar(), 'sequenceId' => $record->SEQUID]) .'">' . __('display.button.setAsStart') . '</a>';
+                return '<a href="' . route('awf-sequence.set-work-center',
+                        ['pillar' => $this->getWorkCenterId(), 'sequenceId' => $record->SEQUID]
+                    ) . '">' . __('display.button.setAsStart') . '</a>';
             })
             ->setRowClass(function ($record) {
                 $start = (new \DateTime())->format('Y-m-d') . ' 00:00:00';
@@ -40,9 +42,9 @@ class ShiftStartDataTable extends DataTable
                         join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
                         join ' . $database . '.REPNO r on r.ORCODE = a.ORCODE and r.WCSHNA = asl.WCSHNA
                     where ((asl.LSTIME is null and a.SEINPR = (r.PORANK - 1)) or (asl.LSTIME > "' . $start .
-                    '" and a.SEINPR = r.PORANK)) and asl.LETIME is null and
-                        asl.WCSHNA = "EL01" and a.SEPILL = "' . $this->getPillar() .
-                    '" and a.SESIDE = "L" order by a.SEQUID limit 1';
+                    '" and a.SEINPR = r.PORANK)) and asl.LETIME is null 
+                        and asl.WCSHNA = "' . $this->getWorkCenterId() . '"
+                    order by a.SEQUID limit 1';
 
                 $sequence = DB::connection('custom_mysql')->select($queryString);
 
@@ -67,21 +69,18 @@ class ShiftStartDataTable extends DataTable
             ->join('AWF_SEQUENCE_LOG as asl', function ($join) {
                 $join->on('asl.SEQUID', '=', 'AWF_SEQUENCE.SEQUID');
             })
-            ->where('asl.WCSHNA', '=', 'EL01')
             ->where(function ($query) {
                 $start = (new \DateTime())->format('Y-m-d') . ' 00:00:00';
 
                 $query->whereNull('asl.LSTIME')->orWhere('asl.LSTIME', '>=', $start);
-            })
-            ->where('SESIDE', 'L');
+            });
 
-         if ($this->getPillar() !== null) {
-             $records->where('AWF_SEQUENCE.SEPILL', '=', $this->getPillar());
-         }
+        if ($this->getWorkCenterId() !== null) {
+            $records->where('asl.WCSHNA', '=', $this->getWorkCenterId());
+        }
 
-         $records
-             ->orderBy('AWF_SEQUENCE.SEPILL', 'DESC')
-             ->orderBy('AWF_SEQUENCE.SEQUID', 'ASC');
+        $records
+            ->orderBy('AWF_SEQUENCE.SEQUID', 'ASC');
 
         return $this->applyScopes($records);
     }
@@ -95,11 +94,16 @@ class ShiftStartDataTable extends DataTable
     {
         return $this->builder()
             ->columns([
-                ['data' => 'SEQUID', 'name' => 'SEQUID', 'title' => __('awf-extension::display.data.shift-sequence.sequenceId')],
-                ['data' => 'SEPONR', 'name' => 'SEPONR', 'title' => __('awf-extension::display.data.shift-sequence.porscheOrderNumber')],
-                ['data' => 'SEPSEQ', 'name' => 'SEPSEQ', 'title' => __('awf-extension::display.data.shift-sequence.porscheSequenceNumber')],
-                ['data' => 'SEARNU', 'name' => 'SEARNU', 'title' => __('awf-extension::display.data.shift-sequence.articleNumber')],
-                ['data' => 'actions', 'name' => 'actions', 'title' => __('button.operations'), 'class' => 'datatable-action', 'orderable' => false, 'searchable' => false],
+                ['data' => 'SEQUID', 'name' => 'SEQUID', 'title' => __('awf-extension::display.data.shift-sequence.sequenceId'
+                )],
+                ['data' => 'SEPONR', 'name' => 'SEPONR', 'title' => __('awf-extension::display.data.shift-sequence.porscheOrderNumber'
+                )],
+                ['data' => 'SEPSEQ', 'name' => 'SEPSEQ', 'title' => __('awf-extension::display.data.shift-sequence.porscheSequenceNumber'
+                )],
+                ['data' => 'SEARNU', 'name' => 'SEARNU', 'title' => __('awf-extension::display.data.shift-sequence.articleNumber'
+                )],
+                ['data' => 'actions', 'name' => 'actions', 'title' => __('button.operations'
+                ), 'class' => 'datatable-action', 'orderable' => false, 'searchable' => false],
             ])
             ->parameters([
                 'dom' => '<"dtToolbarWrapper"l<"dataTables_topLeftItem"B>f>tr<"dtToolbarWrapper"ip>',
@@ -119,14 +123,14 @@ class ShiftStartDataTable extends DataTable
             ]);
     }
 
-    public function getPillar(): ?string
+    public function getWorkCenterId(): string|null
     {
-        return $this->pillar;
+        return $this->workCenterId;
     }
 
-    public function setPillar(?string $pillar): ShiftStartDataTable
+    public function setWorkCenterId(string|null $workCenterId): ManualDataRecordDataTable
     {
-        $this->pillar = $pillar;
+        $this->workCenterId = $workCenterId;
         return $this;
     }
 }

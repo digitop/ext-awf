@@ -111,8 +111,16 @@ form table td {
 
 .awf-move-sequence-button {
     position: absolute !important;
-    left: 60% !important;
-    top: 80% !important;
+    left: 63% !important;
+    top: 78% !important;
+    font-size: x-large !important;
+    padding: 1vh 5vh !important;
+}
+
+.awf-sequences-button {
+    position: absolute !important;
+    left: 46% !important;
+    top: 78% !important;
     font-size: x-large !important;
     padding: 1vh 5vh !important;
 }

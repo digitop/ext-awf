@@ -16,12 +16,12 @@ Content-Type: application/json
 }
 
 ### get data by WC - teszt
-GET http://oeem.local/api/ext/awf-extension/get-sequence/VAJ01/A
+GET http://oeem.local/api/ext/awf-extension/get-sequence/KAB01/A
 Accept: application/json
 Content-Type: application/json
 
 {
-  "side": "R",
+  "side": "L",
   "limit": 1,
   "no_change": "false"
 }

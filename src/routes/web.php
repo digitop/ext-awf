@@ -52,6 +52,11 @@ Route::group(
         Route::get('shift-management/reason', ['uses' => 'ShiftManagementReasonPanelController@create'])
             ->name('awf-shift-management-panel.reason');
         Route::get(
+            'shift-management/manual-data-record/datatable/{WCSHNA}',
+            ['uses' => 'ShiftManagementPanelManualDataRecordController@index']
+        )
+            ->name('awf-shift-management-panel.manual-data-record.index');
+        Route::get(
             'shift-management/manual-data-record',
             ['uses' => 'ShiftManagementPanelManualDataRecordController@create']
         )

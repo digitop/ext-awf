@@ -33,6 +33,7 @@ class ShiftManagementShiftStartPanelController extends Controller
             App::setLocale(substr($locale, 0, 2));
         }
     }
+
     public function index(
         ShiftStartDataTable $dataTable,
         string $pillar
