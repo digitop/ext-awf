@@ -36,6 +36,11 @@ class SequenceController extends Controller
         return $this->facade->set($pillar, $sequenceId);
     }
 
+    public function setWorkCenter(string $WCSHNA, string $sequenceId): RedirectResponse
+    {
+        return $this->facade->setWorkCenter(WORKCENTER::where('WCSHNA', '=', $WCSHNA)->first(), $sequenceId);
+    }
+
     public function welder(Request|null $request = null, string $pillar, WORKCENTER $WCSHNA): JsonResponse
     {
         return $this->facade->welder($request, $pillar, $WCSHNA);

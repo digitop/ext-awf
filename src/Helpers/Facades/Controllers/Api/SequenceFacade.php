@@ -9,6 +9,7 @@ use AWF\Extension\Helpers\Responses\JsonResponseModel;
 use AWF\Extension\Helpers\Responses\ResponseData;
 use AWF\Extension\Models\AWF_SEQUENCE;
 use AWF\Extension\Models\AWF_SEQUENCE_LOG;
+use AWF\Extension\Models\AWF_SEQUENCE_WORKCENTER;
 use AWF\Extension\Responses\CustomJsonResponse;
 use AWF\Extension\Responses\NextProductEventResponse;
 use AWF\Extension\Responses\SequenceFacadeResponse;
@@ -56,6 +57,7 @@ class SequenceFacade extends Facade
     {
         list($workCenter, $pillar) = $model;
         $start = (new \DateTime())->format('Y-m-d') . ' 00:00:00';
+        $database = config('database.connections.mysql.database');
 
         if (is_string($pillar) && $pillar === 'null') {
             $pillar = null;
@@ -77,8 +79,6 @@ class SequenceFacade extends Facade
                 Response::HTTP_OK
             ));
         }
-
-        $database = config('database.connections.mysql.database');
 
         $queryString = '
             select a.PRCODE, a.SEQUID, a.SEPSEQ, a.SEARNU, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEINPR, a.SESCRA, r.RNREPN
@@ -118,15 +118,15 @@ class SequenceFacade extends Facade
             }
 
             $queryString = '
-            select a.PRCODE, a.SEQUID, a.SEPSEQ, a.SEARNU, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEINPR, a.SESCRA
-            from AWF_SEQUENCE_LOG asl
-                join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
-                join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
-                join ' . $database . '.REPNO r on r.ORCODE = a.ORCODE and r.WCSHNA = asl.WCSHNA
-            where ((asl.LSTIME is null and a.SEINPR = (r.PORANK - 1)) or (asl.LSTIME > "' . $start .
-                '" and a.SEINPR = r.PORANK)) and asl.LETIME is null and a.SEINPR <= r.PORANK and
-                asl.WCSHNA = "' . $workCenter->WCSHNA . '" and a.SESIDE = "' . $side . '"' .
-                ($pillar !== null ? ' and a.SEPILL = "' . $pillar .'"' : '') .
+                select a.PRCODE, a.SEQUID, a.SEPSEQ, a.SEARNU, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEINPR, a.SESCRA
+                from AWF_SEQUENCE_LOG asl
+                    join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
+                    join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
+                    join ' . $database . '.REPNO r on r.ORCODE = a.ORCODE and r.WCSHNA = asl.WCSHNA
+                where ((asl.LSTIME is null and a.SEINPR = (r.PORANK - 1)) or (asl.LSTIME > "' . $start .
+                    '" and a.SEINPR = r.PORANK)) and asl.LETIME is null and a.SEINPR <= r.PORANK and
+                    asl.WCSHNA = "' . $workCenter->WCSHNA . '" and a.SESIDE = "' . $side . '"' .
+                    ($pillar !== null ? ' and a.SEPILL = "' . $pillar .'"' : '') .
                 ' order by a.SEQUID limit 1'
             ;
 
@@ -288,6 +288,169 @@ class SequenceFacade extends Facade
             select asl.WCSHNA, a.SEQUID from AWF_SEQUENCE a
                 join AWF_SEQUENCE_LOG asl on a.SEQUID = asl.SEQUID
             where a.SEINPR >= 0 and a.SEQUID >= ' . $sequenceId . ' and a.SEPILL = "' . $pillar . '"'
+        );
+
+        if (array_key_exists(0, $logs) && !empty($logs[0])) {
+            foreach ($logs as $log) {
+                AWF_SEQUENCE::where('SEQUID', '=', $log->SEQUID)->update(['SEINPR' => 0]);
+
+                if ($log->WCSHNA === 'EL01') {
+                    AWF_SEQUENCE_LOG::where('SEQUID', '=', $log->SEQUID)
+                        ->where('WCSHNA', '=', $log->WCSHNA)
+                        ->update([
+                            'LSTIME' => null,
+                            'LETIME' => null,
+                        ]);
+                }
+                else {
+                    AWF_SEQUENCE_LOG::where('SEQUID', '=', $log->SEQUID)
+                        ->where('WCSHNA', '=', $log->WCSHNA)
+                        ->delete();
+                }
+            }
+        }
+
+        return back()->with('notification-success', __('responses.update'));
+    }
+
+    public function setWorkCenter(Model $workCenter, string $sequenceId): RedirectResponse
+    {
+        $now = (new \DateTime())->format('Y-m-d H:i:s');
+        $database = config('database.connections.mysql.database');
+
+        $queryString = '
+            select a.PRCODE, a.SEQUID, a.SEPSEQ, a.SEARNU, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEINPR, a.SESCRA
+            from AWF_SEQUENCE_LOG asl
+                join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
+                join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
+                join ' . $database . '.REPNO r on r.ORCODE = a.ORCODE and r.WCSHNA = asl.WCSHNA
+            where a.SEQUID = ' . $sequenceId
+        ;
+
+        $sequence = DB::connection('custom_mysql')->select($queryString);
+
+        if (!array_key_exists(0, $sequence) || empty($sequence[0])) {
+            return back();
+        }
+
+        $sequence = $sequence[0];
+
+        $rank = DB::select(
+            'select PORANK from REPNO where ORCODE = "' . $sequence->ORCODE . '" and WCSHNA = "' .
+                $workCenter->WCSHNA . '"'
+        );
+
+        if (!array_key_exists(0, $rank) || empty($rank[0])) {
+            return back();
+        }
+
+        $rank = $rank[0];
+
+        $maxRank = DB::select(
+            'select max(PORANK) as maxRank from REPNO where ORCODE = "' . $sequence->ORCODE . '"'
+        );
+
+        if (!array_key_exists(0, $maxRank) || empty($maxRank[0])) {
+            return back();
+        }
+
+        $maxRank = $maxRank[0];
+
+        $data = AWF_SEQUENCE::selectRaw('AWF_SEQUENCE.*')
+            ->join('AWF_SEQUENCE_LOG as asl', function ($join) {
+                $join->on('asl.SEQUID', '=', 'AWF_SEQUENCE.SEQUID');
+            })
+            ->where(function ($query) use ($workCenter) {
+                $query->where('asl.WCSHNA', '=', $workCenter->WCSHNA);
+            })
+            ->first();
+
+        $logs = DB::connection('custom_mysql')->select('
+            select a.SEQUID from AWF_SEQUENCE a
+                join AWF_SEQUENCE_LOG asl on a.SEQUID = asl.SEQUID
+            where a.SEINPR >= 0 and a.SEQUID < ' . $sequenceId .
+                ' and a.SESIDE = "' . $data->SESIDE . '" and a.SEPILL = "' . $data->SEPILL .
+                '" and a.SEINPR < ' . $maxRank->maxRank
+        );
+
+        if (array_key_exists(0, $logs) && !empty($logs[0])) {
+            foreach ($logs as $log) {
+                AWF_SEQUENCE::where('SEQUID', '=', $log->SEQUID)
+                    ->where('SEINPR', '<', $maxRank->maxRank)
+                    ->update([
+                        'SEINPR' => $maxRank->maxRank,
+                    ]);
+
+                AWF_SEQUENCE_LOG::where('SEQUID', '=', $log->SEQUID)
+                    ->whereNull('LSTIME')
+                    ->update([
+                        'LSTIME' => $now,
+                    ]);
+
+                AWF_SEQUENCE_LOG::where('SEQUID', '=', $log->SEQUID)
+                    ->whereNull('LETIME')
+                    ->update([
+                        'LETIME' => $now,
+                    ]);
+            }
+        }
+
+        $logs = DB::connection('custom_mysql')->select('
+            select r.WCSHNA, a.SEQUID, a.SEINPR, r.PORANK, r.RNREPN from AWF_SEQUENCE a
+                join AWF_SEQUENCE_LOG asl on a.SEQUID = asl.SEQUID
+                join ' . $database . '.REPNO r on r.ORCODE = a.ORCODE and r.PORANK <= ' . $rank->PORANK . '
+            where a.SEINPR >= 0 and a.SEQUID = ' . $sequenceId .
+            ' and a.SESIDE = "' . $data->SESIDE . '" and a.SEPILL = "' . $data->SEPILL . '"'
+        );
+
+        if (array_key_exists(0, $logs) && !empty($logs[0])) {
+            foreach ($logs as $log) {
+                AWF_SEQUENCE::where('SEQUID', '=', $log->SEQUID)->update(['SEINPR' => $log->PORANK]);
+
+                if (
+                    !empty(
+                        AWF_SEQUENCE_LOG::where('SEQUID', '=', $log->SEQUID)
+                            ->where('WCSHNA', '=', $log->WCSHNA)
+                            ->first()
+                    )
+                ) {
+                    AWF_SEQUENCE_LOG::where('SEQUID', '=', $log->SEQUID)
+                        ->where('WCSHNA', '=', $log->WCSHNA)
+                        ->update([
+                            'LSTIME' => $now,
+                            'LETIME' => $now,
+                        ]);
+                }
+                else {
+                    AWF_SEQUENCE_LOG::create([
+                        'SEQUID' => $log->SEQUID,
+                        'WCSHNA' => $log->WCSHNA,
+                        'LSTIME' => $now,
+                        'LETIME' => null,
+                    ]);
+                }
+
+                if (
+                    empty(
+                        AWF_SEQUENCE_WORKCENTER::where('SEQUID', '=', $log->SEQUID)
+                            ->where('WCSHNA', '=', $log->WCSHNA)
+                            ->first()
+                    )
+                ) {
+                    AWF_SEQUENCE_WORKCENTER::create([
+                        'SEQUID' => $log->SEQUID,
+                        'WCSHNA' => $log->WCSHNA,
+                        'RNREPN' => $log->RNREPN,
+                    ]);
+                }
+            }
+        }
+
+        $logs = DB::connection('custom_mysql')->select('
+            select asl.WCSHNA, a.SEQUID, a.SEINPR from AWF_SEQUENCE a
+                join AWF_SEQUENCE_LOG asl on a.SEQUID = asl.SEQUID
+            where a.SEINPR >= 0 and a.SEQUID > ' . $sequenceId .
+                ' and a.SESIDE = "' . $data->SESIDE . '" and a.SEPILL = "' . $data->SEPILL . '"'
         );
 
         if (array_key_exists(0, $logs) && !empty($logs[0])) {

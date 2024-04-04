@@ -34,7 +34,13 @@ class ShiftManagementPanelManualDataRecordFacade extends Facade
         }
 
         $dataTable->setWorkCenterId($workCenterId);
-        return $dataTable->render('awf-extension::display/shift_management_panel.partials.table');
+
+        return $dataTable->render(
+            'awf-extension::display/shift_management_panel.partials.manual_data_record_partials.table',
+            [
+                'workCenterId' => $workCenterId
+            ]
+        );
     }
 
     public function create(Request|FormRequest|null $request = null,

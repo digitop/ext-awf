@@ -22,6 +22,8 @@ Route::group(
             ->name('awf-sequence.store');
         Route::get('/set-sequence/{pillar}/{sequenceId}', ['uses' => 'SequenceController@set'])
             ->name('awf-sequence.set');
+        Route::get('/set-work-center-sequence/{WCSHNA}/{sequenceId}', ['uses' => 'SequenceController@setWorkCenter'])
+            ->name('awf-sequence.set-work-center');
         Route::get('/sequence/welder/{pillar}/{WCSHNA}', ['uses' => 'SequenceController@welder'])
             ->name('awf-sequence.welder.set');
 

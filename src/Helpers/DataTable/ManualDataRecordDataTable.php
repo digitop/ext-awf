@@ -28,7 +28,7 @@ class ManualDataRecordDataTable extends DataTable
         return $dataTables
             ->addColumn('actions', function ($record) {
                 return '<a href="' . route('awf-sequence.set-work-center',
-                        ['pillar' => $this->getWorkCenterId(), 'sequenceId' => $record->SEQUID]
+                        ['WCSHNA' => $this->getWorkCenterId(), 'sequenceId' => $record->SEQUID]
                     ) . '">' . __('display.button.setAsStart') . '</a>';
             })
             ->setRowClass(function ($record) {
@@ -65,6 +65,17 @@ class ManualDataRecordDataTable extends DataTable
      */
     public function query(): QueryBuilder|EloquentBuilder
     {
+        if (!empty($this->getWorkCenterId())) {
+            $data = AWF_SEQUENCE::selectRaw('AWF_SEQUENCE.*')
+                ->join('AWF_SEQUENCE_LOG as asl', function ($join) {
+                    $join->on('asl.SEQUID', '=', 'AWF_SEQUENCE.SEQUID');
+                })
+                ->where(function ($query) {
+                    $query->where('asl.WCSHNA', '=', $this->getWorkCenterId());
+                })
+                ->first();
+        }
+
         $records = AWF_SEQUENCE::selectRaw('AWF_SEQUENCE.*')
             ->join('AWF_SEQUENCE_LOG as asl', function ($join) {
                 $join->on('asl.SEQUID', '=', 'AWF_SEQUENCE.SEQUID');
@@ -72,11 +83,12 @@ class ManualDataRecordDataTable extends DataTable
             ->where(function ($query) {
                 $start = (new \DateTime())->format('Y-m-d') . ' 00:00:00';
 
-                $query->whereNull('asl.LSTIME')->orWhere('asl.LSTIME', '>=', $start);
+                $query->whereNull('asl.LSTIME')->orWhere('asl.LSTIME', '>=', $start)->where('asl.WCSHNA', '=', 'EL01');
             });
 
-        if ($this->getWorkCenterId() !== null) {
-            $records->where('asl.WCSHNA', '=', $this->getWorkCenterId());
+        if (!empty($data)) {
+            $records->where('AWF_SEQUENCE.SEPILL', '=', $data->SEPILL)
+                ->where('AWF_SEQUENCE.SESIDE', '=', $data->SESIDE);
         }
 
         $records
