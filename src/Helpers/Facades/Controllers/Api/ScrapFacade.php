@@ -13,6 +13,7 @@ use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use App\Events\Dashboard\ProductQualified;
 use App\Models\WORKCENTER;
+use App\Models\OPERATOR_PANEL;
 use App\Models\REPNO;
 use Illuminate\Support\Facades\DB;
 
@@ -28,7 +29,7 @@ class ScrapFacade extends Facade
 
             if ($operatorPanel) {
                 // Ha van beallitva ertek a szuroben
-                $workCenter = WORKCENTER::find($operatorPanel->DMSVAL); // Selejt állomás megkeresese
+                $workCenter = WORKCENTER::find($operatorPanel->WCSHNA); // Selejt állomás megkeresese
             }
 
             if (empty($workCenter)) {
