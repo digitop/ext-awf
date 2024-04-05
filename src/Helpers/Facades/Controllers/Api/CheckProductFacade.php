@@ -153,10 +153,11 @@ class CheckProductFacade extends Facade
 
         $sequence = AWF_SEQUENCE::where('SEQUID', '=', $waitings[0]->SEQUID)->first();
         $sequenceWorkCenter = AWF_SEQUENCE_WORKCENTER::where('SEQUID', '=', $waitings[0]->SEQUID)->first();
-        $orderCode = $sequence->PRCODE;
+        $orderCode = $sequence->ORCODE;
 
         if ($serial->RNREPN !== $sequenceWorkCenter->RNREPN) {
-            $orderCode = REPNO::where('RNREPN', '=', $serial->RNREPN)->with('orderhead')->first()->orderhead->PRCODE;
+            //$orderCode = REPNO::where('RNREPN', '=', $serial->RNREPN)->with('orderhead')->first()->orderhead->PRCODE;
+            $orderCode = REPNO::where('RNREPN', '=', $serial->RNREPN)->first()->ORCODE;
         }
 
         return new CustomJsonResponse(new JsonResponseModel(

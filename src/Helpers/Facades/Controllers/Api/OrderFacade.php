@@ -62,7 +62,7 @@ class OrderFacade extends Facade
             new ResponseData(
                 $success,
                 [
-                    'orderCode' => $sequence?->PRCODE ?? null,
+                    'orderCode' => $sequence?->ORCODE ?? null,
                     'name' => $sequence?->PRNAME,
                 ],
                 $success ? '' : 'Nem áll rendelkezésre szekvencia adat'
@@ -205,7 +205,7 @@ class OrderFacade extends Facade
             new ResponseData(
                 true,
                 [
-                    'orderCode' => $waitings[0]->PRCODE ?? null,
+                    'orderCode' => $waitings[0]->ORCODE ?? null,
                     'side' => $waitings[0]->SESIDE ?? null,
                     'name' => $waitings[0]->PRNAME ?? null,
                 ]
