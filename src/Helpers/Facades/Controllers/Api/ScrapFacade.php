@@ -24,14 +24,10 @@ class ScrapFacade extends Facade
         $start = (new \DateTime())->format('Y-m-d') . ' 00:00:00';
 
         if ($event->scrapReport !== false) {
-            $moduleSetting = DASHBOARD_MODULE_SETTINGS::where([
-                ['DHIDEN', $event->DHIDEN],
-                ['DMSKEY', 'scrapStationFilter']
-            ])
-                ->first();
+            $operatorPanel = OPERATOR_PANEL::where('DHIDEN', '=', $event->DHIDEN)->first();
 
-            if ($moduleSetting) {
-                $scrapStationFilter = $moduleSetting->DMSVAL;
+            if ($operatorPanel) {
+                $scrapStationFilter = $operatorPanel->DMSVAL;
                 // Ha van beallitva ertek a szuroben
                 $workCenter = WORKCENTER::find($scrapStationFilter); // Selejt állomás megkeresese
             }
@@ -96,7 +92,7 @@ class ScrapFacade extends Facade
                 'WCSHNA' => 'EL01',
             ]);
 
-            $sequence = AWF_SEQUENCE::where('SEQUID', $sequence->SEQUID)
+            $sequence = AWF_SEQUENCE::where('SEQUID', $sequenceLog->SEQUID)
                 ->where('SEINPR', '=', 0)
                 ->where('SESCRA', true)
                 ->first();
