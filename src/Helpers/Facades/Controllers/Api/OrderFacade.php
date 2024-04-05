@@ -117,9 +117,7 @@ class OrderFacade extends Facade
                    a.ORCODE, r.PORANK, r.OPSHNA, p.PRNAME, r.RNREPN
             from AWF_SEQUENCE a
                 join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
-                join ' . $database . '.SERIALNUMBER s on s.SNSERN = "' . $request->serial . '"
-                join ' . $database . '.REPNO r on r.ORCODE = a.ORCODE and r.WCSHNA = "' . $workCenter->WCSHNA .
-            '" and r.ORCODE = substring(s.RNREPN, 1, position("-" in s.RNREPN) - 1)
+                join ' . $database . '.REPNO r on r.ORCODE = a.ORCODE and r.WCSHNA = "' . $workCenter->WCSHNA . '"
                 left join AWF_SEQUENCE_LOG asl on a.SEQUID = asl.SEQUID and asl.WCSHNA = r.WCSHNA
                 left join AWF_SEQUENCE_WORKCENTER asw on a.SEQUID = asw.SEQUID and asw.WCSHNA = r.WCSHNA
             where ((asl.LSTIME is null and a.SEINPR = (r.PORANK - 1)) or (asl.LSTIME > "' . $start .

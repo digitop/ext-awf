@@ -5,14 +5,10 @@ namespace AWF\Extension\Helpers\Facades\Controllers\Api;
 use AWF\Extension\Helpers\Responses\JsonResponseModel;
 use AWF\Extension\Helpers\Responses\ResponseData;
 use AWF\Extension\Responses\CustomJsonResponse;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-use App\Models\SERIALNUMBER;
-use App\Http\Controllers\api\dashboard\scrapStation\ScrapStationController;
 
 class AutoScrapFacade extends Facade
 {
@@ -49,9 +45,6 @@ class AutoScrapFacade extends Facade
             ));
         }
 
-        $sequence = $sequence[0];
-        $serial = SERIALNUMBER::where('RNREPN', '=', $sequence->RNREPN)->first();
-
         publishMqtt(env('DEPLOYMENT_SUBDOMAIN') . '/api/SEQUENCE_SCRAP/', [
             [
                 "to" => 'dh:' . $workCenter->operatorPanels[0]->dashboard->DHIDEN,
@@ -60,21 +53,6 @@ class AutoScrapFacade extends Facade
                 ],
             ]
         ]);
-
-        $result = (new ScrapStationController())->saveReport(
-            new Request([
-                'reportMethod' => 0,
-                'snsern' => $serial->SNSERN,
-                'USIDEN' => 1,
-                'orcode' => $sequence->ORCODE,
-                'reportAction' => 0,
-                'goodQuantity' => 0,
-                'scrapQuantity' => 1,
-                'closedQuantity' => 0,
-            ]),
-            $workCenter->operatorPanels[0]->dashboard->DHIDEN,
-            true
-        );
 
         return new CustomJsonResponse(new JsonResponseModel(
             new ResponseData(
