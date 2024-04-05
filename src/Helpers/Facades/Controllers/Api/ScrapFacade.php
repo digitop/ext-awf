@@ -20,6 +20,9 @@ class ScrapFacade extends Facade
 {
     public function index(ProductQualified $event): JsonResponse
     {
+        $database = config('database.connections.mysql.database');
+        $start = (new \DateTime())->format('Y-m-d') . ' 00:00:00';
+
         if ($event->scrapReport !== false) {
             $moduleSetting = DASHBOARD_MODULE_SETTINGS::where([
                 ['DHIDEN', $event->DHIDEN],
@@ -43,18 +46,25 @@ class ScrapFacade extends Facade
                 ));
             }
 
-            $sequence = DB::connection('custom_mysql')->select('
-                select a.* from AWF_SEQUENCE a
-                    join AWF_SEQUENCE_WORKCENTER asw on a.SEQUID = asw.SEQUID and asw.WCSHNA = "' . $workCenter->WCSHNA . '"
-                    join AWF_SEQUENCE_LOG asl on a.SEQUID = asl.SEQUID and asw.WCSHNA = asl.WCSHNA
-                where asl.LSTIME is not null and asl.LETIME is null and a.SEINPR > 0
-            ');
+            $queryString = '
+                select a.PRCODE, a.ORCODE,r.OPSHNA, r.RNREPN, a.SEQUID, a.SEPSEQ, a.SEARNU, a.SESIDE, a.SEPILL, a.SEPONR,
+                       a.SEINPR, p.PRNAME, p.PRCODE
+                from AWF_SEQUENCE_LOG asl
+                    join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
+                    join ' . $database . '.REPNO r on r.ORCODE = a.ORCODE
+                    join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
+                where ((asl.LSTIME is null and a.SEINPR = (r.PORANK - 1)) or (asl.LSTIME > "' . $start .
+                '" and a.SEINPR = r.PORANK)) and asl.LETIME is null and
+                    asl.WCSHNA = "' . $workCenter->WCSHNA . '"' .
+                ' order by a.SEQUID limit 1';
 
-            if (array_key_exists(0, $sequence) && !empty($sequence[0])) {
-                $sequence = $sequence[0];
+            $sequenceLog = DB::connection('custom_mysql')->select($queryString);
+
+            if (array_key_exists(0, $sequenceLog) && !empty($sequenceLog[0])) {
+                $sequenceLog = $sequenceLog[0];
             }
 
-            if (empty($sequence)) {
+            if (empty($sequenceLog)) {
                 return new CustomJsonResponse(new JsonResponseModel(
                     new ResponseData(
                         false,
@@ -64,15 +74,15 @@ class ScrapFacade extends Facade
                 ));
             }
 
-            AWF_SEQUENCE::where('SEQUID', '=', $sequence->SEQUID)
-                ->where('SEINPR', '=', $sequence->SEINPR)
+            AWF_SEQUENCE::where('SEQUID', '=', $sequenceLog->SEQUID)
+                ->where('SEINPR', '=', $sequenceLog->SEINPR)
                 ->first()
                 ?->update([
                     'SEINPR' => 0,
                     'SESCRA' => true,
                 ]);
 
-            $logs = AWF_SEQUENCE_LOG::where('SEQUID', '=', $sequence->SEQUID)
+            $logs = AWF_SEQUENCE_LOG::where('SEQUID', '=', $sequenceLog->SEQUID)
                 ->whereNotNull('LSTIME')
                 ->get();
             $now = (new \DateTime())->format('Y-m-d H:i:s');
@@ -82,7 +92,7 @@ class ScrapFacade extends Facade
             }
 
             AWF_SEQUENCE_LOG::create([
-                'SEQUID' => $sequence->SEQUID,
+                'SEQUID' => $sequenceLog->SEQUID,
                 'WCSHNA' => 'EL01',
             ]);
 
