@@ -165,18 +165,30 @@ class ProductFeaturesFacade extends Facade
 
     public function check(Request|FormRequest|null $request = null): JsonResponse|null
     {
+        $database = config('database.connections.mysql.database');
+        $start = (new \DateTime())->format('Y-m-d') . ' 00:00:00';
+        
         $workCenter = WORKCENTER::where(
             'WCSHNA',
             '=',
             DASHBOARD::where('DHIDEN', '=', $request->dashboard)->first()->operatorPanels[0]->WCSHNA
         )->first();
 
-        $sequenceLog = AWF_SEQUENCE_LOG::where('WCSHNA', '=', $workCenter->WCSHNA)
-            ->whereNull('LETIME')
-            ->orderBy('SEQUID')
-            ->first();
+        $queryString = '
+            select a.PRCODE, a.ORCODE,r.OPSHNA, r.RNREPN, a.SEQUID, a.SEPSEQ, a.SEARNU, a.SESIDE, a.SEPILL, a.SEPONR,
+                   a.SEINPR, p.PRNAME, p.PRCODE
+            from AWF_SEQUENCE_LOG asl
+                join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
+                join ' . $database . '.REPNO r on r.ORCODE = a.ORCODE
+                join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
+            where ((asl.LSTIME is null and a.SEINPR = (r.PORANK - 1)) or (asl.LSTIME > "' . $start .
+            '" and a.SEINPR = r.PORANK)) and asl.LETIME is null and
+                asl.WCSHNA = "' . $workCenter->WCSHNA . '"' .
+            ' order by a.SEQUID limit 1';
 
-        if (empty($sequenceLog)) {
+        $sequenceLog = DB::connection('custom_mysql')->select($queryString);
+
+        if (!array_key_exists(0, $sequenceLog) || empty($sequenceLog[0])) {
             return new CustomJsonResponse(new JsonResponseModel(
                 new ResponseData(
                     false,
@@ -187,9 +199,9 @@ class ProductFeaturesFacade extends Facade
             ));
         }
 
-        $sequence = AWF_SEQUENCE::where('SEQUID', '=', $sequenceLog->SEQUID)->first();
+        $sequenceLog = $sequenceLog[0];
 
-        $product = PRODUCT::where('PRCODE', '=', $sequence->PRCODE)->first();
+        $product = PRODUCT::where('PRCODE', '=', $sequenceLog->PRCODE)->first();
 
         if ($product->features()->where('FESHNA', '=', 'SZASZ')->first() === null) {
             $workCenter->features()->where('WFSHNA', '=', 'OPSTATUS')->first()?->update([
@@ -221,15 +233,11 @@ class ProductFeaturesFacade extends Facade
             'WFVALU' => 'success',
         ]);
 
-        $sequenceWorkCenter = AWF_SEQUENCE_WORKCENTER::where('SEQUID', '=', $sequence->SEQUID)
-            ->where('WCSHNA', '=', $workCenter->WCSHNA)
-            ->first();
-
         return new CustomJsonResponse(new JsonResponseModel(
             new ResponseData(
                 true,
                 [
-                    'RNREPN' => $sequenceWorkCenter->RNREPN,
+                    'RNREPN' => $sequenceLog->RNREPN,
                     'PRCODE' => $product->PRCODE,
                     'SNCOUN' => 1,
                     'SNRDCN' => 1,
