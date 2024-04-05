@@ -27,9 +27,8 @@ class ScrapFacade extends Facade
             $operatorPanel = OPERATOR_PANEL::where('DHIDEN', '=', $event->DHIDEN)->first();
 
             if ($operatorPanel) {
-                $scrapStationFilter = $operatorPanel->DMSVAL;
                 // Ha van beallitva ertek a szuroben
-                $workCenter = WORKCENTER::find($scrapStationFilter); // Selejt állomás megkeresese
+                $workCenter = WORKCENTER::find($operatorPanel->DMSVAL); // Selejt állomás megkeresese
             }
 
             if (empty($workCenter)) {
