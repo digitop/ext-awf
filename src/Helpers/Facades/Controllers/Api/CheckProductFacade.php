@@ -79,7 +79,7 @@ class CheckProductFacade extends Facade
             where ((asl.LSTIME is null and a.SEINPR = (r.PORANK - 1)) or (asl.LSTIME > "' . $start .
             '" and a.SEINPR = r.PORANK)) and asl.LETIME is null and
                 asl.WCSHNA = "' . $workCenter->WCSHNA . '"' .
-            ' order by asl.LSTIME DESC, a.SEQUID limit 1
+            ' order by a.SEQUID limit 1
             '
         );
 

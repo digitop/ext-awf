@@ -25,6 +25,7 @@ class OrderFacade extends Facade
     public function create(Request|FormRequest|null $request = null, Model|string|null $model = null): JsonResponse|null
     {
         $success = false;
+        $start = (new \DateTime())->format('Y-m-d') . ' 00:00:00';
 
         if ($model === null || empty($model)) {
             return new CustomJsonResponse(new JsonResponseModel(
@@ -44,13 +45,11 @@ class OrderFacade extends Facade
             select a.PRCODE, a.ORCODE, p.PRNAME
             from AWF_SEQUENCE a
                 join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
-                join ' . $database . '.PRWFDATA pfd on pfd.PRCODE = a.PRCODE
-                join ' . $database . '.PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = "' . $model->WCSHNA . '"
-                join ' . $database . '.PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
+                join ' . $database . '.REPNO r on r.ORCODE = a.ORCODE and r.WCSHNA = asl.WCSHNA
                 left join AWF_SEQUENCE_LOG asl on a.SEQUID = asl.SEQUID and asl.WCSHNA = pcd.WCSHNA
-            where a.SEINPR < ppd.PORANK
-                and (asl.LSTIME is null and asl.LSTIME is null)
-            order by asl.LSTIME DESC, a.SEQUID limit 1
+            where ((asl.LSTIME is null and a.SEINPR = (r.PORANK - 1)) or (asl.LSTIME > "' . $start .
+            '" and a.SEINPR = r.PORANK)) and asl.LETIME is null
+            order by a.SEQUID limit 1
         ');
 
         if (array_key_exists(0, $waitings) && !empty($waitings[0])) {
@@ -112,7 +111,7 @@ class OrderFacade extends Facade
 
         $workCenter = WORKCENTER::where('WCSHNA', '=', $model[0]->operatorPanels[0]->WCSHNA)->first();
 
-        $waitings = DB::connection('custom_mysql')->select('
+        $queryString = '
             select asl.LSTIME, a.SEQUID, a.SEPONR, a.SEPSEQ, a.SESIDE, a.SEPILL, a.SEINPR, a.PRCODE,
                    a.ORCODE, r.PORANK, r.OPSHNA, p.PRNAME, r.RNREPN
             from AWF_SEQUENCE_LOG asl
@@ -122,25 +121,32 @@ class OrderFacade extends Facade
             where ((asl.LSTIME is null and a.SEINPR = (r.PORANK - 1)) or (asl.LSTIME > "' . $start .
             '" and a.SEINPR = r.PORANK)) and asl.LETIME is null and
                 asl.WCSHNA = "' . $workCenter->WCSHNA . '"' .
-            ' order by asl.LSTIME DESC, a.SEQUID limit 1
-        '
-        );
+            ' order by a.SEQUID limit 1
+        ';
+
+        $waitings = DB::connection('custom_mysql')->select($queryString);
 
         if (!array_key_exists(0, $waitings) || empty($waitings[0])) {
             return new CustomJsonResponse(new JsonResponseModel(
                 new ResponseData(
                     false,
                     [],
-                    __('response.check.not_next_product')
+                    __('response.no_new_data_available')
                 ),
                 Response::HTTP_OK
             ));
         }
 
-        $serial = SERIALNUMBER::where('SNSERN', '=', $request->serial)
-            ->first();
+//        $serial = SERIALNUMBER::where('SNSERN', '=', $request->serial)
+//            ->first();
+//
+        $serial = DB::select('
+            select s.SNRDCN, r.RNREPN, s.PRCODE from SERIALNUMBER s
+                join REPNO r on r.ORCODE = substring(s.RNREPN, 1, position("-" in s.RNREPN) - 1) and
+                     s.SNSERN = "' . $request->serial . '" and r.WCSHNA = "' . $workCenter->WCSHNA . '"'
+        );
 
-        if (empty($serial) || $serial->PRCODE !== $waitings[0]->PRCODE) {
+        if (!array_key_exists(0, $serial) || empty($serial[0]) || $serial[0]->PRCODE !== $waitings[0]->PRCODE) {
             return new CustomJsonResponse(new JsonResponseModel(
                 new ResponseData(
                     false,
@@ -152,10 +158,12 @@ class OrderFacade extends Facade
             );
         }
 
+        $serial = $serial[0];
+
         $serialCheck = (new OperatorPanelController())->checkAndSaveSerial(
             new Request([
                 'SNSERN' => $request->serial,
-                'RNREPN' => $waitings[0]->RNREPN,
+                'RNREPN' => $serial->RNREPN,
                 'SNCOUN' => 1,
                 'SNRDCN' => $serial->SNRDCN,
                 'subProduct' => false,

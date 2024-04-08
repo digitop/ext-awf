@@ -14,8 +14,8 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "WCSHNA": "KAB01",
-  "SEQUID": 149946,
+  "WCSHNA": "KBJ01",
+  "SEQUID": 150593,
   "pillar": "B"
 }
 

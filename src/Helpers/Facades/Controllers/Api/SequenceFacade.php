@@ -523,7 +523,7 @@ class SequenceFacade extends Facade
                 left join AWF_SEQUENCE_LOG asl on a.SEQUID = asl.SEQUID and asl.WCSHNA = pcd.WCSHNA
             where a.SEINPR < ppd.PORANK and a.SESIDE = "L"
                 and (asl.LSTIME >= "' . $start . '" or asl.LSTIME is null)
-            order by asl.LSTIME DESC, a.SEQUID limit 2
+            order by a.SEQUID limit 2
         ');
 
         $alreadyReaded = false;
@@ -539,7 +539,7 @@ class SequenceFacade extends Facade
                 left join ' . $database . '.SERIALNUMBER s on s.RNREPN = r.RNREPN and s.PRCODE = a.PRCODE
             where a.SEINPR <= ppd.PORANK
                 and (asl.LSTIME >= "' . $start . '" or asl.LSTIME is null) and asl.LETIME is null
-            order by asl.LSTIME DESC, a.SEQUID
+            order by a.SEQUID
         ';
 
         $inProgress = DB::connection('custom_mysql')->select($queryString);
@@ -564,7 +564,7 @@ class SequenceFacade extends Facade
                     and (asl.LSTIME >= "' . $start . '" or asl.LSTIME is null) and asl.LETIME is not null 
                     and a.SESIDE = "' . $side . '" and a.SEPONR = "' . $inProgress->SEPONR . '" 
                     and a.SEPSEQ = "' . $inProgress->SEPSEQ . '" and a.SEPILL = "' . $inProgress->SEPILL . '"
-                order by asl.LSTIME DESC, a.SEQUID
+                order by a.SEQUID
             ';
 
             $inProgressOtherSide = DB::connection('custom_mysql')->select($queryString);
