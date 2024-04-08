@@ -1,5 +1,5 @@
 ### check serial
-POST https://oeem.awf.hu/api/ext/awf-extension/order/check-serial/11
+POST https://oeem.awf.hu/api/ext/awf-extension/order/check-serial/12
 Accept: application/json
 Content-Type: application/json
 
