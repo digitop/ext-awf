@@ -70,7 +70,7 @@ class CheckProductFacade extends Facade
         $database = config('database.connections.mysql.database');
 
         $waitings = DB::connection('custom_mysql')->select('
-        select asl.LSTIME, a.SEQUID, a.SEPONR, a.SEPSEQ, a.SESIDE, a.SEPILL, a.SEINPR, a.PRCODE,
+            select asl.LSTIME, a.SEQUID, a.SEPONR, a.SEPSEQ, a.SESIDE, a.SEPILL, a.SEINPR, a.PRCODE,
                    a.ORCODE, r.PORANK, r.OPSHNA, p.PRNAME, r.RNREPN
             from AWF_SEQUENCE_LOG asl
                 join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
@@ -95,7 +95,6 @@ class CheckProductFacade extends Facade
         }
 
         $serial = SERIALNUMBER::where('SNSERN', '=', $request->serial)
-//            ->where('PRCODE', '=', $waitings[0]->PRCODE)
             ->first();
 
         if (empty($serial) || (array_key_exists(0, $waitings) && $serial->PRCODE !== $waitings[0]->PRCODE)) {
