@@ -137,7 +137,6 @@ class OrderFacade extends Facade
         }
 
         $serial = SERIALNUMBER::where('SNSERN', '=', $request->serial)
-            ->where('PRCODE', '=', $waitings[0]->PRCODE)
             ->first();
 
         if (empty($serial) || $serial->PRCODE !== $waitings[0]->PRCODE) {
