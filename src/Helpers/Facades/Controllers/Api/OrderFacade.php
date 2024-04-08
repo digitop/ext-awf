@@ -118,11 +118,10 @@ class OrderFacade extends Facade
             from AWF_SEQUENCE a
                 join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
                 join ' . $database . '.REPNO r on r.ORCODE = a.ORCODE and r.WCSHNA = "' . $workCenter->WCSHNA . '"
-                left join AWF_SEQUENCE_LOG asl on a.SEQUID = asl.SEQUID and asl.WCSHNA = r.WCSHNA
-                left join AWF_SEQUENCE_WORKCENTER asw on a.SEQUID = asw.SEQUID and asw.WCSHNA = r.WCSHNA
+                join AWF_SEQUENCE_LOG asl on a.SEQUID = asl.SEQUID and asl.WCSHNA = r.WCSHNA
             where ((asl.LSTIME is null and a.SEINPR = (r.PORANK - 1)) or (asl.LSTIME > "' . $start .
             '" and a.SEINPR = r.PORANK)) and asl.LETIME is null
-            order by asl.LSTIME DESC, a.SEQUID limit 1
+            order by a.SEQUID limit 1
         '
         );
 
