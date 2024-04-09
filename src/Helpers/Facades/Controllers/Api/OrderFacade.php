@@ -62,7 +62,7 @@ class OrderFacade extends Facade
                 $success,
                 [
                     'orderCode' => $sequence?->ORCODE ?? null,
-                    'name' => $sequence?->PRNAME,
+                    'name' => $sequence?->PRNAME ?? null,
                 ],
                 $success ? '' : 'Nem áll rendelkezésre szekvencia adat'
             ),

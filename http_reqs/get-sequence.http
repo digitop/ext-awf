@@ -4,13 +4,12 @@ Accept: application/json
 Content-Type: application/json
 
 ### get data by WC
-GET https://oeem.awf.hu/api/ext/awf-extension/get-sequence/VCB01/C
+GET https://oeem.awf.hu/api/ext/awf-extension/get-sequence/HCB01/C
 Accept: application/json
 Content-Type: application/json
 
 {
   "side": "L",
-  "serial": "HW01000253405",
   "limit": 1,
   "no_change": "true"
 }
