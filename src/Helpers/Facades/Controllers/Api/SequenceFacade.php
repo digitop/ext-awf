@@ -81,7 +81,8 @@ class SequenceFacade extends Facade
         }
 
         $queryString = '
-            select a.PRCODE, a.SEQUID, a.SEPSEQ, a.SEARNU, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEINPR, a.SESCRA, r.RNREPN
+            select a.PRCODE, a.SEQUID, a.SEPSEQ, a.SEARNU, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEINPR,
+                a.SESCRA, r.RNREPN, r.PORANK
             from AWF_SEQUENCE_LOG asl
                 join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
                 join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
@@ -118,7 +119,8 @@ class SequenceFacade extends Facade
             }
 
             $queryString = '
-                select a.PRCODE, a.SEQUID, a.SEPSEQ, a.SEARNU, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEINPR, a.SESCRA
+                select a.PRCODE, a.SEQUID, a.SEPSEQ, a.SEARNU, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEINPR,
+                    a.SESCRA, r.RNREPN, r.PORANK
                 from AWF_SEQUENCE_LOG asl
                     join AWF_SEQUENCE a on a.SEQUID = asl.SEQUID
                     join ' . $database . '.PRODUCT p on p.PRCODE = a.PRCODE
@@ -138,6 +140,8 @@ class SequenceFacade extends Facade
                 $nextIsScrapSequence[0]->SESCRA == true
             ) {
                 $sequence = new Collection($nextIsScrapSequence);
+
+                $request['side'] = $nextIsScrapSequence[0]->SESIDE;
             }
         }
 
@@ -221,23 +225,12 @@ class SequenceFacade extends Facade
                     ]);
             }
 
-            $productRank = DB::select('
-                select ppd.PORANK
-                    from PRODUCT p
-                       join PRWFDATA pfd on p.PRCODE = pfd.PRCODE
-                       join PRWCDATA pcd on pfd.PFIDEN = pcd.PFIDEN and pcd.WCSHNA = "' . $workCenter->WCSHNA . '"
-                       join PROPDATA ppd on ppd.PFIDEN = pcd.PFIDEN and ppd.OPSHNA = pcd.OPSHNA
-                    where p.PRCODE = "' . $sequence[0]->PRCODE . '"'
-            );
-
-            if (!empty($productRank[0])) {
-                foreach ($sequence as $item) {
-                    AWF_SEQUENCE::where('SEQUID', '=', $item->SEQUID)
-                        ->first()
-                        ->update([
-                            'SEINPR' => $productRank[0]->PORANK,
-                        ]);
-                }
+            foreach ($sequence as $item) {
+                AWF_SEQUENCE::where('SEQUID', '=', $item->SEQUID)
+                    ->first()
+                    ->update([
+                        'SEINPR' => $sequence[0]->PORANK,
+                    ]);
             }
         }
 
