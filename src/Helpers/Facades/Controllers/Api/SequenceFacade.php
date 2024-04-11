@@ -407,7 +407,7 @@ class SequenceFacade extends Facade
                             ->first()
                     )
                 ) {
-                    if ($log->PORANK == $maxRank->maxRank) {
+                    if ($log->PORANK == $rank->PORANK) {
                         AWF_SEQUENCE_LOG::where('SEQUID', '=', $log->SEQUID)
                             ->where('WCSHNA', '=', $log->WCSHNA)
                             ->update([
@@ -415,12 +415,20 @@ class SequenceFacade extends Facade
                                 'LETIME' => null,
                             ]);
                     }
-                    else {
+                    elseif ($log->PORANK < $rank->PORANK) {
                         AWF_SEQUENCE_LOG::where('SEQUID', '=', $log->SEQUID)
                             ->where('WCSHNA', '=', $log->WCSHNA)
                             ->update([
                                 'LSTIME' => $now,
                                 'LETIME' => $now,
+                            ]);
+                    }
+                    else {
+                        AWF_SEQUENCE_LOG::where('SEQUID', '=', $log->SEQUID)
+                            ->where('WCSHNA', '=', $log->WCSHNA)
+                            ->update([
+                                'LSTIME' => null,
+                                'LETIME' => null,
                             ]);
                     }
                 }
@@ -452,7 +460,7 @@ class SequenceFacade extends Facade
         $logs = DB::connection('custom_mysql')->select('
             select asl.WCSHNA, a.SEQUID, a.SEINPR from AWF_SEQUENCE a
                 join AWF_SEQUENCE_LOG asl on a.SEQUID = asl.SEQUID
-            where a.SEINPR >= 0 and a.SEQUID > ' . $sequenceId .
+            where a.SEINPR > 0 and a.SEQUID > ' . $sequenceId .
                 ' and a.SESIDE = "' . $data->SESIDE . '" and a.SEPILL = "' . $data->SEPILL . '"'
         );
 
@@ -461,24 +469,12 @@ class SequenceFacade extends Facade
                 if ($log->SEINPR >= $rank->PORANK) {
                     AWF_SEQUENCE::where('SEQUID', '=', $log->SEQUID)->update(['SEINPR' => (int)$rank->PORANK - 1]);
 
-                    $logRank = DB::select(
-                        'select PORANK, WCSHNA from REPNO where ORCODE = "' . $sequence->ORCODE . '" and WCSHNA = "' .
-                        $log->WCSHNA . '"'
-                    )[0];
-
-                    if ($logRank->PORANK == $rank->PORANK && $logRank->WCSHNA == $workCenter->WCSHNA) {
-                        AWF_SEQUENCE_LOG::where('SEQUID', '=', $log->SEQUID)
-                            ->where('WCSHNA', '=', $log->WCSHNA)
-                            ->update([
-                                'LSTIME' => null,
-                                'LETIME' => null,
-                            ]);
-                    }
-                    elseif ($logRank->PORANK > $rank->PORANK) {
-                        AWF_SEQUENCE_LOG::where('SEQUID', '=', $log->SEQUID)
-                            ->where('WCSHNA', '=', $log->WCSHNA)
-                            ->delete();
-                    }
+                    AWF_SEQUENCE_LOG::where('SEQUID', '=', $log->SEQUID)
+                        ->where('WCSHNA', '=', $log->WCSHNA)
+                        ->update([
+                            'LSTIME' => null,
+                            'LETIME' => null,
+                        ]);
                 }
             }
         }

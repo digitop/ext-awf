@@ -83,8 +83,15 @@ class ManualDataRecordDataTable extends DataTable
             ->where(function ($query) {
                 $start = (new \DateTime())->format('Y-m-d') . ' 00:00:00';
 
-                $query->whereNull('asl.LSTIME')->orWhere('asl.LSTIME', '>=', $start)->where('asl.WCSHNA', '=', 'EL01');
-            });
+                $query->whereNull('asl.LSTIME')->orWhere('asl.LSTIME', '>=', $start);
+            })
+            ->where(function ($query) {
+                $query->where('asl.WCSHNA', '=', 'EL01')->where('AWF_SEQUENCE.SEINPR', '=', 0);
+
+                if (!empty($this->getWorkCenterId())) {
+                    $query->orWhere('asl.WCSHNA', '=', $this->getWorkCenterId())->where('AWF_SEQUENCE.SEINPR', '>', 0);
+                }
+            });;
 
         if (!empty($data)) {
             $records->where('AWF_SEQUENCE.SEPILL', '=', $data->SEPILL)
