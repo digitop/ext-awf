@@ -74,17 +74,20 @@ class ProductFeaturesFacade extends Facade
         }
 
         if (empty($workCenter)) {
-            $moduleSetting = DASHBOARD_MODULE_SETTINGS::where([
-                ['DHIDEN', $request->dashboard],
-                ['DMSKEY', 'scrapStationFilter']
-            ])
-                ->first();
-
-            if ($moduleSetting) {
-                $scrapStationFilter = $moduleSetting->DMSVAL;
-                // Ha van beallitva ertek a szuroben
-                $workCenter = WORKCENTER::find($scrapStationFilter); // Selejt állomás megkeresese
-            }
+            return new CustomJsonResponse(new JsonResponseModel(
+                new ResponseData(
+                    false,
+                    [
+                        'data' => [],
+                        'status' => 'default',
+                        'orderCode' => null,
+                        'name' => null,
+                        'opshna' => null,
+                    ]
+                ),
+                Response::HTTP_OK
+            )
+            );
         }
 
         $queryString = '
