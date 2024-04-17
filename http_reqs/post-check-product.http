@@ -9,11 +9,11 @@ Content-Type: application/json
 }
 
 ### check if it is the next product - teszt
-POST http://localhost:8003/api/ext/awf-extension/product/check
+POST http://oeem.local/api/ext/awf-extension/product/check
 Accept: application/json
 Content-Type: application/json
 
 {
-  "dashboard": "15",
-  "serial": "HW01000255782"
+  "dashboard": "17",
+  "serial": "HW01000257362"
 }

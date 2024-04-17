@@ -20,7 +20,7 @@ use App\Models\DASHBOARD;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\DB;
 use App\Events\Api\OperatorPanelSaveSerialEvent;
-
+use App\Http\Controllers\api\dashboard\operatorPanel\OperatorPanelController;
 
 /**
  * API endpoint for barcode/serial verification of qualification stations
@@ -94,10 +94,30 @@ class CheckProductFacade extends Facade
             ));
         }
 
-        $serial = SERIALNUMBER::where('SNSERN', '=', $request->serial)
-            ->first();
+        $serial = DB::select('
+            select s.SNRDCN, r.RNREPN, s.PRCODE from SERIALNUMBER s
+                join REPNO r on r.ORCODE = substring(s.RNREPN, 1, position("-" in s.RNREPN) - 1) and
+                     s.SNSERN = "' . $request->serial . '" and r.WCSHNA = "' . $workCenter->WCSHNA . '"'
+        );
 
-        if (empty($serial) || (array_key_exists(0, $waitings) && $serial->PRCODE !== $waitings[0]->PRCODE)) {
+        if (array_key_exists(0, $serial) && empty($serial[0])) {
+            return new CustomJsonResponse(new JsonResponseModel(
+                new ResponseData(
+                    false,
+                    [],
+                    __(
+                        'response.check.cannot_attach_piece',
+                        ['waiting' => $waitings[0]->PRCODE ?? null, 'got' => $serial?->PRCODE ?? null]
+                    )
+                ),
+                Response::HTTP_OK
+            )
+            );
+        }
+
+        $serial = $serial[0];
+
+        if (array_key_exists(0, $waitings) && $serial->PRCODE !== $waitings[0]->PRCODE) {
             return new CustomJsonResponse(new JsonResponseModel(
                 new ResponseData(
                     false,
@@ -109,6 +129,45 @@ class CheckProductFacade extends Facade
                 ),
                 Response::HTTP_OK
             ));
+        }
+
+        $serialCheck = (new OperatorPanelController())->validateSerial(
+            new Request([
+                'SNSERN' => $request->serial,
+                'RNREPN' => $serial->RNREPN,
+                'SNCOUN' => 1,
+                'SNRDCN' => $serial->SNRDCN,
+                'subProduct' => false,
+                'parentSNSERN' => false,
+                'PRCODE' => $waitings[0]->PRCODE,
+            ]),
+            $request->dashboard
+        );
+
+        $validate = json_decode($serialCheck, true);
+
+        if ($validate['success'] !== true) {
+            $error = $serialCheck;
+
+            if (array_key_exists('errorCode', $validate)) {
+                if ($validate['errorCode'] == -3) {
+                    $error = 'A vonalkód még nem lett minősítve';
+                }
+
+                if ($validate['errorCode'] == -4) {
+                    $error = 'A termék nem volt az előző műveletben';
+                }
+            }
+
+            return new CustomJsonResponse(new JsonResponseModel(
+                new ResponseData(
+                    false,
+                    [],
+                    $error
+                ),
+                Response::HTTP_OK
+            )
+            );
         }
 
         $serialCheck =(new ScrapStationController())->findSerial(
@@ -134,7 +193,7 @@ class CheckProductFacade extends Facade
                 new ResponseData(
                     false,
                     [],
-                    json_encode($serialCheck)
+                    'A vonalkód még nem lett minősítve'
                 ),
                 Response::HTTP_OK
             ));

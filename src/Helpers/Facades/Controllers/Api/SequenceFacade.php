@@ -118,7 +118,8 @@ class SequenceFacade extends Facade
                 $side = 'L';
             }
 
-            $queryString = '
+            if ($sequence[0]->SESCRA == false) {
+                $queryString = '
                 select a.PRCODE, a.SEQUID, a.SEPSEQ, a.SEARNU, a.ORCODE, a.SESIDE, a.SEPILL, a.SEPONR, a.SEINPR,
                     a.SESCRA, r.RNREPN, r.PORANK
                 from AWF_SEQUENCE_LOG asl
@@ -129,19 +130,19 @@ class SequenceFacade extends Facade
                     '" and a.SEINPR = r.PORANK)) and asl.LETIME is null and a.SEINPR <= r.PORANK and
                     asl.WCSHNA = "' . $workCenter->WCSHNA . '" and a.SESIDE = "' . $side . '"' .
                     ($pillar !== null ? ' and a.SEPILL = "' . $pillar .'"' : '') .
-                ' order by a.SEQUID limit 1'
-            ;
+                    ' order by a.SEQUID limit 1';
 
-            $nextIsScrapSequence = DB::connection('custom_mysql')->select($queryString);
+                $nextIsScrapSequence = DB::connection('custom_mysql')->select($queryString);
 
-            if (
-                array_key_exists(0, $nextIsScrapSequence) &&
-                is_object($nextIsScrapSequence[0]) &&
-                $nextIsScrapSequence[0]->SESCRA == true
-            ) {
-                $sequence = new Collection($nextIsScrapSequence);
+                if (
+                    array_key_exists(0, $nextIsScrapSequence) &&
+                    is_object($nextIsScrapSequence[0]) &&
+                    $nextIsScrapSequence[0]->SESCRA == true
+                ) {
+                    $sequence = new Collection($nextIsScrapSequence);
 
-                $request['side'] = $nextIsScrapSequence[0]->SESIDE;
+                    $request['side'] = $nextIsScrapSequence[0]->SESIDE;
+                }
             }
         }
 
