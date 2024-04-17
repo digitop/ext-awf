@@ -10,12 +10,15 @@ class ResponseData extends ObjectToArray
     protected array $data = [];
     protected array|null $next = null;
     protected string $message = '';
+    protected string $timestamp;
 
     public function __construct(bool $success = false, array $data = [], string $message = '')
     {
         $this->success = $success;
         $this->data = $data;
         $this->message = $message;
+
+        $this->timestamp = (new \DateTime())->format(\DateTimeImmutable::ATOM);
     }
 
     public function isSuccess(): bool
