@@ -100,7 +100,7 @@ class CheckProductFacade extends Facade
                      s.SNSERN = "' . $request->serial . '" and r.WCSHNA = "' . $workCenter->WCSHNA . '"'
         );
 
-        if (array_key_exists(0, $serial) && empty($serial[0])) {
+        if (!array_key_exists(0, $serial) || empty($serial[0])) {
             return new CustomJsonResponse(new JsonResponseModel(
                 new ResponseData(
                     false,
