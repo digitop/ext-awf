@@ -1,3 +1,38 @@
-GET localhost:8000/api/ext/awf-extension/get-default-sequence
+### get all data
+GET http://localhost:8000/api/ext/awf-extension/get-default-sequence
+Accept: application/json
+Content-Type: application/json
+
+### get data by WC
+GET https://oeem.awf.hu/api/ext/awf-extension/get-sequence/VCJ01/C
+Accept: application/json
+Content-Type: application/json
+
+{
+  "side": "R",
+  "limit": 1,
+  "serial": "HW01000261362",
+  "no_change": "true"
+}
+
+### get data by WC - teszt
+GET http://localhost:8003/api/ext/awf-extension/get-sequence/VAJ01/A
+Accept: application/json
+Content-Type: application/json
+
+{
+  "side": "R",
+  "serial": "HW01000255782",
+  "limit": 1,
+  "no_change": "false"
+}
+
+### get default preparation panel
+GET http://localhost:8003/api/ext/awf-extension/preparation-panel/default
+Accept: application/json
+Content-Type: application/json
+
+### get welder data
+GET http://localhost:8000/api/ext/awf-extension/sequence/welder/B/HB01
 Accept: application/json
 Content-Type: application/json

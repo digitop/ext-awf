@@ -16,10 +16,17 @@ use Illuminate\View\View;
 
 interface ApiControllerFacadeInterface
 {
-    public function create(Request|null $request = null, Model|string|null $model = null): JsonResponse|null;
-    public function show(Model ...$model): JsonResponse|null;
+    public function create(Request|FormRequest|null $request = null,
+        Model|string|null $model = null
+    ): JsonResponse|null;
+
+    public function show(Request|FormRequest|null $request = null, Model|string|null ...$model): JsonResponse|null;
+
     public function add(Model|null $model = null, Request|null $request = null): JsonResponse|null;
-    public function store(Request|FormRequest $request, Model|string ...$model): JsonResponse|null;
+
+    public function store(Request|FormRequest $request, Model|string|null ...$model): JsonResponse|null;
+
     public function update(Request|FormRequest $request, Model|string ...$model): JsonResponse|null;
+
     public function destroy(Request|FormRequest $request, Model|string ...$model): JsonResponse|null;
 }

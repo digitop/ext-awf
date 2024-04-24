@@ -3,6 +3,7 @@
 namespace AWF\Extension\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
@@ -54,6 +55,7 @@ class AWF_SEQUENCE extends Model
         'SEINPR',
         'PRCODE',
         'ORCODE',
+        'SESCRA',
     ];
 
     /**
@@ -62,7 +64,7 @@ class AWF_SEQUENCE extends Model
      * @var array
      */
     protected $casts = [
-        'SEINPR' => 'bool',
+        'SESCRA' => 'bool',
     ];
 
     public function getActivitylogOptions(): LogOptions

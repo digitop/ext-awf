@@ -1,0 +1,28 @@
+### get features of a given product by machine
+POST https://oeem.awf.hu/api/ext/awf-extension/product-feature/show
+Accept: application/json
+Content-Type: application/json
+
+{
+  "productCode": "F46B17201"
+}
+
+### check if selected color is right - test
+POST http://oeem.local/api/ext/awf-extension/product-feature/check
+Accept: application/json
+Content-Type: application/json
+
+{
+  "dashboard": "2",
+  "productCode": "F46B00203"
+}
+
+### check if selected color is right
+POST https://oeem.awf.hu/api/ext/awf-extension/product-feature/check
+Accept: application/json
+Content-Type: application/json
+
+{
+  "dashboard": "8",
+  "productCode": "F46B00703"
+}

@@ -1,0 +1,5 @@
+### autoscrap
+GET http://oeem.local/api/ext/awf-extension/sequence/auto-scrap/KAJ01
+Accept: application/json
+Content-Type: application/json
+

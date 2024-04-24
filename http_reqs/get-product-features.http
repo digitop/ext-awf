@@ -1,0 +1,28 @@
+### get features of all product
+GET localhost:8000/api/ext/awf-extension/product-feature/get
+Accept: application/json
+Content-Type: application/json
+
+### get features of all product - colors test
+GET http://oeem.local/api/ext/awf-extension/product-feature/get/colors
+Accept: application/json
+Content-Type: application/json
+
+{
+  "dashboard": "2"
+}
+
+
+### get features of all product - colors
+GET https://oeem.awf.hu/api/ext/awf-extension/product-feature/get/colors
+Accept: application/json
+Content-Type: application/json
+
+{
+  "dashboard": "9"
+}
+
+### get features of all product - materials
+GET localhost:8000/api/ext/awf-extension/product-feature/get/materials
+Accept: application/json
+Content-Type: application/json

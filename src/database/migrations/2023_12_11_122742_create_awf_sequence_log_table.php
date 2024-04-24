@@ -18,9 +18,9 @@ return new class extends Migration {
             $table->id('SELOID')->comment('The unique identifier of the sequence log table of a unique development module of awf');
             $table->unsignedBigInteger('SEQUID')->comment('AWF uniquely developed module sequence identifier (AWF_SEQUENCE:SEQUID)');
             $table->string('WCSHNA', 8)->nullable()->comment('Workcenter short name (WORKCENTER:WCSHNA)');
-            $table->timestamp('LSTIME')->comment('Timestamp when the workcenter started the work process');
-            $table->timestamp('LETIME')->comment('Timestamp when the workcenter ended the work process');
-            $table->unique(['SEQUID', 'WCSHNA'], 'SEQUID_WCSHNA_UNIQUE');
+            $table->timestamp('LSTIME')->nullable()->comment('Timestamp when the workcenter started the work process');
+            $table->timestamp('LETIME')->nullable()->comment('Timestamp when the workcenter ended the work process');
+            $table->unique(['SEQUID', 'WCSHNA', 'LSTIME', 'LETIME'], 'SEQUID_WCSHNA_LSTIME_LETIME_UNIQUE');
         });
 
         Schema::connection('custom_mysql')->table('AWF_SEQUENCE_LOG', function (Blueprint $table) use ($database) {

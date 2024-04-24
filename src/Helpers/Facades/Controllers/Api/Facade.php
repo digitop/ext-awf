@@ -10,12 +10,12 @@ use AWF\Extension\Interfaces\ApiControllerFacadeInterface;
 
 class Facade implements ApiControllerFacadeInterface
 {
-    public function create(Request|null $request = null, Model|string|null $model = null): JsonResponse|null
+    public function create(Request|FormRequest|null $request = null, Model|string|null $model = null): JsonResponse|null
     {
         return null;
     }
 
-    public function show(Model ...$model): JsonResponse|null
+    public function show(Request|FormRequest|null $request = null, Model|string|null ...$model): JsonResponse|null
     {
         return null;
     }
@@ -25,7 +25,7 @@ class Facade implements ApiControllerFacadeInterface
         return null;
     }
 
-    public function store(FormRequest|Request $request, Model|string ...$model): JsonResponse|null
+    public function store(FormRequest|Request $request, Model|string|null ...$model): JsonResponse|null
     {
         return null;
     }
