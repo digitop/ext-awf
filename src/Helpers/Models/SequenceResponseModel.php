@@ -16,6 +16,7 @@ class SequenceResponseModel extends ObjectToArray
     protected string|null $RNREPN = null;
     protected string|null $DHIDEN = null;
     protected string|null $plc = null;
+    protected string|null $plc2 = null;
     protected string|null $pruftisch = null;
     protected array $previousRepnos = [];
 
@@ -63,12 +64,12 @@ class SequenceResponseModel extends ObjectToArray
         return $this;
     }
 
-    public function getSESCRA(): ?string
+    public function getSESCRA(): string|null
     {
         return $this->SESCRA;
     }
 
-    public function setSESCRA(?string $SESCRA): SequenceResponseModel
+    public function setSESCRA(string|null $SESCRA): SequenceResponseModel
     {
         $this->SESCRA = $SESCRA;
         return $this;
@@ -123,12 +124,23 @@ class SequenceResponseModel extends ObjectToArray
         return $this;
     }
 
-    public function getPruftisch(): ?string
+    public function getPlc2(): string|null
+    {
+        return $this->plc2;
+    }
+
+    public function setPlc2(string|null $plc): SequenceResponseModel
+    {
+        $this->plc2 = $plc;
+        return $this;
+    }
+
+    public function getPruftisch(): string|null
     {
         return $this->pruftisch;
     }
 
-    public function setPruftisch(?string $pruftisch): SequenceResponseModel
+    public function setPruftisch(string|null $pruftisch): SequenceResponseModel
     {
         $this->pruftisch = $pruftisch;
         return $this;
