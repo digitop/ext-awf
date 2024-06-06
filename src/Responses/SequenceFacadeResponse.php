@@ -85,6 +85,7 @@ class SequenceFacadeResponse  implements ResponseInterface
             )
             ->setRNREPN($sequence->RNREPN)
             ->setPlc($product?->features()->where('FESHNA', '=', 'PLCCOLOR')->first()?->FEVALU ?? null)
+            ->setPlc2($product?->features()->where('FESHNA', '=', 'PLCCOLOR2')->first()?->FEVALU ?? null)
             ->setPruftisch($product?->features()->where('FESHNA', '=', 'PLCPRUFCOLOR')->first()?->FEVALU ?? null)
             ->setPreviousRepnos(
                 REPNO::where('WCSHNA', '=', $this->workCenter?->WCSHNA)->where('RNOLAC', '=', 1)->get()

@@ -193,7 +193,7 @@ class CheckProductFacade extends Facade
                 new ResponseData(
                     false,
                     [],
-                    'A vonalkód még nem lett minősítve'
+                    'A vonalkód már le lett minősítve, újraminősítés nem lehetséges'
                 ),
                 Response::HTTP_OK
             ));
