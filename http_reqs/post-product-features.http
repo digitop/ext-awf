@@ -23,6 +23,6 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "dashboard": "8",
-  "productCode": "F46B00703"
+  "dashboard": "6",
+  "productCode": "F46B88301"
 }

@@ -232,7 +232,7 @@ class ProductFeaturesFacade extends Facade
             );
         }
 
-        if ($product->PRCODE !== $request->productCode) {
+        if (trim($product->PRCODE) !== trim($request->productCode)) {
             $workCenter->features()->where('WFSHNA', '=', 'OPSTATUS')->first()?->update([
                 'WFVALU' => 'fail',
             ]);
