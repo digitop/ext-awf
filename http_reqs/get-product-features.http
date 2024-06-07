@@ -19,7 +19,7 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "dashboard": "9"
+  "dashboard": "6"
 }
 
 ### get features of all product - materials
