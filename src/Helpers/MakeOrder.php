@@ -22,13 +22,21 @@ class MakeOrder
 
     protected static function generateOrders(Collection $sequences): void
     {
-        $insertOrdersQuery = 'insert into ORDERHEAD (PRCODE, PRORCO, ORCODE, PFIDEN, ORSTAT, ORQUAN, ORQYEN, ORRQEN, ORNOID, ORNOTC, ORNOSC, ORSCTY, ORSCVA, ORSCW1, ORSCW2, ORSCSW) values ';
+        $insertOrdersQuery = 'insert into ORDERHEAD (PRCODE, PRORCO, ORCODE, PFIDEN, ORSTAT, ORSTDA, ORQUAN, ORQYEN, ORRQEN, ORNOID, ORNOTC, ORNOSC, ORSCTY, ORSCVA, ORSCW1, ORSCW2, ORSCSW) values ';
         $insertOrderScheduleQuery = 'insert into ORDER_SCHEDULE (ORCODE, OSNAME, OSSTRD, OSQUAN, OSACTV) values ';
         $updateSequenceQuery = [];
 
         $orderCounter = 1;
+        $previousPillar = $sequences[0]->SEPILL;
+        $start = (new \DateTime())->add(new \DateInterval('PT6H'));
+        $time = clone $start;
 
         for ($i = 0, $iMax = count($sequences); $i < $iMax; $i++) {
+            if ($previousPillar !== $sequences[$i]->SEPILL) {
+                $previousPillar = $sequences[$i]->SEPILL;
+                $time = clone $start;
+            }
+
             $orderCode = $sequences[$i]->SEPONR . '_' . $sequences[$i]->SEPSEQ . '_' . $sequences[$i]->SEARNU;
 
             $workflow = PRWFDATA::where('PRCODE', $sequences[$i]->PRCODE)->first();
@@ -44,10 +52,11 @@ class MakeOrder
             $updateSequenceQuery[] = 'update AWF_SEQUENCE set ORCODE = "' . $orderCode . '" where SEQUID = ' . $sequences[$i]->SEQUID . ';';
             
             $insertOrdersQuery .= sprintf(
-                '("%s",null,"%s","%s",1,1,1,1,%s,%s,60,2,1,5,10,null)',
+                '("%s",null,"%s","%s",1,"%s",1,1,1,%s,%s,60,2,1,5,10,null)',
                 $sequences[$i]->PRCODE,
                 $orderCode,
                 $workflow->PFIDEN,
+                $time->format('Y-m-d H:i:s'),
                 $orderDefaultNotification->PAVALU ?? null,
                 $orderNotificationEnabled->PAVALU ?? 0
             );
@@ -62,6 +71,8 @@ class MakeOrder
                 $insertOrdersQuery .= ',';
                 $insertOrderScheduleQuery .= ',';
             }
+
+            $time->add(new \DateInterval('PT15M'));
         }
         
         DB::insert($insertOrdersQuery);

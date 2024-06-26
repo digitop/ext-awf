@@ -100,6 +100,10 @@ class MoveSequenceFacade extends Facade
         }
 
         if (in_array($request->WCSHNA, ['VAB01', 'VAJ01', 'VAB02', 'VAJ02','VBB01', 'VBJ01','VCB01', 'VCJ01'], true)) {
+            ORDERHEAD::where('ORCODE', '=', $sequence['ORCODE'])->update([
+                'ORENDA' => (new \DateTime())->format('Y-m-d H:i:s'),
+            ]);
+
             $status = 'default';
             $workCenter = WORKCENTER::where('WCSHNA', '=', $request->WCSHNA)->first();
 
