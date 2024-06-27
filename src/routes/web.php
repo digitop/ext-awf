@@ -77,3 +77,10 @@ Route::group(
         )
             ->name('awf-shift-management-panel.manual-data-record.update');
 });
+
+// Report
+Route::group(['middleware' => ['web'], 'namespace' => 'AWF\Extension\Controllers\Web\Reports', 'prefix' => 'report'],
+    function () {
+        Route::get('awfProductionDetails', ['uses' => 'ProductionDetailsController@index']);
+        Route::post('awfProductionDetails', ['uses' => 'ProductionDetailsController@show']);
+    });
