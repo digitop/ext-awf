@@ -50,7 +50,7 @@ class ProductionDetailsFacade extends Facade
             }
 
             if (!empty($request->porscheSequenceNumber)) {
-                $sequence->where('SEARNU', '=', $request->porscheSequenceNumber);
+                $sequence->where('SEPSEQ', '=', $request->porscheSequenceNumber);
             }
 
             if (!empty($request->productCode)) {
