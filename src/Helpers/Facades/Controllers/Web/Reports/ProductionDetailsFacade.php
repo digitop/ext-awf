@@ -104,7 +104,7 @@ class ProductionDetailsFacade extends Facade
                 ),
                 "reportFilterFormUrl" => 'report/awfProductionDetails',
                 "birt" => [
-                    'report' => 'productDetails/productDetails.rptdesign',
+                    'report' => 'awfProductionDetails/report.rptdesign',
                     'language' => substr(Session::get('locale'), 0, 2),
                     'url' => $birtData['url'],
                     'params' => $birtData['params'],
