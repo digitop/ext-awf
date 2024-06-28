@@ -28,7 +28,7 @@ class ProductionDetailsShowRequest extends Request
             'serial' => 'nullable|string|max:64|min:1',
             'porscheOrderNumber' => 'nullable|string|max:10|min:1',
             'porscheSequenceNumber' => 'nullable|string|max:10|min:1',
-            'productCode' => 'required_with:porscheOrderNumber,porscheSequenceNumber|string|max:32|min:1',
+            'productCode' => 'nullable|required_with:porscheOrderNumber,porscheSequenceNumber|string|max:32|min:1',
         ];
     }
 
@@ -56,7 +56,7 @@ class ProductionDetailsShowRequest extends Request
             'productCode.required_with' => __('validation.required_with',
                 ['attribute' => 'productCode', 'values' => 'porscheSequenceNumber/porscheOrderNumber']
             ),
-            'productCode.string' => __('validation.integer', ['attribute' => 'productCode']),
+            'productCode.string' => __('validation.string', ['attribute' => 'productCode']),
             'productCode.max' => __('validation.max.string', ['attribute' => 'productCode', 'max' => 32]),
             'productCode.min' => __('validation.min.string', ['attribute' => 'productCode', 'min' => 1]),
         ];

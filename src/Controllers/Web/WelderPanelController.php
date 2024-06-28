@@ -33,6 +33,7 @@ class WelderPanelController extends Controller
             App::setLocale(substr($locale, 0, 2));
         }
     }
+
     public function create(Request $request, string $WCSHNA): Application|Factory|View|IlluminateView|ContractsApplication|null
     {
         return $this->facade->create($request, WORKCENTER::where('WCSHNA', '=', $WCSHNA)->first());
