@@ -44,7 +44,7 @@ class GenerateDataFacade extends Facade
                 }
             }
 
-            foreach (Storage::disk('local')->files('/sequence-data/20240209_13') as $filePath) {
+            foreach (Storage::disk('awfSequenceFtp')->files() as $filePath) {
                 if (str_contains($filePath, 'P992')) {
                     $this->generateData($filePath);
                 }
@@ -100,7 +100,7 @@ class GenerateDataFacade extends Facade
 
     protected function generateData(string $filePath): void
     {
-        $file = Storage::disk('local')->get($filePath);
+        $file = Storage::disk('awfSequenceFtp')->get($filePath);
 
         $insertQuery = 'insert into AWF_SEQUENCE (SEPONR, SEPSEQ, SEARNU, SEARDE, SESIDE, SEEXPI, SEPILL, PRCODE) values';
         $rows = explode(PHP_EOL, $file);

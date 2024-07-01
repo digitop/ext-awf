@@ -28,7 +28,7 @@ class MakeOrder
 
         $orderCounter = 1;
         $previousPillar = $sequences[0]->SEPILL;
-        $start = (new \DateTime())->add(new \DateInterval('PT6H'));
+        $start = (new \DateTime())->add(new \DateInterval('PT2H'));
         $time = clone $start;
 
         for ($i = 0, $iMax = count($sequences); $i < $iMax; $i++) {
